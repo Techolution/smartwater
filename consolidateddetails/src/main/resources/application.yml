@@ -1,0 +1,27 @@
+server:
+  port: 8082
+
+
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    log4j.logger.org.hibernate.SQL: DEBUG
+    com.techolution: DEBUG
+    
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+  datasource:
+    url: jdbc:mysql://localhost:3306/mauritius_smartwater
+    username: admin
+    password: admin123
+    driver-class-name: com.mysql.jdbc.Driver
+
+
+  
