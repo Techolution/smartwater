@@ -111,7 +111,7 @@ public class BatteryDataSimiulator implements IStubData {
 		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 
 		try {
-		    HttpPost request = new HttpPost("http://localhost:8083/insert/telemetry/data/"+telemetry.getMeter_id());
+		    HttpPost request = new HttpPost("http://localhost:8085/insert/telemetry/data/"+telemetry.getMeter_id());
 		    StringEntity params = new StringEntity(json.toString());
 		    request.addHeader("content-type", "application/json");
 		    request.setEntity(params);

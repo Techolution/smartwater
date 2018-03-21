@@ -26,6 +26,10 @@ import com.techolution.mauritus.data.Telemetry;
 
 public class FlowDataSimiulator implements IStubData {
 
+	
+	private static String INFLUX_CONNECTION_STRING="http://52.170.92.62:8086";
+	private static String INFLUX_USERNAME="root";
+	private static String INFLUX_PWD="root"; 
 	Logger log=Logger.getLogger(FlowDataSimiulator.class.getName());
 	@Override
 	public void startProcess(int meterId, String startTime, String endTime, long sleepTime, int incrementtime) {
@@ -72,7 +76,8 @@ public class FlowDataSimiulator implements IStubData {
 		log.fine("Query is:"+query);
 		
 		
-		InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
+		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
+		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
 		String dbName = "mauritius_smartwater";
 		QueryResult queryResult = influxDB.query(new Query(query, dbName));
 		
@@ -133,7 +138,7 @@ public class FlowDataSimiulator implements IStubData {
 		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 
 		try {
-		    HttpPost request = new HttpPost("http://localhost:8083/insert/telemetry/data/"+telemetry.getMeter_id());
+		    HttpPost request = new HttpPost("http://localhost:8085/insert/telemetry/data/"+telemetry.getMeter_id());
 		    StringEntity params = new StringEntity(json.toString());
 		    request.addHeader("content-type", "application/json");
 		    request.setEntity(params);

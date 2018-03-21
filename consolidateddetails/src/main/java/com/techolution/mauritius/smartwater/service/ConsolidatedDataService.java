@@ -27,7 +27,9 @@ import com.techolution.mauritius.smartwater.repository.ConnectionDetailsReposito
 public class ConsolidatedDataService {
 	private Log log = LogFactory.getLog(ConsolidatedDataService.class);
 	
-	private static final String INFLUX_ENDPOINT="http://localhost:32768/query?db=mauritius_smartwater&q="; 
+	private static String INFLUX_CONNECTION_STRING="http://52.170.92.62:8086";
+	private static String INFLUX_USERNAME="root";
+	private static String INFLUX_PWD="root"; 
 	
 	@Autowired
 	private ConnectionDetailsRepository connectionDetailsRepository;
@@ -70,7 +72,8 @@ public class ConsolidatedDataService {
 		
 		
 		
-		InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
+		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
+		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
 		String dbName = "mauritius_smartwater";
 		QueryResult queryResult = influxDB.query(new Query(query, dbName));
 		Double consumption = getConsumption(queryResult);
@@ -106,7 +109,8 @@ public TotalConsolidatedConsumption getConsumptionForToday() throws ClientProtoc
 		
 		
 		
-		InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
+		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
+		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
 		String dbName = "mauritius_smartwater";
 		QueryResult queryResult = influxDB.query(new Query(query, dbName));
 		Double consumption = getConsumption(queryResult);
@@ -142,7 +146,8 @@ public TotalConsolidatedConsumption getConsumptionForToday() throws ClientProtoc
 		
 		
 		
-		InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
+		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
+		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
 		String dbName = "mauritius_smartwater";
 		QueryResult queryResult = influxDB.query(new Query(query, dbName));
 		List<Result> results=queryResult.getResults();
@@ -219,7 +224,8 @@ public TotalConsolidatedConsumption getConsumptionForToday() throws ClientProtoc
 		
 		
 		
-		InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
+		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
+		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
 		String dbName = "mauritius_smartwater";
 		QueryResult queryResult = influxDB.query(new Query(query, dbName));
 		List<Result> results=queryResult.getResults();

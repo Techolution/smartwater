@@ -2,6 +2,7 @@ package com.techolution.mauritus.data.simulator;
 
 import java.text.ParseException;
 
+import com.techolution.mauritius.data.simulator.service.BatteryDataSimiulator;
 import com.techolution.mauritius.data.simulator.service.FlowDataSimiulator;
 import com.techolution.mauritius.data.simulator.service.IStubData;
 
@@ -28,6 +29,9 @@ public class PopulateData {
 			data.startProcess(meter, starttime, endtime, sleepval, incrementval);
 			
 			
+		}else if("battery".equalsIgnoreCase(kpi)){
+			data=new BatteryDataSimiulator();
+			data.startProcess(meter, starttime, endtime, sleepval, incrementval);
 		}
 	}
 

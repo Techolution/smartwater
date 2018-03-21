@@ -26,6 +26,9 @@ import com.techolution.mauritius.smartwater.domain.RequestData;
 
 @Component
 public class MapDataService {
+	private static String INFLUX_CONNECTION_STRING="http://52.170.92.62:8086";
+	private static String INFLUX_USERNAME="root";
+	private static String INFLUX_PWD="root"; 
 	
 	private Log log = LogFactory.getLog(MapDataService.class);
 	
@@ -67,7 +70,8 @@ public class MapDataService {
 		//int deviceId=123;
 				
 		
-		InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
+		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
+		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
 		String dbName = "mauritius_smartwater";
 		
 		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");

@@ -34,6 +34,10 @@ public class ConnectionStatisticsService {
 	
 	private Log log = LogFactory.getLog(ConnectionStatisticsService.class);
 	
+	private static String INFLUX_CONNECTION_STRING="http://52.170.92.62:8086";
+	private static String INFLUX_USERNAME="root";
+	private static String INFLUX_PWD="root";
+	
 	public List<Data> getData(RequestData data) throws ParseException{
 		
 		
@@ -80,7 +84,8 @@ public class ConnectionStatisticsService {
 		log.debug("Query is:"+query);
 		
 		
-		InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
+		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32770", "root", "root");
+		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
 		String dbName = "mauritius_smartwater";
 		QueryResult queryResult = influxDB.query(new Query(query, dbName));
 		String locationName= "TEST";
@@ -135,12 +140,13 @@ public class ConnectionStatisticsService {
 		}else{
 			log.info("Time to set is:"+telemetry.getDate().getTime());
 		}
-		InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:8086", "root", "root");
+		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32770", "root", "root");
+		InfluxDB influxDB =InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
 		String dbName = "mauritius_smartwater";
 		influxDB.setDatabase(dbName);
 		influxDB.enableBatch(BatchOptions.DEFAULTS);
 		String rpName = "aRetentionPolicy";
-		//influxDB.createRetentionPolicy(rpName, dbName, "365d", "30m", 2, true);
+		influxDB.createRetentionPolicy(rpName, dbName, "365d", "30m", 2, true);
 
 		
 		BatchPoints batchPoints = BatchPoints
