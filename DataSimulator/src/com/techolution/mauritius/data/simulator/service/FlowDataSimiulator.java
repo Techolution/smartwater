@@ -72,7 +72,7 @@ public class FlowDataSimiulator implements IStubData {
 			}
 		}
 		
-		String query = "select last(value)  from meterreading where time <='"+startTime+"' and meter_id='"+meterId+"'";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
+		String query = "select last(value)  from meterreading where time <='"+startTime+"' and meter_id="+meterId+"";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
 		log.fine("Query is:"+query);
 		
 		
@@ -98,7 +98,7 @@ public class FlowDataSimiulator implements IStubData {
 		}
 		boolean loop=true;
 		while(startDate.before( endDate)){
-			
+			//System.out.println("Start date millis:"+startDate.getTime());
 			
 			try {
 				Telemetry telemetry=new Telemetry();
@@ -134,6 +134,7 @@ public class FlowDataSimiulator implements IStubData {
 		json.put("flow", telemetry.getFlow());    
 		json.put("reading", telemetry.getReading());
 		json.put("date", dateVal);
+		//System.out.println("String value is:"+json.toString());
 
 		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 

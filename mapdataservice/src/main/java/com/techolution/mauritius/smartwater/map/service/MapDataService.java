@@ -82,7 +82,7 @@ public class MapDataService {
 				
 		availableConnections.parallelStream().forEach(meterConnection -> {
 			
-			String query = "select sum(value)  from flow where time >='"+startTime+"' and time<'"+endTime+"' and meter_id='"+meterConnection.getHouse_id()+"'";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
+			String query = "select sum(value)  from flow where time >='"+startTime+"' and time<'"+endTime+"' and meter_id="+meterConnection.getHouse_id()+"";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
 			log.debug("Query is:"+query);
 			QueryResult queryResult = influxDB.query(new Query(query, dbName));
 			List<Result> resultlist=queryResult.getResults();

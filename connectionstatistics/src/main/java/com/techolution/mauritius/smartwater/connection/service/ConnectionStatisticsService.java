@@ -80,7 +80,7 @@ public class ConnectionStatisticsService {
 		
 		int deviceId=data.getHouse_ID();
 		//int deviceId=123;
-		String query = "select sum(value)  from flow where time >='"+startTime+"' and time<'"+endTime+"' and meter_id='"+deviceId+"' group by time("+groupVal+") fill(0)";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
+		String query = "select sum(value)  from flow where time >='"+startTime+"' and time<'"+endTime+"' and meter_id="+deviceId+" group by time("+groupVal+") fill(0)";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
 		log.debug("Query is:"+query);
 		
 		
@@ -204,7 +204,7 @@ public class ConnectionStatisticsService {
 */
 		
 		Point point1 = Point.measurement("flow")
-				.time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+				.time(telemetry.getDate().getTime(), TimeUnit.MILLISECONDS)
 				.addField("meter_id", telemetry.getMeter_id())
 				.addField("value", telemetry.getFlow())
 				.build();
@@ -228,7 +228,7 @@ public class ConnectionStatisticsService {
 		*/
 		
 		Point point1 = Point.measurement("batterylevel")
-				.time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+				.time(telemetry.getDate().getTime(), TimeUnit.MILLISECONDS)
 				.addField("meter_id", telemetry.getMeter_id())
 				.addField("value", telemetry.getBattery())
 				.build();
@@ -252,7 +252,7 @@ public class ConnectionStatisticsService {
 				.build());*/
 	
 		Point point1 = Point.measurement("flowrate")
-				.time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+				.time(telemetry.getDate().getTime(), TimeUnit.MILLISECONDS)
 				.addField("meter_id", telemetry.getMeter_id())
 				.addField("value", telemetry.getFlowrate())
 				.build();
