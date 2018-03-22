@@ -69,15 +69,25 @@ public class BatteryDataSimiulator implements IStubData {
 		}
 		
 		
-		
+		int i = 0;
+		long batteryVal=3200;
 		while(startDate.before( endDate)){
 			
 			
 			try {
 				Telemetry telemetry=new Telemetry();
 				telemetry.setDate(startDate);
-				 
-				telemetry.setBattery(new Long(3200));
+				
+				if( i == 10){
+					batteryVal = batteryVal -ThreadLocalRandom.current().nextLong(10, 30);
+					i = 0;
+				}
+				
+				telemetry.setBattery(batteryVal);
+				
+				if(batteryVal < 2000){
+					batteryVal = 3000;
+				}
 				
 				telemetry.setMeter_id(meterId);
 				sendBattery(telemetry,startDate);
@@ -94,7 +104,7 @@ public class BatteryDataSimiulator implements IStubData {
 				e.printStackTrace();
 			}
 			
-			
+			i++;
 		}
 
 	}

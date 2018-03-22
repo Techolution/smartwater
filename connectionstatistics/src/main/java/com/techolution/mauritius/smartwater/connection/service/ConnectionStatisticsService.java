@@ -2,6 +2,7 @@ package com.techolution.mauritius.smartwater.connection.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -80,7 +81,7 @@ public class ConnectionStatisticsService {
 		
 		int deviceId=data.getHouse_ID();
 		//int deviceId=123;
-		String query = "select sum(value)  from flow where time >='"+startTime+"' and time<'"+endTime+"' and meter_id="+deviceId+" group by time("+groupVal+") fill(0)";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
+		String query = "select sum(value)  from flow where time >='"+startTime+"' and time<='"+endTime+"' and meter_id="+deviceId+" group by time("+groupVal+") fill(0)";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
 		log.debug("Query is:"+query);
 		
 		
@@ -93,10 +94,12 @@ public class ConnectionStatisticsService {
 		List<Result> resultlist=queryResult.getResults();
 		int recordSize=0;
 		List<Data> retlist=new ArrayList<Data>();
-		SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
-		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+		//SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
+		//SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-ddTHH:mm:ssZ");
+		//dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 		//Date date1=new SimpleDateFormat("yyyy-MM-DDTHH:mm:ssz").parse(sDate1);
 		Data resultData=null;
+		Instant  instant=null;
 		for(Result result:resultlist){
 			List<Series> serieslist=result.getSeries();
 			if(serieslist == null){
@@ -106,8 +109,10 @@ public class ConnectionStatisticsService {
 				List<List<Object>> valuelist=series.getValues();
 				for(List<Object> results:valuelist){
 					String endTimeReturned=(String)results.get(0);
-					log.debug("Date is:"+(endTimeReturned.split("T"))[0]);
-					Date date=dateFormat.parse(endTimeReturned);
+					/*log.debug("Date is:"+(endTimeReturned.split("T"))[0]);
+					log.debug("Date2 is:"+(endTimeReturned.split("T"))[1]);*/
+					instant= Instant.parse( endTimeReturned); 
+					Date date=java.util.Date.from(instant);
 					
 					resultData=new Data();
 					resultData.setDevid(deviceId);
@@ -115,6 +120,101 @@ public class ConnectionStatisticsService {
 					resultData.setWdata(((Double)results.get(1)).doubleValue());
 					resultData.setSensor_locationname(locationName);
 					retlist.add(resultData);
+				}
+				
+				
+			}
+			
+		}
+		influxDB.close();
+		return retlist;
+	}
+	
+  public List<Data> geBatterytData(RequestData data) throws ParseException{
+		
+		
+		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+		
+		
+		/*String startTime = myFormat.format(data.getStart_Time().getTime());
+		String endTime = myFormat.format(data.getEnd_Time().getTime());*/
+		String startTime = data.getStart_Time();
+		//String startTime = "2018-03-01";
+		
+		String endTime = data.getEnd_Time();
+		//String endTime = "2018-03-15";
+		
+		int distanceValue=data.getSample_Distance_value();
+		//int distanceValue=30;
+		String disVal=String.valueOf(distanceValue);
+		
+		String code="d";
+		String groupVal=null;
+		log.debug("Sample Distance:"+data.getSample_Distance());
+		log.debug("distanceValue:"+distanceValue);
+		//String groupVal="1d";
+		if(data.getSample_Distance().equalsIgnoreCase("Day")){
+			code="d";
+			groupVal=disVal+code;
+		}
+		else if(data.getSample_Distance().equalsIgnoreCase("Hour")){
+			code="h";
+			groupVal=disVal+code;
+		}else if(data.getSample_Distance().equalsIgnoreCase("Month")){
+			int monthgroupval=distanceValue*30;
+			groupVal=String.valueOf(monthgroupval)+"d";
+			
+		}else{
+			code="d";
+			groupVal=disVal+code;
+		}
+		
+		
+		int deviceId=data.getHouse_ID();
+		//int deviceId=123;
+		String query = "select last(value)  from batterylevel where time >='"+startTime+"' and time<='"+endTime+"' and meter_id="+deviceId+" group by time("+groupVal+")";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
+		log.debug("Query is:"+query);
+		
+		
+		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32770", "root", "root");
+		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
+		String dbName = "mauritius_smartwater";
+		QueryResult queryResult = influxDB.query(new Query(query, dbName));
+		String locationName= "TEST";
+		
+		List<Result> resultlist=queryResult.getResults();
+	//	int recordSize=0;
+		List<Data> retlist=new ArrayList<Data>();
+		//SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
+		//dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+		//Date date1=new SimpleDateFormat("yyyy-MM-DDTHH:mm:ssz").parse(sDate1);
+		Data resultData=null;
+		
+		Instant  instant=null;
+		for(Result result:resultlist){
+			List<Series> serieslist=result.getSeries();
+			if(serieslist == null){
+				break;
+			}
+			for(Series series:serieslist){
+				List<List<Object>> valuelist=series.getValues();
+				for(List<Object> results:valuelist){
+					String endTimeReturned=(String)results.get(0);
+					//log.debug("Date is:"+(endTimeReturned.split("T"))[0]);
+					instant= Instant.parse( endTimeReturned); 
+					Date date=java.util.Date.from(instant);
+				//	Date date=dateFormat.parse(endTimeReturned);
+					if(results.get(1)!=null){
+						
+					
+					resultData=new Data();
+					resultData.setDevid(deviceId);
+					resultData.setEndtime(date);	
+					
+					resultData.setWdata(((Double)results.get(1)).doubleValue());
+					resultData.setSensor_locationname(locationName);
+					retlist.add(resultData);
+					}
 				}
 				
 				
