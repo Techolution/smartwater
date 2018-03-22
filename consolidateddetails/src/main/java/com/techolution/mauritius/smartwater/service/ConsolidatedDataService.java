@@ -39,13 +39,15 @@ public class ConsolidatedDataService {
 	public List<MeterConnection> getAllConnections(){
 		
 		log.info("Entering ConsolidatedDataService.getAllConnections ");
-		List returnList= (List)connectionDetailsRepository.findAll();
+		List<MeterConnection> returnList= (List)connectionDetailsRepository.findAll();
 		log.info("Exiting ConsolidatedDataService.getAllConnections ");
 		if(returnList == null) {
 			log.debug("returnList size is null");
 		}else{
 			log.debug("List size is:"+returnList.size());	
 		}
+		
+				
 		
 		return returnList;
 	}
@@ -123,6 +125,9 @@ public TotalConsolidatedConsumption getConsumptionForToday() throws ClientProtoc
 		return consolidatedConsumption;
 		
 	}
+
+
+
 	
 	public TotalConsolidatedDeviceStatus getDeviceStatusForThisMonth() throws ClientProtocolException, IOException, JSONException{
 		

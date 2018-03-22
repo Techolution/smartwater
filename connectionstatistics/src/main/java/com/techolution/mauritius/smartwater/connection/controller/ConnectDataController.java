@@ -12,12 +12,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 
 import com.techolution.mauritius.smartwater.connection.domain.Dfj;
 import com.techolution.mauritius.smartwater.connection.domain.ResponseData;
 import com.techolution.mauritius.smartwater.connection.domain.Telemetry;
 import com.techolution.mauritius.smartwater.connection.service.ConnectionStatisticsService;
 
+@CrossOrigin(origins = {"*"})
 @RestController
 @RequestMapping(value="/insert")
 public class ConnectDataController {

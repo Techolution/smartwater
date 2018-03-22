@@ -7,6 +7,7 @@ import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +20,7 @@ import com.techolution.mauritius.smartwater.domain.RequestData;
 import com.techolution.mauritius.smartwater.domain.ResponseData;
 import com.techolution.mauritius.smartwater.map.service.MapDataService;
 
-
+@CrossOrigin(origins = {"*"})
 @RestController
 @RequestMapping(value="/map")
 

@@ -8,6 +8,7 @@ import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ import com.techolution.mauritius.smartwater.connection.domain.RequestData;
 import com.techolution.mauritius.smartwater.connection.domain.ResponseData;
 import com.techolution.mauritius.smartwater.connection.service.ConnectionStatisticsService;
 
+@CrossOrigin(origins = {"*"})
 @RestController
 @RequestMapping(value="/read")
 
