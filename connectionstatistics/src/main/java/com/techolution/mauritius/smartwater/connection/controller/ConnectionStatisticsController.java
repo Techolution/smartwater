@@ -1,6 +1,7 @@
 package com.techolution.mauritius.smartwater.connection.controller;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -19,6 +20,7 @@ import com.techolution.mauritius.smartwater.connection.domain.Data;
 import com.techolution.mauritius.smartwater.connection.domain.Dfj;
 import com.techolution.mauritius.smartwater.connection.domain.RequestData;
 import com.techolution.mauritius.smartwater.connection.domain.ResponseData;
+import com.techolution.mauritius.smartwater.connection.domain.WaterConsumptionResponseData;
 import com.techolution.mauritius.smartwater.connection.service.ConnectionStatisticsService;
 
 @CrossOrigin(origins = {"*"})
@@ -31,6 +33,7 @@ public class ConnectionStatisticsController {
 	private ConnectionStatisticsService connectionStatisticsService;
 	private Log log = LogFactory.getLog(ConnectionStatisticsController.class);
 	
+	private static String CONSUMPTION ="Consumption";
 	
 	/**
 	 * Taking as string as Senseworx api doesnot take json key confirming to java bean format.
@@ -42,7 +45,7 @@ public class ConnectionStatisticsController {
 	 * @throws JSONException 
 	 */
 	@PostMapping("/r/GetData")
-	public @ResponseBody ResponseData getConsumptionDetails(@RequestBody String data) throws ParseException, JSONException
+	public @ResponseBody List<WaterConsumptionResponseData> getConsumptionDetails(@RequestBody String data) throws ParseException, JSONException
 	
 	{
 		log.info("Entering ConnectionStatisticsController.getConsumptionDetails ");
@@ -71,15 +74,17 @@ public class ConnectionStatisticsController {
 		
      
 		List<Data> resultList=connectionStatisticsService.getData(requestData);
-		Dfj dfj=new Dfj();
-		dfj.setStatus("Success");
 		
-		ResponseData responseData=new ResponseData();
-		responseData.setData(resultList);
-		responseData.setDfj(dfj);
+		
+		WaterConsumptionResponseData responseData=new WaterConsumptionResponseData();
+		responseData.setName(CONSUMPTION);
+		responseData.setSeries(resultList);
+		
+		List<WaterConsumptionResponseData> waterconumptionData=new ArrayList<WaterConsumptionResponseData>(1);
+		waterconumptionData.add(responseData);
 		
 		log.info("Exiting ConnectionStatisticsController.getConsumptionDetails ");
-		return responseData;
+		return waterconumptionData;
 	}
 	
 	
@@ -93,7 +98,7 @@ public class ConnectionStatisticsController {
 	 * @throws JSONException 
 	 */
 	@PostMapping("/battery/GetData")
-	public @ResponseBody ResponseData getBatteryDetails(@RequestBody String data) throws ParseException, JSONException
+	public @ResponseBody List<Data> getBatteryDetails(@RequestBody String data) throws ParseException, JSONException
 	
 	{
 		log.info("Entering ConnectionStatisticsController.getBatteryDetails ");
@@ -122,15 +127,15 @@ public class ConnectionStatisticsController {
 		
      
 		List<Data> resultList=connectionStatisticsService.geBatterytData(requestData);
-		Dfj dfj=new Dfj();
+		/*Dfj dfj=new Dfj();
 		dfj.setStatus("Success");
 		
 		ResponseData responseData=new ResponseData();
 		responseData.setData(resultList);
-		responseData.setDfj(dfj);
+		responseData.setDfj(dfj);*/
 		
 		log.info("Exiting ConnectionStatisticsController.getConsumptionDetails ");
-		return responseData;
+		return resultList;
 	}
 
 }

@@ -92,14 +92,14 @@ public class ConnectionStatisticsService {
 		String locationName= "TEST";
 		
 		List<Result> resultlist=queryResult.getResults();
-		int recordSize=0;
+	//	int recordSize=0;
 		List<Data> retlist=new ArrayList<Data>();
-		//SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
+	//	SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
 		//SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-ddTHH:mm:ssZ");
 		//dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 		//Date date1=new SimpleDateFormat("yyyy-MM-DDTHH:mm:ssz").parse(sDate1);
 		Data resultData=null;
-		Instant  instant=null;
+		//Instant  instant=null;
 		for(Result result:resultlist){
 			List<Series> serieslist=result.getSeries();
 			if(serieslist == null){
@@ -111,13 +111,14 @@ public class ConnectionStatisticsService {
 					String endTimeReturned=(String)results.get(0);
 					/*log.debug("Date is:"+(endTimeReturned.split("T"))[0]);
 					log.debug("Date2 is:"+(endTimeReturned.split("T"))[1]);*/
-					instant= Instant.parse( endTimeReturned); 
-					Date date=java.util.Date.from(instant);
+			//		instant= Instant.parse( endTimeReturned); 
+					//Date date=java.util.Date.from(instant);
+					//Date date=dateFormat.parse(endTimeReturned.split("T")[0]);
 					
 					resultData=new Data();
 					resultData.setDevid(deviceId);
-					resultData.setEndtime(date);	
-					resultData.setWdata(((Double)results.get(1)).doubleValue());
+					resultData.setName(endTimeReturned.split("T")[0]);	
+					resultData.setValue(((Double)results.get(1)).doubleValue());
 					resultData.setSensor_locationname(locationName);
 					retlist.add(resultData);
 				}
@@ -133,7 +134,7 @@ public class ConnectionStatisticsService {
   public List<Data> geBatterytData(RequestData data) throws ParseException{
 		
 		
-		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+	//	SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 		
 		
 		/*String startTime = myFormat.format(data.getStart_Time().getTime());
@@ -185,12 +186,12 @@ public class ConnectionStatisticsService {
 		List<Result> resultlist=queryResult.getResults();
 	//	int recordSize=0;
 		List<Data> retlist=new ArrayList<Data>();
-		//SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
+//		SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
 		//dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 		//Date date1=new SimpleDateFormat("yyyy-MM-DDTHH:mm:ssz").parse(sDate1);
 		Data resultData=null;
 		
-		Instant  instant=null;
+	//	Instant  instant=null;
 		for(Result result:resultlist){
 			List<Series> serieslist=result.getSeries();
 			if(serieslist == null){
@@ -201,17 +202,17 @@ public class ConnectionStatisticsService {
 				for(List<Object> results:valuelist){
 					String endTimeReturned=(String)results.get(0);
 					//log.debug("Date is:"+(endTimeReturned.split("T"))[0]);
-					instant= Instant.parse( endTimeReturned); 
-					Date date=java.util.Date.from(instant);
+				//	instant= Instant.parse( endTimeReturned); 
+			//		Date date=java.util.Date.from(instant);
 				//	Date date=dateFormat.parse(endTimeReturned);
 					if(results.get(1)!=null){
 						
-					
+				//	Date date=dateFormat.parse(endTimeReturned.split("T")[0]);
 					resultData=new Data();
 					resultData.setDevid(deviceId);
-					resultData.setEndtime(date);	
+					resultData.setName(endTimeReturned.split("T")[0]);	
 					
-					resultData.setWdata(((Double)results.get(1)).doubleValue());
+					resultData.setValue(((Double)results.get(1)).doubleValue());
 					resultData.setSensor_locationname(locationName);
 					retlist.add(resultData);
 					}

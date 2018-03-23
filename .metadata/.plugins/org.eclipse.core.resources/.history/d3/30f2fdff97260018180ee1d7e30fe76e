@@ -1,0 +1,96 @@
+package com.techolution.mauritius.smartwater.service;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.http.client.ClientProtocolException;
+import org.influxdb.InfluxDB;
+import org.influxdb.InfluxDBFactory;
+import org.influxdb.dto.Query;
+import org.influxdb.dto.QueryResult;
+import org.influxdb.dto.QueryResult.Result;
+import org.json.JSONException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.techolution.mauritius.smartwater.domain.MeterConnection;
+import com.techolution.mauritius.smartwater.domain.TotalConsolidatedConsumption;
+import com.techolution.mauritius.smartwater.repository.ConnectionDetailsRepository;
+
+@Component
+public class ConsolidatedDataService {
+	private Log log = LogFactory.getLog(ConsolidatedDataService.class);
+	
+	private static final String INFLUX_ENDPOINT="http://localhost:32768/query?db=mauritius_smartwater&q="; 
+	
+	@Autowired
+	private ConnectionDetailsRepository connectionDetailsRepository;
+	
+	
+	
+	public List<MeterConnection> getAllConnections(){
+		
+		log.info("Entering ConsolidatedDataService.getAllConnections ");
+		List returnList= (List)connectionDetailsRepository.findAll();
+		log.info("Exiting ConsolidatedDataService.getAllConnections ");
+		if(returnList == null) {
+			log.debug("returnList size is null");
+		}else{
+			log.debug("List size is:"+returnList.size());	
+		}
+		
+		return returnList;
+	}
+	
+	public TotalConsolidatedConsumption getConsumptionForThisMonth() throws ClientProtocolException, IOException, JSONException{
+		
+		
+		Calendar calendar=Calendar.getInstance();
+		calendar.set(Calendar.DAY_OF_MONTH, 1);
+		
+		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String reformattedStr = null;
+		reformattedStr = myFormat.format(calendar.getTime());
+		
+		Calendar calendarlastmonth=Calendar.getInstance();
+		calendarlastmonth.set(Calendar.DAY_OF_MONTH, 1);
+		calendarlastmonth.add(Calendar.MONTH, -1);
+		String reformattedStrlastmonth = myFormat.format(calendarlastmonth.getTime());
+		
+		//String query=INFLUX_ENDPOINT+"select sum(value) from flow where time >='"+reformattedStr+"'";
+		String query="select sum(value) from flow where time >='"+reformattedStr+"'";
+		
+		String query_previousbucket="select sum(value) from flow where time >='"+reformattedStrlastmonth+"' and time < '"+reformattedStr+"'" ;
+		
+		
+		
+		InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
+		String dbName = "mauritius_smartwater";
+		QueryResult queryResult = influxDB.query(new Query(query, dbName));
+		Double consumption = getConsumption(queryResult);
+		QueryResult queryResultPreviousBucket = influxDB.query(new Query(query_previousbucket, dbName));
+		Double previousconsumption = getConsumption(queryResult);
+		log.debug("consumption:"+consumption);
+		
+		//TotalConsolidatedConsumption consolidatedConsumption=new TotalConsolidatedConsumption(Long.valueOf(consumption).longValue(), 100.00, 0.00, 0.00);
+		TotalConsolidatedConsumption consolidatedConsumption=new TotalConsolidatedConsumption(consumption, 100.00, 0.00, 0.00);
+		return consolidatedConsumption;
+		
+	}
+
+	private Double getConsumption(QueryResult queryResult) {
+		List<Result> results=queryResult.getResults();
+		Result valueobj=results.get(0);
+		List<List<Object>> values=valueobj.getSeries().get(0).getValues();
+//		String consumption=(String)(values.get(0).get(1));
+		Double consumption=(Double)(values.get(0).get(1));
+		return consumption;
+	}
+	
+	
+	
+}

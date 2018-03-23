@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<typeInfoHistroy>
+<typeInfo handle="=mapdataservice/src\/main\/java&lt;com.techolution.mauritius.smartwater.domain{MeterConnection.java[MeterConnection" modifiers="1" timestamp="1520858192990"/>
+<typeInfo handle="=consolidateddetails/C:\/Program Files\/Java\/jdk1.8.0_121\/jre\/lib\/rt.jar&lt;java.io(Serializable.class[Serializable" modifiers="1537" timestamp="1485242307596"/>
+<typeInfo handle="=DataSimulator/src&lt;com.techolution.mauritius.data.simulator.service{IStubData.java[IStubData" modifiers="513" timestamp="1521545535030"/>
+<typeInfo handle="=connectionstatistics/C:\/Users\/Lenovo\/.m2\/repository\/com\/vaadin\/external\/google\/android-json\/0.0.20131108.vaadin1\/android-json-0.0.20131108.vaadin1.jar&lt;org.json(JSONObject.class[JSONObject" modifiers="33" timestamp="1491209172835"/>
+<typeInfo handle="=DataSimulator/C:\/Program Files\/Java\/jdk1.8.0_121\/jre\/lib\/rt.jar&lt;java.time.format(DateTimeFormatter.class[DateTimeFormatter" modifiers="49" timestamp="1485242307596"/>
+</typeInfoHistroy>

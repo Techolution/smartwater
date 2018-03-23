@@ -1,0 +1,7 @@
+package com.techolution.mauritius.smartwater.connection.domain;
+
+import java.io.Serializable;
+
+public class Telemetry implements Serializable {
+
+}

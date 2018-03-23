@@ -1,0 +1,5 @@
+package com.techolution.mauritius.data.simulator.service;
+
+public interface IStubData {
+
+}

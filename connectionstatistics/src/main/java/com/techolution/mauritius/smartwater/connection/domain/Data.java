@@ -21,21 +21,23 @@ public class Data implements Serializable {
 	public void setSensor_locationname(String sensor_locationname) {
 		this.sensor_locationname = sensor_locationname;
 	}
-	public Date getEndtime() {
-		return endtime;
+	
+	public String getName() {
+		return name;
 	}
-	public void setEndtime(Date endtime) {
-		this.endtime = endtime;
+	public void setName(String name) {
+		this.name = name;
 	}
-	public double getWdata() {
-		return wdata;
+	public double getValue() {
+		return value;
 	}
-	public void setWdata(double wdata) {
-		this.wdata = wdata;
+	public void setValue(double value) {
+		this.value = value;
 	}
+
 	private int devid;
 	private String sensor_locationname;
-	private Date endtime;
-	private double wdata;
+	private String name;
+	private double value;
 
 }

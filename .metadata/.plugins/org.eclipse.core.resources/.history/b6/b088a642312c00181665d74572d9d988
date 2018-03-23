@@ -1,0 +1,14 @@
+package com.techolution.mauritus.data.simulator;
+
+public class PopulateData {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		String kpi=args[0];
+		String meterid=args[1];
+		String starttime=args[2];
+		String endtime=args[3];
+	}
+
+}

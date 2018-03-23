@@ -1,0 +1,19 @@
+package com.techolution.mauritius.smartwater.connection.domain;
+
+import java.io.Serializable;
+import java.util.List;
+
+public class WaterConsumptionResponseData implements Serializable {
+	
+	private String name;
+	public List<Data> getData() {
+		return data;
+	}
+
+	public void setData(List<Data> data) {
+		this.data = data;
+	}
+
+	private List<Data> data;
+
+}

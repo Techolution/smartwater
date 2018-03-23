@@ -1,0 +1,11 @@
+1520847722126	Rename compilation unit 'Connection.java'
+1520855273664	Delete element
+1520928059674	Copy compilation unit
+1520928179146	Rename field 'totalConsumption'
+1520928193647	Rename field 'normalPercentage'
+1520928406151	Rename field 'percentageOfDevicesNotWorkingPreviousBucket'
+1520929071481	Rename field 'trend'
+1520929452587	Extract method 'getConsumption'
+1520942625152	Copy file
+1521112727216	Copy file
+1521112947124	Copy packages
