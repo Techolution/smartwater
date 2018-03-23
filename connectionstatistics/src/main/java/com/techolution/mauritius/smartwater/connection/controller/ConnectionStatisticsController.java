@@ -10,15 +10,21 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.techolution.mauritius.smartwater.connection.domain.BatteryConsumptionResponseData;
+import com.techolution.mauritius.smartwater.connection.domain.ConnectionKpiData;
 import com.techolution.mauritius.smartwater.connection.domain.Data;
+import com.techolution.mauritius.smartwater.connection.domain.Dfj;
 import com.techolution.mauritius.smartwater.connection.domain.RequestData;
+import com.techolution.mauritius.smartwater.connection.domain.ResponseData;
+import com.techolution.mauritius.smartwater.connection.domain.Telemetry;
 import com.techolution.mauritius.smartwater.connection.service.ConnectionStatisticsService;
 
 @CrossOrigin(origins = {"*"})
@@ -142,6 +148,20 @@ public class ConnectionStatisticsController {
 		
 		log.info("Exiting ConnectionStatisticsController.getConsumptionDetails ");
 		return waterconumptionData;
+	}
+	
+	@RequestMapping(method=RequestMethod.GET,value="/daily/data/{meter_id}")
+	public @ResponseBody ConnectionKpiData getDataForDay(@PathVariable int meter_id) throws ParseException, JSONException
+	
+	{
+		log.info("Entering ConnectDataController.getDataForDay");
+		
+		
+		ConnectionKpiData data=connectionStatisticsService.getAllMetricsForConnectionForDay(meter_id);
+		log.info("Exiting ConnectDataController.getDataForDay");
+		
+		return data;
+		
 	}
 
 }

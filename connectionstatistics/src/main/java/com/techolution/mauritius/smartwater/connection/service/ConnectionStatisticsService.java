@@ -2,10 +2,8 @@ package com.techolution.mauritius.smartwater.connection.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -25,7 +23,9 @@ import org.influxdb.dto.QueryResult.Series;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import com.techolution.mauritius.smartwater.connection.domain.ConnectionKpiData;
 import com.techolution.mauritius.smartwater.connection.domain.Data;
+import com.techolution.mauritius.smartwater.connection.domain.Kpi;
 import com.techolution.mauritius.smartwater.connection.domain.RequestData;
 import com.techolution.mauritius.smartwater.connection.domain.Telemetry;
 
@@ -385,6 +385,114 @@ public class ConnectionStatisticsService {
 		log.info("Exiting ConnectionStatisticsService.insertFlowrate");
 		
 	}
+ 
+ /**
+  * This methods gets data for specific meter for the day
+  * @param meterId
+  * @return
+  * @throws ParseException
+  */
+ 
+    public ConnectionKpiData getAllMetricsForConnectionForDay(int meterId) throws ParseException{
+    	
+    	
+    	log.info("Entering ConnectionStatisticsService.getAllMetricsForConnectionForDay");
+    	SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+    	
+    	Calendar dayStart=Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+    	dayStart.set(Calendar.HOUR_OF_DAY, 0);
+    	dayStart.set(Calendar.MINUTE, 0);
+    	dayStart.set(Calendar.SECOND, 0);
+    	
+    	
+    	Calendar dayend=Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+    	dayend.set(Calendar.HOUR_OF_DAY, 0);
+    	dayend.set(Calendar.MINUTE, 59);
+    	dayend.set(Calendar.SECOND, 59);
+    	dayend.add(Calendar.DATE,1);
+    	
+    	RequestData requestData=new RequestData();
+    	requestData.setHouse_ID(meterId);
+    	
+    	requestData.setStart_Time(myFormat.format(dayStart.getTime()));
+    	requestData.setEnd_Time(myFormat.format(dayend.getTime()));
+    	requestData.setSample_Distance_value(1);
+    	requestData.setSample_Distance("Day");
+    	List<Data> batteryData=geBatterytData(requestData);
+    	
+    	Double batterylevel = new Double(2000);
+    	if(batteryData != null && batteryData.size()>0){
+    		batterylevel=batteryData.get(0).getValue();	
+    	}
+    	List<Data> consumptionData=getData(requestData);
+    	Double consumption = new Double(0);
+    	if(consumptionData != null && consumptionData.size()>0){
+    		consumption=(consumptionData.get(0).getValue());	
+    	}
+    	
+    	int status=getCurrentDeviceStatus(meterId);
+    	
+    	Kpi consumptionkpi= new Kpi("Consumption",consumption);
+    	Kpi batterykpi= new Kpi("Battery",batterylevel);
+    	String deviceStatus="INACTIVE";
+    	if(status == 0){
+    		deviceStatus="NOTWORKING";
+    	}else if(status == 1){
+    		deviceStatus="WORKING";
+    	}
+    	Kpi statuskpi=new Kpi("Status",deviceStatus);
+    	
+    	List<Kpi> kpiList=new ArrayList<Kpi>();
+    	kpiList.add(consumptionkpi);
+    	kpiList.add(batterykpi);
+    	kpiList.add(statuskpi);
+    	
+    	ConnectionKpiData data=new ConnectionKpiData(meterId, kpiList);
+    	
+    	
+    	log.info("Exiting ConnectionStatisticsService.getAllMetricsForConnectionForDay");
+    	return data;
+    	
+    }
+    
+    public int getCurrentDeviceStatus(int meterId){
+    	log.info("Entering ConnectionStatisticsService.getCurrentDeviceStatus");
+    	
+    		
+    	String query = "select last(value)  from devicestatus where  meter_id='"+meterId+"'";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
+		log.debug("Query is:"+query);
+		
+		
+		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32770", "root", "root");
+		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
+		String dbName = "mauritius_smartwater";
+		QueryResult queryResult = influxDB.query(new Query(query, dbName));
+    	log.info("Entering ConnectionStatisticsService.getCurrentDeviceStatus");
+    	
+    	List<Result> resultList=queryResult.getResults();
+    	
+    	int returnval=-1;
+    	
+    	if(resultList != null && resultList.size()>0){
+    		Result result=resultList.get(0);
+    		
+    		List<Series> serieslist=result.getSeries();
+    		if(serieslist != null && serieslist.size()>0){
+    			Series series=serieslist.get(0);
+    			
+    			List<List<Object>> resultrow=series.getValues();
+    			if(resultrow != null && resultrow.size()>0){
+    				List<Object> row=resultrow.get(0);
+    				returnval=((Double)row.get(1)).intValue();
+    			}
+    					
+    		}
+    	}
+    	return returnval;
+    	
+    	
+    	
+    }
 
 
 }

@@ -38,7 +38,7 @@ public class ConnectDataController {
 	 * @throws JSONException
 	 */
 	@PostMapping("/telemetry/data/{meter_id}")
-	public @ResponseBody ResponseData getConsumptionDetails(@RequestBody Telemetry telemetry,@PathVariable int meter_id) throws ParseException, JSONException
+	public @ResponseBody ResponseData insertTelemetryData(@RequestBody Telemetry telemetry,@PathVariable int meter_id) throws ParseException, JSONException
 	
 	{
 		log.info("Entering ConnectDataController.getConsumptionDetails");
