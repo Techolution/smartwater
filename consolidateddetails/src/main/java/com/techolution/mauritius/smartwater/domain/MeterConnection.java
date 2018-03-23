@@ -93,5 +93,21 @@ public class MeterConnection implements Serializable {
 	private double device_latitude;
 	private double device_longitude;
 	private long current_usage;
+	
+	private long currentbatteryhealth;
+	
+	private String currentstatus;
+	public long getCurrentbatteryhealth() {
+		return currentbatteryhealth;
+	}
+	public void setCurrentbatteryhealth(long currentbatteryhealth) {
+		this.currentbatteryhealth = currentbatteryhealth;
+	}
+	public String getCurrentstatus() {
+		return currentstatus;
+	}
+	public void setCurrentstatus(String currentstatus) {
+		this.currentstatus = currentstatus;
+	}
 
 }

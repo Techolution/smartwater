@@ -3,7 +3,9 @@ package com.techolution.mauritius.smartwater.service;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,6 +33,11 @@ public class ConsolidatedDataService {
 	private static String INFLUX_USERNAME="root";
 	private static String INFLUX_PWD="root"; 
 	
+	private static String dbName = "mauritius_smartwater";
+	private static String TAG_METER_ID = "meter_id";
+	private static String WORKING = "WORKING";
+	private static String NOT_WORKING = "NOTWORKING";
+	
 	@Autowired
 	private ConnectionDetailsRepository connectionDetailsRepository;
 	
@@ -39,15 +46,25 @@ public class ConsolidatedDataService {
 	public List<MeterConnection> getAllConnections(){
 		
 		log.info("Entering ConsolidatedDataService.getAllConnections ");
-		List<MeterConnection> returnList= (List)connectionDetailsRepository.findAll();
+		List<MeterConnection> returnList= (List<MeterConnection>)connectionDetailsRepository.findAll();
 		log.info("Exiting ConsolidatedDataService.getAllConnections ");
 		if(returnList == null) {
 			log.debug("returnList size is null");
 		}else{
 			log.debug("List size is:"+returnList.size());	
 		}
-		
+		try {
+			Map<String,String> currentStatusList=getLatestDeviceStatusForAllDevices();
+			if (currentStatusList !=null){
+				returnList.parallelStream().forEach(meterconnection -> meterconnection.setCurrentstatus(currentStatusList.getOrDefault(Long.toString(meterconnection.getHouse_id())
+						,WORKING))
+							);
 				
+				}
+		} catch (IOException | JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		return returnList;
 	}
@@ -76,7 +93,7 @@ public class ConsolidatedDataService {
 		
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
 		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
-		String dbName = "mauritius_smartwater";
+		
 		QueryResult queryResult = influxDB.query(new Query(query, dbName));
 		Double consumption = getConsumption(queryResult);
 		QueryResult queryResultPreviousBucket = influxDB.query(new Query(query_previousbucket, dbName));
@@ -113,7 +130,7 @@ public TotalConsolidatedConsumption getConsumptionForToday() throws ClientProtoc
 		
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
 		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
-		String dbName = "mauritius_smartwater";
+		
 		QueryResult queryResult = influxDB.query(new Query(query, dbName));
 		Double consumption = getConsumption(queryResult);
 		QueryResult queryResultPreviousBucket = influxDB.query(new Query(query_previousbucket, dbName));
@@ -153,7 +170,7 @@ public TotalConsolidatedConsumption getConsumptionForToday() throws ClientProtoc
 		
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
 		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
-		String dbName = "mauritius_smartwater";
+		
 		QueryResult queryResult = influxDB.query(new Query(query, dbName));
 		List<Result> results=queryResult.getResults();
 		
@@ -208,7 +225,7 @@ public TotalConsolidatedConsumption getConsumptionForToday() throws ClientProtoc
 	}
 
 	
- public TotalConsolidatedDeviceStatus getDeviceStatusForToday() throws ClientProtocolException, IOException, JSONException{
+  public TotalConsolidatedDeviceStatus getDeviceStatusForToday() throws ClientProtocolException, IOException, JSONException{
 		
 		
 		Calendar calendar=Calendar.getInstance();
@@ -231,7 +248,7 @@ public TotalConsolidatedConsumption getConsumptionForToday() throws ClientProtoc
 		
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
 		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
-		String dbName = "mauritius_smartwater";
+		
 		QueryResult queryResult = influxDB.query(new Query(query, dbName));
 		List<Result> results=queryResult.getResults();
 		
@@ -296,6 +313,59 @@ public TotalConsolidatedConsumption getConsumptionForToday() throws ClientProtoc
 		}else{
 			return new Double(0.0);
 		}
+		
+	}
+	
+  private Map<String,String> getLatestDeviceStatusForAllDevices() throws ClientProtocolException, IOException, JSONException{
+		
+		
+		Calendar calendar=Calendar.getInstance();
+		
+		
+		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String reformattedStr = null;
+		reformattedStr = myFormat.format(calendar.getTime());
+		
+		Calendar calendarlastmonth=Calendar.getInstance();
+		calendarlastmonth.add(Calendar.DAY_OF_MONTH, -1);
+		String reformattedStrlastmonth = myFormat.format(calendarlastmonth.getTime());
+		
+		//String query=INFLUX_ENDPOINT+"select sum(value) from flow where time >='"+reformattedStr+"'";
+		String query="select last(value) from devicestatus  group by meter_id";
+		
+		
+		
+		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
+		
+		QueryResult queryResult = influxDB.query(new Query(query, dbName));
+		List<Result> results=queryResult.getResults();
+		Map<String,String> statusMap=new HashMap<String,String>();
+		
+		
+		for(Result result:results){
+			
+			List<Series> seriesvalues=result.getSeries();
+			if(seriesvalues == null)
+				break;
+			else
+		
+			for(Series series:seriesvalues){
+				List<List<Object>> values=series.getValues();
+				String meterId=series.getTags().get(TAG_METER_ID);
+				Double value=(Double)(values.get(0).get(1));
+				if(0 == value){
+				statusMap.put(meterId,NOT_WORKING);
+				}else{
+					statusMap.put(meterId,WORKING);
+				}
+		
+			}
+		}
+		
+		
+		
+		
+		return statusMap;
 		
 	}
 	
