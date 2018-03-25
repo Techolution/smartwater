@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="getConsumptionForTodayForMeter" key="selection"/>
+		<item value="" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="getConsumptionForTodayForMeter"/>
+			<item value="/1000"/>
+			<item value="startTime"/>
+			<item value="dbName"/>
+			<item value="Name"/>
+			<item value="String dbName"/>
 			<item value="getConsumption"/>
+			<item value="getConsumptionForTodayForMeter"/>
 			<item value="INFLUX_CONNECTION_STRING"/>
-			<item value="`"/>
-			<item value="InfluxDBFactory.connect"/>
-			<item value="mauri"/>
-			<item value="commo"/>
-			<item value="myFormat"/>
 		</list>
 		<list key="replacehistory">
 			<item value="int"/>

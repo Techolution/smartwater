@@ -2,6 +2,7 @@ package com.techolution.mauritius.smartwater.connection.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -371,8 +372,18 @@ public class ConnectionStatisticsService {
 				.build();
 		
 		
+		
 		if(telemetry.getFlow()!=null){
 			insertFlow(telemetry,influxDB,batchPoints);
+			
+			if(telemetry.getReading() == null){
+				SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				
+				long meterReading=getLastMeterReading(myFormat.format(telemetry.getDate()), telemetry.getMeter_id());
+				log.debug("last flow value:"+meterReading);
+				long newmeterreading=meterReading+telemetry.getFlow();
+				telemetry.setReading(newmeterreading);
+			}
 		}else{
 			log.info("No flow data. Not inserting");
 		}
@@ -479,7 +490,7 @@ public class ConnectionStatisticsService {
 	
  private void insertMeterReading(Telemetry telemetry,BatchPoints  batchPoints){
 		
-		log.info("Entering ConnectionStatisticsService.insertFlowrate");
+		log.info("Entering ConnectionStatisticsService.insertMeterReading");
 	
 		/*influxDB.write(Point.measurement("flowrate")
 				.time(telemetry.getDate().getTime(), TimeUnit.MILLISECONDS)
@@ -495,7 +506,7 @@ public class ConnectionStatisticsService {
 		batchPoints.point(point1);
 		log.debug("Inserted meterreading into db");
 		
-		log.info("Exiting ConnectionStatisticsService.insertFlowrate");
+		log.info("Exiting ConnectionStatisticsService.insertMeterReading");
 		
 	}
  
@@ -622,5 +633,37 @@ public class ConnectionStatisticsService {
     	return returnVal;
     }
 
+    private long getLastMeterReading(String startTime,int meterId){
+    	
+    	
+    	long baseReadingValue =0;
+    	
+    	String query = "select last(value)  from meterreading where time <='"+startTime+"' and meter_id="+meterId+"";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
+		log.info("Query is:"+query);
+		
+		
+		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
+		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
+		String dbName = "mauritius_smartwater";
+		QueryResult queryResult = influxDB.query(new Query(query, dbName));
+		
+		List<Result> results=queryResult.getResults();
+		if(results != null && results.size()>0){
+			Result result  = results.get(0);
+			
+			List<Series> serieslist=result.getSeries();
+			if(serieslist !=null && serieslist.size()>0){
+				Series series=serieslist.get(0);
+				List<List<Object>> objects=series.getValues();
+				List<Object> resultvals=objects.get(0);
+				Double double1=(Double)resultvals.get(1);
+				baseReadingValue=double1.longValue();
+			}
+				
+			
+		}
+		return baseReadingValue;
+    	
+    }
 
 }
