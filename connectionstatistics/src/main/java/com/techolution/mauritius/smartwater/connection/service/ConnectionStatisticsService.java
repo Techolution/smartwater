@@ -28,6 +28,7 @@ import com.techolution.mauritius.smartwater.connection.domain.Data;
 import com.techolution.mauritius.smartwater.connection.domain.Kpi;
 import com.techolution.mauritius.smartwater.connection.domain.RequestData;
 import com.techolution.mauritius.smartwater.connection.domain.Telemetry;
+import com.techolution.mauritius.smartwater.connection.domain.TelemetryRequestData;
 
 
 @Component
@@ -38,6 +39,14 @@ public class ConnectionStatisticsService {
 	private static String INFLUX_CONNECTION_STRING="http://52.170.92.62:8086";
 	private static String INFLUX_USERNAME="root";
 	private static String INFLUX_PWD="root";
+	
+	private static String dbName = "mauritius_smartwater";
+	/**
+	 * 
+	 * @param data
+	 * @return
+	 * @throws ParseException
+	 */
 	
 	public List<Data> getData(RequestData data) throws ParseException{
 		
@@ -87,7 +96,7 @@ public class ConnectionStatisticsService {
 		
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32770", "root", "root");
 		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
-		String dbName = "mauritius_smartwater";
+		
 		QueryResult queryResult = influxDB.query(new Query(query, dbName));
 		String locationName= "TEST";
 		
@@ -133,6 +142,7 @@ public class ConnectionStatisticsService {
 	
   public List<Data> geBatterytData(RequestData data) throws ParseException{
 		
+	  log.debug("Entering ConnectionStatisticsService.geBatterytData");
 		
 	//	SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 		
@@ -179,7 +189,7 @@ public class ConnectionStatisticsService {
 		
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32770", "root", "root");
 		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
-		String dbName = "mauritius_smartwater";
+		
 		QueryResult queryResult = influxDB.query(new Query(query, dbName));
 		String locationName= "TEST";
 		
@@ -223,8 +233,111 @@ public class ConnectionStatisticsService {
 			
 		}
 		influxDB.close();
+		log.debug("Exiting ConnectionStatisticsService.geBatterytData");
 		return retlist;
 	}
+  
+  
+  /**
+   * 
+   * @param data
+   * @return
+   * @throws ParseException
+   */
+  public List<Data> geInstanceTelemetrytData(TelemetryRequestData data) throws ParseException{
+		
+	  log.debug("Entering ConnectionStatisticsService.geInstanceTelemetrytData");
+		
+			
+			int distanceValue=data.getSampleDistanceValue();
+			//int distanceValue=30;
+			String disVal=String.valueOf(distanceValue);
+			
+			String code="d";
+			String groupVal=null;
+			log.debug("Sample Distance:"+data.getSampleDistance());
+			log.debug("distanceValue:"+distanceValue);
+			boolean giveTimeStamp=false;
+			//String groupVal="1d";
+			if(data.getSampleDistance().equalsIgnoreCase("Day")){
+				code="d";
+				groupVal=disVal+code;
+			}
+			else if(data.getSampleDistance().equalsIgnoreCase("Hour")){
+				code="h";
+				groupVal=disVal+code;
+				giveTimeStamp=true;
+			}else if(data.getSampleDistance().equalsIgnoreCase("Month")){
+				int monthgroupval=distanceValue*30;
+				groupVal=String.valueOf(monthgroupval)+"d";
+				
+			}else{
+				code="d";
+				groupVal=disVal+code;
+			}
+			
+			
+			int deviceId=data.getHouseId();
+			String seriesname=getSeriesForMetrics(data.getMetrics());
+			
+			
+			
+			//int deviceId=123;
+			String query = "select last(value)  from "+ seriesname+" where time >='"+data.getStartTime()+"' and time<='"+data.getEndTime()+"' and meter_id="+deviceId+" group by time("+groupVal+")";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
+			if(data.getDefaultValueForMissingData()!=null){
+				query = query+"fill("+data.getDefaultValueForMissingData()+")";
+			}
+			log.debug("Query is:"+query);
+			
+			
+			//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32770", "root", "root");
+			InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
+			
+			QueryResult queryResult = influxDB.query(new Query(query, dbName));
+			String locationName= "TEST";
+			
+			List<Result> resultlist=queryResult.getResults();
+
+			List<Data> retlist=new ArrayList<Data>();
+			Data resultData=null;
+			
+		//	Instant  instant=null;
+			for(Result result:resultlist){
+				List<Series> serieslist=result.getSeries();
+				if(serieslist == null){
+					break;
+				}
+				for(Series series:serieslist){
+					List<List<Object>> valuelist=series.getValues();
+					for(List<Object> results:valuelist){
+						String endTimeReturned=(String)results.get(0);
+						
+						if(results.get(1)!=null){
+							
+					
+						resultData=new Data();
+						resultData.setDevid(deviceId);
+						if(giveTimeStamp){
+							resultData.setName(endTimeReturned);
+						}else{
+							resultData.setName(endTimeReturned.split("T")[0]);	
+						}
+							
+						
+						resultData.setValue(((Double)results.get(1)).doubleValue());
+						resultData.setSensor_locationname(locationName);
+						retlist.add(resultData);
+						}
+					}
+					
+					
+				}
+				
+			}
+			influxDB.close();
+			log.debug("Entering ConnectionStatisticsService.geInstanceTelemetrytData");
+			return retlist;
+		}
 	
 	/**
 	 * 
@@ -243,7 +356,7 @@ public class ConnectionStatisticsService {
 		}
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32770", "root", "root");
 		InfluxDB influxDB =InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
-		String dbName = "mauritius_smartwater";
+		
 		influxDB.setDatabase(dbName);
 		influxDB.enableBatch(BatchOptions.DEFAULTS);
 		String rpName = "aRetentionPolicy";
@@ -434,9 +547,9 @@ public class ConnectionStatisticsService {
     	
     	Kpi consumptionkpi= new Kpi("Consumption",consumption);
     	Kpi batterykpi= new Kpi("Battery",batterylevel);
-    	String deviceStatus="INACTIVE";
+    	String deviceStatus="IN ACTIVE";
     	if(status == 0){
-    		deviceStatus="NOTWORKING";
+    		deviceStatus="NOT WORKING";
     	}else if(status == 1){
     		deviceStatus="WORKING";
     	}
@@ -465,7 +578,7 @@ public class ConnectionStatisticsService {
 		
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32770", "root", "root");
 		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
-		String dbName = "mauritius_smartwater";
+		
 		QueryResult queryResult = influxDB.query(new Query(query, dbName));
     	log.info("Entering ConnectionStatisticsService.getCurrentDeviceStatus");
     	
@@ -492,6 +605,21 @@ public class ConnectionStatisticsService {
     	
     	
     	
+    }
+    
+    /**
+     * 
+     * @param metrics
+     * @return
+     */
+    private String getSeriesForMetrics(String metrics){
+    	//TODO CHange this to take from DB or file
+    	String returnVal=null;
+    	
+    	if("readings".equalsIgnoreCase(metrics)){
+    		returnVal="meterreading";
+    	}
+    	return returnVal;
     }
 
 

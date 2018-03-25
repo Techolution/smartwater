@@ -22,7 +22,7 @@ public class Data implements Serializable {
 		this.sensor_locationname = sensor_locationname;
 	}
 	
-	public String getName() {
+	public Object getName() {
 		return name;
 	}
 	public void setName(String name) {
@@ -37,7 +37,7 @@ public class Data implements Serializable {
 
 	private int devid;
 	private String sensor_locationname;
-	private String name;
+	private Object name;
 	private double value;
 
 }

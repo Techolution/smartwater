@@ -36,7 +36,7 @@ public class ConsolidatedDataService {
 	private static String dbName = "mauritius_smartwater";
 	private static String TAG_METER_ID = "meter_id";
 	private static String WORKING = "WORKING";
-	private static String NOT_WORKING = "NOTWORKING";
+	private static String NOT_WORKING = "NOT WORKING";
 	
 	@Autowired
 	private ConnectionDetailsRepository connectionDetailsRepository;
