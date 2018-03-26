@@ -72,8 +72,8 @@ public class FlowDataSimiulator implements IStubData {
 			}
 		}
 		
-		String query = "select last(value)  from meterreadingvalues where time <='"+startTime+"' and meter_id'="+meterId+"'";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
-		log.fine("Query is:"+query);
+		String query = "select last(value)  from meterreadingvalues where time <='"+startTime+"' and meter_id='"+meterId+"'";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
+		System.out.println("Query is:"+query);
 		
 		
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");

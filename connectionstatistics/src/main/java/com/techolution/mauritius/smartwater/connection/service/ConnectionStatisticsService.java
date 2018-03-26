@@ -285,7 +285,7 @@ public class ConnectionStatisticsService {
 			
 			
 			//int deviceId=123;
-			String query = "select last(value)  from "+ seriesname+" where time >='"+data.getStartTime()+"' and time<='"+data.getEndTime()+"' and meter_id="+deviceId+" group by time("+groupVal+")";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
+			String query = "select last(value)  from "+ seriesname+" where time >='"+data.getStartTime()+"' and time<='"+data.getEndTime()+"' and meter_id='"+deviceId+"' group by time("+groupVal+")";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
 			if(data.getDefaultValueForMissingData()!=null){
 				query = query+"fill("+data.getDefaultValueForMissingData()+")";
 			}
@@ -639,7 +639,7 @@ public class ConnectionStatisticsService {
     	String returnVal=null;
     	
     	if("readings".equalsIgnoreCase(metrics)){
-    		returnVal="meterreading";
+    		returnVal="meterreadingvalues";
     	}
     	return returnVal;
     }
