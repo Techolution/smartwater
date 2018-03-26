@@ -509,7 +509,7 @@ public class ConnectionStatisticsService {
 		Map<String,String> tagMap=new HashMap<String,String>();
 		tagMap.put("meter_id",Integer.toString( telemetry.getMeter_id()));
 		Point point1 = Point.measurement("meterreadingvalues")
-				.time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+				.time(telemetry.getDate().getTime(), TimeUnit.MILLISECONDS)
 				.tag(tagMap)
 				//.addField("meter_id", telemetry.getMeter_id())
 				.addField("value", telemetry.getReading())
