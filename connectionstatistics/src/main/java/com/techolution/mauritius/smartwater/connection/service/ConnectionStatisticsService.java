@@ -2,10 +2,11 @@ package com.techolution.mauritius.smartwater.connection.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -184,7 +185,7 @@ public class ConnectionStatisticsService {
 		
 		int deviceId=data.getHouse_ID();
 		//int deviceId=123;
-		String query = "select last(value)  from batterylevel where time >='"+startTime+"' and time<='"+endTime+"' and meter_id="+deviceId+" group by time("+groupVal+")";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
+		String query = "select last(value)  from batterylevelvalues where time >='"+startTime+"' and time<='"+endTime+"' and meter_id='"+deviceId+"' group by time("+groupVal+")";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
 		log.debug("Query is:"+query);
 		
 		
@@ -361,8 +362,8 @@ public class ConnectionStatisticsService {
 		influxDB.setDatabase(dbName);
 		influxDB.enableBatch(BatchOptions.DEFAULTS);
 		String rpName = "aRetentionPolicy";
-		influxDB.createRetentionPolicy(rpName, dbName, "365d", "30m", 2, true);
-
+	//	influxDB.createRetentionPolicy(rpName, dbName, "365d", "30m", 2, true);
+		influxDB.setRetentionPolicy("aRetentionPolicy");
 		
 		BatchPoints batchPoints = BatchPoints
 				.database(dbName)
@@ -451,10 +452,12 @@ public class ConnectionStatisticsService {
 				.addField("value", telemetry.getBattery())
 				.build());
 		*/
-		
-		Point point1 = Point.measurement("batterylevel")
+		Map<String,String> tagMap=new HashMap<String,String>();
+		tagMap.put("meter_id", Integer.toString(telemetry.getMeter_id()));
+		Point point1 = Point.measurement("batterylevelvalues")
 				.time(telemetry.getDate().getTime(), TimeUnit.MILLISECONDS)
-				.addField("meter_id", telemetry.getMeter_id())
+				//.addField("meter_id", telemetry.getMeter_id())
+				.tag(tagMap)
 				.addField("value", telemetry.getBattery())
 				.build();
 
