@@ -2,6 +2,7 @@ package com.techolution.mauritius.smartwater.map.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -100,14 +101,16 @@ public class MapDataService {
 			}
 			MeterConsumption meterconsumption=new MeterConsumption(meterConnection);
 			if(endDate!=null){
-				try {
+				//try {
 					log.debug("End date is:"+endDate);
-					Date date=myFormat.parse((endDate.split("Z"))[0]);
-					meterconsumption.setEndTime(date);
-				} catch (ParseException e) {
+					Instant instant=Instant.parse(endDate);
+				//	Date date=myFormat.parse((endDate.split("Z"))[0]);
+				//	meterconsumption.setEndTime(date);
+					meterconsumption.setEndTime(java.util.Date.from(instant));
+				/*} catch (ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
+				}*/
 			}
 			meterconsumption.setWdata(consumption);
 			resultList.add(meterconsumption);
