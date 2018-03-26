@@ -72,7 +72,7 @@ public class FlowDataSimiulator implements IStubData {
 			}
 		}
 		
-		String query = "select last(value)  from meterreading where time <='"+startTime+"' and meter_id="+meterId+"";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
+		String query = "select last(value)  from meterreadingvalues where time <='"+startTime+"' and meter_id'="+meterId+"'";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
 		log.fine("Query is:"+query);
 		
 		

@@ -85,9 +85,9 @@ public class ConsolidatedDataService {
 		String reformattedStrlastmonth = myFormat.format(calendarlastmonth.getTime());
 		
 		//String query=INFLUX_ENDPOINT+"select sum(value) from flow where time >='"+reformattedStr+"'";
-		String query="select sum(value) from flow where time >='"+reformattedStr+"'";
+		String query="select sum(value) from flowvalues where time >='"+reformattedStr+"'";
 		
-		String query_previousbucket="select sum(value) from flow where time >='"+reformattedStrlastmonth+"' and time < '"+reformattedStr+"'" ;
+		String query_previousbucket="select sum(value) from flowvalues where time >='"+reformattedStrlastmonth+"' and time < '"+reformattedStr+"'" ;
 		
 		
 		
@@ -122,9 +122,9 @@ public TotalConsolidatedConsumption getConsumptionForToday() throws ClientProtoc
 		String reformattedStrlastmonth = myFormat.format(calendarlastmonth.getTime());
 		
 		//String query=INFLUX_ENDPOINT+"select sum(value) from flow where time >='"+reformattedStr+"'";
-		String query="select sum(value) from flow where time >='"+reformattedStr+"'";
+		String query="select sum(value) from flowvalues where time >='"+reformattedStr+"'";
 		
-		String query_previousbucket="select sum(value) from flow where time >='"+reformattedStrlastmonth+"' and time < '"+reformattedStr+"'" ;
+		String query_previousbucket="select sum(value) from flowvalues where time >='"+reformattedStrlastmonth+"' and time < '"+reformattedStr+"'" ;
 		
 		
 		

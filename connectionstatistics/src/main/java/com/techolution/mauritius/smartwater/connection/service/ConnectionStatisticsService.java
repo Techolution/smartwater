@@ -92,7 +92,7 @@ public class ConnectionStatisticsService {
 		
 		int deviceId=data.getHouse_ID();
 		//int deviceId=123;
-		String query = "select sum(value)  from flow where time >='"+startTime+"' and time<='"+endTime+"' and meter_id="+deviceId+" group by time("+groupVal+") fill(0)";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
+		String query = "select sum(value)  from flowvalues where time >='"+startTime+"' and time<='"+endTime+"' and meter_id='"+deviceId+"' group by time("+groupVal+") fill(0)";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
 		log.debug("Query is:"+query);
 		
 		
@@ -428,10 +428,12 @@ public class ConnectionStatisticsService {
 				.addField("value", telemetry.getFlow())
 				.build());
 */
-		
-		Point point1 = Point.measurement("flow")
+		Map<String,String> tagMap=new HashMap<String,String>();
+		tagMap.put("meter_id", Integer.toString(telemetry.getMeter_id()));
+		Point point1 = Point.measurement("flowvalues")
 				.time(telemetry.getDate().getTime(), TimeUnit.MILLISECONDS)
-				.addField("meter_id", telemetry.getMeter_id())
+				.tag(tagMap)
+				//.addField("meter_id", telemetry.getMeter_id())
 				.addField("value", telemetry.getFlow())
 				.build();
 
@@ -479,9 +481,12 @@ public class ConnectionStatisticsService {
 				.addField("value", telemetry.getFlowrate())
 				.build());*/
 	
-		Point point1 = Point.measurement("flowrate")
+		Map<String,String> tagMap=new HashMap<String,String>();
+		tagMap.put("meter_id",Integer.toString( telemetry.getMeter_id()));
+		Point point1 = Point.measurement("flowratevalues")
 				.time(telemetry.getDate().getTime(), TimeUnit.MILLISECONDS)
-				.addField("meter_id", telemetry.getMeter_id())
+				.tag(tagMap)
+				//.addField("meter_id", telemetry.getMeter_id())
 				.addField("value", telemetry.getFlowrate())
 				.build();
 		batchPoints.point(point1);
@@ -501,9 +506,12 @@ public class ConnectionStatisticsService {
 				.addField("value", telemetry.getFlowrate())
 				.build());*/
 	
-		Point point1 = Point.measurement("meterreading")
+		Map<String,String> tagMap=new HashMap<String,String>();
+		tagMap.put("meter_id",Integer.toString( telemetry.getMeter_id()));
+		Point point1 = Point.measurement("meterreadingvalues")
 				.time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
-				.addField("meter_id", telemetry.getMeter_id())
+				.tag(tagMap)
+				//.addField("meter_id", telemetry.getMeter_id())
 				.addField("value", telemetry.getReading())
 				.build();
 		batchPoints.point(point1);
@@ -641,7 +649,7 @@ public class ConnectionStatisticsService {
     	
     	long baseReadingValue =0;
     	
-    	String query = "select last(value)  from meterreading where time <='"+startTime+"' and meter_id="+meterId+"";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
+    	String query = "select last(value)  from meterreadingvalues where time <='"+startTime+"' and meter_id'="+meterId+"'";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
 		log.info("Query is:"+query);
 		
 		
