@@ -177,6 +177,7 @@ public TotalConsolidatedConsumption getConsumptionForToday() throws ClientProtoc
 		int totalDevices=results.size();
 		int workingdevicescount =0;
 		int notworkingdevicescount = 0;
+		int inactiveDeviceCount=0;
 		
 		for(Result result:results){
 			
@@ -190,7 +191,9 @@ public TotalConsolidatedConsumption getConsumptionForToday() throws ClientProtoc
 				Double value=(Double)(values.get(0).get(1));
 				if(value.intValue() == 1){
 					workingdevicescount++;
-				}else{
+				}else if(value.intValue() == -1){
+					inactiveDeviceCount++;
+				}else {
 					notworkingdevicescount++;
 				}
 			}
@@ -219,7 +222,7 @@ public TotalConsolidatedConsumption getConsumptionForToday() throws ClientProtoc
 		
 		
 		//TotalConsolidatedConsumption consolidatedConsumption=new TotalConsolidatedConsumption(Long.valueOf(consumption).longValue(), 100.00, 0.00, 0.00);
-		TotalConsolidatedDeviceStatus consolidatedDeviceStatus=new TotalConsolidatedDeviceStatus(totalDevices, workingdevicescount,notworkingdevicescount, notworkingdevicescountpreviousbucket);
+		TotalConsolidatedDeviceStatus consolidatedDeviceStatus=new TotalConsolidatedDeviceStatus(totalDevices, workingdevicescount,notworkingdevicescount, notworkingdevicescountpreviousbucket,inactiveDeviceCount,0);
 		return consolidatedDeviceStatus;
 		
 	}
@@ -255,6 +258,8 @@ public TotalConsolidatedConsumption getConsumptionForToday() throws ClientProtoc
 		int totalDevices=results.size();
 		int workingdevicescount =0;
 		int notworkingdevicescount = 0;
+		int inactiveDevicesCount=0;
+		int warningDevicesCount=0;
 		
 		for(Result result:results){
 			
@@ -268,6 +273,8 @@ public TotalConsolidatedConsumption getConsumptionForToday() throws ClientProtoc
 				Double value=(Double)(values.get(0).get(1));
 				if(value.intValue() == 1){
 					workingdevicescount++;
+				}else if (value.intValue() == -1){
+					inactiveDevicesCount++;
 				}else{
 					notworkingdevicescount++;
 				}
@@ -297,7 +304,7 @@ public TotalConsolidatedConsumption getConsumptionForToday() throws ClientProtoc
 		
 		
 		//TotalConsolidatedConsumption consolidatedConsumption=new TotalConsolidatedConsumption(Long.valueOf(consumption).longValue(), 100.00, 0.00, 0.00);
-		TotalConsolidatedDeviceStatus consolidatedDeviceStatus=new TotalConsolidatedDeviceStatus(totalDevices, workingdevicescount,notworkingdevicescount, notworkingdevicescountpreviousbucket);
+		TotalConsolidatedDeviceStatus consolidatedDeviceStatus=new TotalConsolidatedDeviceStatus(totalDevices, workingdevicescount,notworkingdevicescount, notworkingdevicescountpreviousbucket,inactiveDevicesCount,warningDevicesCount);
 		return consolidatedDeviceStatus;
 		
 	}

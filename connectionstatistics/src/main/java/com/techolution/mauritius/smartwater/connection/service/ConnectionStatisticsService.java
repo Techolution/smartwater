@@ -98,8 +98,11 @@ public class ConnectionStatisticsService {
 		
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32770", "root", "root");
 		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
-		
+		long startStarttime=System.currentTimeMillis();
 		QueryResult queryResult = influxDB.query(new Query(query, dbName));
+		long endtime=System.currentTimeMillis();
+		log.debug("Time After getBattery query execution:"+endtime);
+		log.debug("Time Taken for query execution:"+(endtime-startStarttime));
 		String locationName= "TEST";
 		
 		List<Result> resultlist=queryResult.getResults();
@@ -191,8 +194,12 @@ public class ConnectionStatisticsService {
 		
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32770", "root", "root");
 		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
-		
+		long startStarttime=System.currentTimeMillis();
+		log.debug("Time before getBattery query execution:"+startStarttime);
 		QueryResult queryResult = influxDB.query(new Query(query, dbName));
+		long endtime=System.currentTimeMillis();
+		log.debug("Time After getBattery query execution:"+endtime);
+		log.debug("Time Taken for query execution:"+(endtime-startStarttime));
 		String locationName= "TEST";
 		
 		List<Result> resultlist=queryResult.getResults();
@@ -294,8 +301,11 @@ public class ConnectionStatisticsService {
 			
 			//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32770", "root", "root");
 			InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
-			
+			long startStarttime=System.currentTimeMillis();
 			QueryResult queryResult = influxDB.query(new Query(query, dbName));
+			long endtime=System.currentTimeMillis();
+			log.debug("Time After getBattery query execution:"+endtime);
+			log.debug("Time Taken for query execution:"+(endtime-startStarttime));
 			String locationName= "TEST";
 			
 			List<Result> resultlist=queryResult.getResults();
@@ -574,6 +584,8 @@ public class ConnectionStatisticsService {
     		deviceStatus="NOT WORKING";
     	}else if(status == 1){
     		deviceStatus="WORKING";
+    	}else if(status == -1){
+    		deviceStatus="IN ACTIVE";
     	}
     	Kpi statuskpi=new Kpi("Status",deviceStatus);
     	
@@ -600,10 +612,12 @@ public class ConnectionStatisticsService {
 		
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32770", "root", "root");
 		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
-		
+		long startStarttime=System.currentTimeMillis();
 		QueryResult queryResult = influxDB.query(new Query(query, dbName));
     	log.info("Entering ConnectionStatisticsService.getCurrentDeviceStatus");
-    	
+    	long endtime=System.currentTimeMillis();
+		log.debug("Time After getBattery query execution:"+endtime);
+		log.debug("Time Taken for query execution:"+(endtime-startStarttime));
     	List<Result> resultList=queryResult.getResults();
     	
     	int returnval=-1;
