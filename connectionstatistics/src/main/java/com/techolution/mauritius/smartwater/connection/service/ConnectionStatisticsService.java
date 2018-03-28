@@ -1,5 +1,6 @@
 package com.techolution.mauritius.smartwater.connection.service;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,6 +23,8 @@ import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
 import org.influxdb.dto.QueryResult.Result;
 import org.influxdb.dto.QueryResult.Series;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -190,7 +193,7 @@ public class ConnectionStatisticsService {
 		//int deviceId=123;
 		String query = "select last(value)  from batterylevelvalues where time >='"+startTime+"' and time<='"+endTime+"' and meter_id='"+deviceId+"' group by time("+groupVal+")";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
 		log.debug("Query is:"+query);
-		
+		String query2 = "\"select last(value)  from batterylevelvalues where time >='"+startTime+"' and time<='"+endTime+"' and meter_id='"+deviceId+"' group by time("+groupVal+")\"";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
 		
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32770", "root", "root");
 		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
@@ -200,6 +203,19 @@ public class ConnectionStatisticsService {
 		long endtime=System.currentTimeMillis();
 		log.debug("Time After getBattery query execution:"+endtime);
 		log.debug("Time Taken for query execution:"+(endtime-startStarttime));
+		
+		long jsonstarttime=System.currentTimeMillis();
+		/*try {
+			JSONObject responsejson=InfluxDBUtils.executeQuery(query2);
+			long jsonendtime=System.currentTimeMillis();
+			
+			System.out.println("JSON response is:"+responsejson.toString());
+			System.out.println("Timetake to execute as JSON is:"+(jsonendtime-jsonstarttime));
+		} catch (IOException | JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+		
 		String locationName= "TEST";
 		
 		List<Result> resultlist=queryResult.getResults();
@@ -663,7 +679,7 @@ public class ConnectionStatisticsService {
     	
     	long baseReadingValue =0;
     	
-    	String query = "select last(value)  from meterreadingvalues where time <='"+startTime+"' and meter_id'="+meterId+"'";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
+    	String query = "select last(value)  from meterreadingvalues where time <='"+startTime+"' and meter_id='"+meterId+"'";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
 		log.info("Query is:"+query);
 		
 		
