@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="javax.persistence.Entity"/>
-<fullyQualifiedTypeName name="org.springframework.stereotype.Repository"/>
-<fullyQualifiedTypeName name="org.apache.commons.logging.LogFactory"/>
-<fullyQualifiedTypeName name="org.apache.commons.logging.Log"/>
-<fullyQualifiedTypeName name="javax.persistence.Id"/>
 <fullyQualifiedTypeName name="javax.persistence.Table"/>
 <fullyQualifiedTypeName name="java.text.ParseException"/>
-<fullyQualifiedTypeName name="java.io.InputStream"/>
 <fullyQualifiedTypeName name="org.apache.http.util.EntityUtils"/>
 <fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.domain.TotalConsolidatedConsumption"/>
 <fullyQualifiedTypeName name="java.io.Serializable"/>
@@ -15,7 +9,6 @@
 <fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.connection.domain.Data"/>
 <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.PostMapping"/>
 <fullyQualifiedTypeName name="java.text.SimpleDateFormat"/>
-<fullyQualifiedTypeName name="org.springframework.web.bind.annotation.RequestBody"/>
 <fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.domain.RequestData"/>
 <fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.domain.Dfj"/>
 <fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.domain.ResponseData"/>
@@ -32,29 +25,39 @@
 <fullyQualifiedTypeName name="org.influxdb.InfluxDB"/>
 <fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.connection.domain.ResponseData"/>
 <fullyQualifiedTypeName name="org.influxdb.dto.Point"/>
-<fullyQualifiedTypeName name="java.util.Date"/>
 <fullyQualifiedTypeName name="java.util.logging.Logger"/>
 <fullyQualifiedTypeName name="org.influxdb.dto.Query"/>
 <fullyQualifiedTypeName name="org.influxdb.dto.QueryResult.Result"/>
 <fullyQualifiedTypeName name="java.lang.Double"/>
 <fullyQualifiedTypeName name="com.techolution.mauritus.data.Telemetry"/>
-<fullyQualifiedTypeName name="org.json.JSONObject"/>
 <fullyQualifiedTypeName name="java.lang.Thread"/>
 <fullyQualifiedTypeName name="com.techolution.mauritius.data.simulator.service.IStubData"/>
 <fullyQualifiedTypeName name="com.techolution.mauritius.data.simulator.service.FlowDataSimiulator"/>
-<fullyQualifiedTypeName name="java.lang.System"/>
 <fullyQualifiedTypeName name="com.techolution.mauritius.data.simulator.service.BatteryDataSimiulator"/>
 <fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.connection.domain.WaterConsumptionResponseData"/>
 <fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.connection.controller.ConnectDataController"/>
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
-<fullyQualifiedTypeName name="java.util.HashMap"/>
-<fullyQualifiedTypeName name="java.util.Map"/>
 <fullyQualifiedTypeName name="java.util.TimeZone"/>
 <fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.connection.domain.RequestData"/>
-<fullyQualifiedTypeName name="java.lang.Integer"/>
 <fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.connection.domain.Kpi"/>
 <fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.connection.domain.ConnectionKpiData"/>
 <fullyQualifiedTypeName name="java.util.Calendar"/>
+<fullyQualifiedTypeName name="java.util.Date"/>
+<fullyQualifiedTypeName name="lombok.Getter"/>
+<fullyQualifiedTypeName name="lombok.Setter"/>
+<fullyQualifiedTypeName name="org.springframework.web.bind.annotation.RequestBody"/>
+<fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.connection.domain.TelemetryRequestData"/>
 <fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.connection.domain.TelemetryResponseData"/>
+<fullyQualifiedTypeName name="java.util.Map"/>
+<fullyQualifiedTypeName name="java.util.HashMap"/>
+<fullyQualifiedTypeName name="java.lang.Integer"/>
+<fullyQualifiedTypeName name="java.time.Instant"/>
+<fullyQualifiedTypeName name="org.apache.http.client.methods.HttpGet"/>
+<fullyQualifiedTypeName name="org.apache.http.client.methods.CloseableHttpResponse"/>
+<fullyQualifiedTypeName name="java.lang.System"/>
+<fullyQualifiedTypeName name="org.json.JSONObject"/>
+<fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.connection.service.InfluxDBUtils"/>
+<fullyQualifiedTypeName name="java.net.URL"/>
+<fullyQualifiedTypeName name="java.io.InputStream"/>
 </qualifiedTypeNameHistroy>

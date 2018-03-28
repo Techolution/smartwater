@@ -115,6 +115,7 @@ public class BatteryDataSimiulator implements IStubData {
 		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 		String dateVal=myFormat.format(date);
 		JSONObject json = new JSONObject();
+		
 		json.put("battery", telemetry.getBattery());    
 		json.put("date", dateVal);
 
