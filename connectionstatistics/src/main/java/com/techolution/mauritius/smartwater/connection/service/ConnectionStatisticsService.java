@@ -1,6 +1,7 @@
 package com.techolution.mauritius.smartwater.connection.service;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,11 +24,13 @@ import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
 import org.influxdb.dto.QueryResult.Result;
 import org.influxdb.dto.QueryResult.Series;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import com.techolution.mauritius.smartwater.connection.domain.BatteryData;
 import com.techolution.mauritius.smartwater.connection.domain.ConnectionKpiData;
 import com.techolution.mauritius.smartwater.connection.domain.Data;
 import com.techolution.mauritius.smartwater.connection.domain.Kpi;
@@ -46,6 +49,12 @@ public class ConnectionStatisticsService {
 	private static String INFLUX_PWD="root";
 	
 	private static String dbName = "mauritius_smartwater";
+	
+	//TODO replace with spring properties or DB
+	private static final int TOTALCAPACITY=4200;
+	private static final int TOTALPOWER=3200;
+	private static double TEMPERATURE=84.2;
+	
 	/**
 	 * 
 	 * @param data
@@ -193,74 +202,121 @@ public class ConnectionStatisticsService {
 		//int deviceId=123;
 		String query = "select last(value)  from batterylevelvalues where time >='"+startTime+"' and time<='"+endTime+"' and meter_id='"+deviceId+"' group by time("+groupVal+")";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
 		log.debug("Query is:"+query);
-		String query2 = "\"select last(value)  from batterylevelvalues where time >='"+startTime+"' and time<='"+endTime+"' and meter_id='"+deviceId+"' group by time("+groupVal+")\"";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
 		
-		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32770", "root", "root");
-		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
-		long startStarttime=System.currentTimeMillis();
-		log.debug("Time before getBattery query execution:"+startStarttime);
-		QueryResult queryResult = influxDB.query(new Query(query, dbName));
-		long endtime=System.currentTimeMillis();
-		log.debug("Time After getBattery query execution:"+endtime);
-		log.debug("Time Taken for query execution:"+(endtime-startStarttime));
+		
+		
 		
 		long jsonstarttime=System.currentTimeMillis();
-		/*try {
-			JSONObject responsejson=InfluxDBUtils.executeQuery(query2);
-			long jsonendtime=System.currentTimeMillis();
-			
-			System.out.println("JSON response is:"+responsejson.toString());
-			System.out.println("Timetake to execute as JSON is:"+(jsonendtime-jsonstarttime));
-		} catch (IOException | JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		
+		List<Data> retlist =null;
 		String locationName= "TEST";
+	//	getBatteryDataUsingNativeHttp(deviceId, query, jsonstarttime, locationName);
 		
-		List<Result> resultlist=queryResult.getResults();
-	//	int recordSize=0;
-		List<Data> retlist=new ArrayList<Data>();
-//		SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
-		//dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-		//Date date1=new SimpleDateFormat("yyyy-MM-DDTHH:mm:ssz").parse(sDate1);
-		Data resultData=null;
 		
-	//	Instant  instant=null;
-		for(Result result:resultlist){
-			List<Series> serieslist=result.getSeries();
-			if(serieslist == null){
-				break;
-			}
-			for(Series series:serieslist){
-				List<List<Object>> valuelist=series.getValues();
-				for(List<Object> results:valuelist){
-					String endTimeReturned=(String)results.get(0);
-					//log.debug("Date is:"+(endTimeReturned.split("T"))[0]);
-				//	instant= Instant.parse( endTimeReturned); 
-			//		Date date=java.util.Date.from(instant);
-				//	Date date=dateFormat.parse(endTimeReturned);
-					if(results.get(1)!=null){
-						
-				//	Date date=dateFormat.parse(endTimeReturned.split("T")[0]);
-					resultData=new Data();
-					resultData.setDevid(deviceId);
-					resultData.setName(endTimeReturned.split("T")[0]);	
-					
-					resultData.setValue(((Double)results.get(1)).doubleValue());
-					resultData.setSensor_locationname(locationName);
-					retlist.add(resultData);
-					}
-				}
-				
-				
-			}
-			
-		}
-		influxDB.close();
+		
+		
+		 retlist = getBatteryResultUsingInfluxAPI(deviceId, query, locationName);
 		log.debug("Exiting ConnectionStatisticsService.geBatterytData");
 		return retlist;
 	}
+
+private void getBatteryDataUsingNativeHttp(int deviceId, String query, long jsonstarttime, String locationName) {
+	List<Data> retlist;
+	try {
+		JSONObject responsejson=InfluxDBUtils.executeQuery(query);
+		long jsonendtime=System.currentTimeMillis();
+		
+		log.debug("JSON response is:"+responsejson.toString());
+		log.debug("Timetake to execute as JSON is:"+(jsonendtime-jsonstarttime));
+		
+		JSONArray resultsArray=responsejson.getJSONArray("results");
+		JSONObject object=(JSONObject)resultsArray.get(0);
+		JSONArray seriesArray=object.getJSONArray("series");
+		JSONObject seriesobject=(JSONObject)seriesArray.get(0);
+		JSONArray valuesArray=seriesobject.getJSONArray("values");
+		int valueslength=valuesArray.length();
+		Data resultData=null;
+		retlist=new ArrayList<Data>();
+		for(int index=0;index<valueslength;index++){
+			JSONArray valueobj=valuesArray.getJSONArray(index);
+			resultData=new Data();
+			resultData.setDevid(deviceId);
+			resultData.setName(valueobj.getString(0).split("T")[0]);
+			resultData.setValue(valueobj.getDouble(1));
+			resultData.setSensor_locationname(locationName);
+			retlist.add(resultData);
+			
+		}
+
+		
+	} catch (IOException | JSONException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (URISyntaxException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
+
+private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, String locationName) {
+	//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32770", "root", "root");
+	InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
+	long startStarttime=System.currentTimeMillis();
+	log.debug("Time before getBattery query execution:"+startStarttime);
+	QueryResult queryResult = influxDB.query(new Query(query, dbName));
+	long endtime=System.currentTimeMillis();
+	log.debug("Time After getBattery query execution:"+endtime);
+	log.debug("Time Taken for query execution:"+(endtime-startStarttime));
+	List<Result> resultlist=queryResult.getResults();
+//	int recordSize=0;
+	List<Data> retlist=new ArrayList<Data>();
+//		SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
+	//dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+	//Date date1=new SimpleDateFormat("yyyy-MM-DDTHH:mm:ssz").parse(sDate1);
+	BatteryData resultData=null;
+	
+//	Instant  instant=null;
+	for(Result result:resultlist){
+		List<Series> serieslist=result.getSeries();
+		if(serieslist == null){
+			break;
+		}
+		for(Series series:serieslist){
+			List<List<Object>> valuelist=series.getValues();
+			for(List<Object> results:valuelist){
+				String endTimeReturned=(String)results.get(0);
+				//log.debug("Date is:"+(endTimeReturned.split("T"))[0]);
+			//	instant= Instant.parse( endTimeReturned); 
+		//		Date date=java.util.Date.from(instant);
+			//	Date date=dateFormat.parse(endTimeReturned);
+				if(results.get(1)!=null){
+					
+			//	Date date=dateFormat.parse(endTimeReturned.split("T")[0]);
+				resultData=new BatteryData();
+				resultData.setDevid(deviceId);
+				resultData.setName(endTimeReturned.split("T")[0]);	
+				double currentPower=((Double)results.get(1)).doubleValue();
+				double currentPercent=(currentPower/TOTALPOWER)*100;
+				double currentCapacity=(currentPercent/100)*TOTALCAPACITY;
+				resultData.setCurrentCapacity(new Double(currentCapacity).intValue());
+				resultData.setCurrentHealthPercentage(new Double(currentPercent).intValue());
+				resultData.setCurrentPower(new Double(currentPower).intValue());
+				resultData.setTotalPower(TOTALPOWER);
+				resultData.setTotalCapacity(TOTALCAPACITY);
+				resultData.setTemperature(TEMPERATURE);
+				
+				resultData.setValue(currentPower);
+				resultData.setSensor_locationname(locationName);
+				retlist.add(resultData);
+				}
+			}
+			
+			
+		}
+		
+	}
+	influxDB.close();
+	return retlist;
+}
   
   
   /**

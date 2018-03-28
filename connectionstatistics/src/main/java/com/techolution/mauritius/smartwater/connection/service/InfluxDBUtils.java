@@ -5,9 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.JSONException;
@@ -21,28 +23,37 @@ public class InfluxDBUtils {
 	
 	
 	private static String DBNAME = "mauritius_smartwater";
-	private static String QUERY_TEMPLATE=INFLUX_CONNECTION_STRING+"/query?db="+DBNAME+"&q=";
-	public static JSONObject executeQuery(String query) throws ClientProtocolException, IOException, JSONException{
+	//private static String QUERY_TEMPLATE=INFLUX_CONNECTION_STRING+"/query?db="+DBNAME+"&q=";
+	private static String QUERY_TEMPLATE=INFLUX_CONNECTION_STRING+"/query";
+	public static JSONObject executeQuery(String query) throws ClientProtocolException, IOException, JSONException, URISyntaxException{
 		
-		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+	//	CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+		URIBuilder ub = new URIBuilder(QUERY_TEMPLATE);
+		ub.addParameter("db", DBNAME);
+		ub.addParameter("q", query);
 		String finalquery=QUERY_TEMPLATE+query;
 		//Apche commons API always gave error with URL though URL was working fine independently
-	/*	HttpGet request=new HttpGet(finalquery);
+		/*HttpGet request=new HttpGet(finalquery);
 		CloseableHttpResponse response=httpClient.execute(request);
 		InputStream stream=response.getEntity().getContent();*/
 		
-		URL obj = new URL(finalquery);
+		//URL obj = new URL(finalquery);
+		URL obj = new URL(ub.toString());
+		
+		
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+		con.setRequestMethod("GET");
 		//con.connect();
 		//con
-		con.setRequestMethod("GET");
-		//InputStream stream=con.getInputStream();
-		System.out.println("Content is:"+con.getContent().getClass());
 		
-		//String responseString=convertStreamToString(stream);
-		//JSONObject jsonObject=new JSONObject(responseString);
-		//return jsonObject;
-		return null;
+		InputStream stream=con.getInputStream();
+		//System.out.println("Content is:"+con.getContent().getClass());
+		
+		String responseString=convertStreamToString(stream);
+		JSONObject jsonObject=new JSONObject(responseString);
+		con.disconnect();
+		return jsonObject;
+		//return null;
 	}
 	
 	
