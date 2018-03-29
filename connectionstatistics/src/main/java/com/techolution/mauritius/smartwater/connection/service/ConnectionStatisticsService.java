@@ -215,18 +215,18 @@ public class ConnectionStatisticsService {
 		long jsonstarttime=System.currentTimeMillis();
 		List<Data> retlist =null;
 		String locationName= "TEST";
-	//	getBatteryDataUsingNativeHttp(deviceId, query, jsonstarttime, locationName);
+		retlist=getBatteryDataUsingNativeHttp(deviceId, query, jsonstarttime, locationName);
 		
 		
 		
 		
-		 retlist = getBatteryResultUsingInfluxAPI(deviceId, query, locationName);
+	//	 retlist = getBatteryResultUsingInfluxAPI(deviceId, query, locationName);
 		log.debug("Exiting ConnectionStatisticsService.geBatterytData");
 		return retlist;
 	}
 
-private void getBatteryDataUsingNativeHttp(int deviceId, String query, long jsonstarttime, String locationName) {
-	List<Data> retlist;
+private List<Data> getBatteryDataUsingNativeHttp(int deviceId, String query, long jsonstarttime, String locationName) {
+	List<Data> retlist = null;
 	try {
 		JSONObject responsejson=InfluxDBUtils.executeQuery(query);
 		long jsonendtime=System.currentTimeMillis();
@@ -237,22 +237,50 @@ private void getBatteryDataUsingNativeHttp(int deviceId, String query, long json
 		JSONArray resultsArray=responsejson.getJSONArray("results");
 		JSONObject object=(JSONObject)resultsArray.get(0);
 		JSONArray seriesArray=object.getJSONArray("series");
+		log.debug("seriesArray length is:"+seriesArray.length());
 		JSONObject seriesobject=(JSONObject)seriesArray.get(0);
 		JSONArray valuesArray=seriesobject.getJSONArray("values");
+		log.debug("valuesArray length is:"+valuesArray.length());
 		int valueslength=valuesArray.length();
-		Data resultData=null;
+		BatteryData resultData=null;
 		retlist=new ArrayList<Data>();
 		for(int index=0;index<valueslength;index++){
 			JSONArray valueobj=valuesArray.getJSONArray(index);
-			resultData=new Data();
+			
+			resultData=new BatteryData();
 			resultData.setDevid(deviceId);
-			resultData.setName(valueobj.getString(0).split("T")[0]);
-			resultData.setValue(valueobj.getDouble(1));
+			resultData.setName(((String)valueobj.get(0)).split("T")[0]);
+			Integer currentPowerVal=(Integer)valueobj.get(1);
+			
+			double currentPower=currentPowerVal.doubleValue();
+			double currentPercent=(currentPower/TOTALPOWER)*100;
+			
+			if(currentPercent >= 80){
+				resultData.setHealthStatus(HEALTH_GOOD);
+			}else if (currentPercent >=60){
+				resultData.setHealthStatus(HEALTH_MODERATE);
+			}else if(currentPercent >=30){
+				resultData.setHealthStatus(HEALTH_WEAK);
+			}else{
+				resultData.setHealthStatus(HEALTH_POOR);
+			}
+			
+			double currentCapacity=(currentPercent/100)*TOTALCAPACITY;
+			resultData.setCurrentCapacity(new Double(currentCapacity).intValue());
+			resultData.setCurrentHealthPercentage(new Double(currentPercent).intValue());
+			resultData.setCurrentPower(new Double(currentPower).intValue());
+			resultData.setTotalPower(TOTALPOWER);
+			resultData.setTotalCapacity(TOTALCAPACITY);
+			resultData.setTemperature(TEMPERATURE);
+			
+			
+			resultData.setValue(((Integer)valueobj.get(1)).doubleValue());
 			resultData.setSensor_locationname(locationName);
 			retlist.add(resultData);
 			
 		}
-
+		
+		
 		
 	} catch (IOException | JSONException e) {
 		// TODO Auto-generated catch block
@@ -261,6 +289,7 @@ private void getBatteryDataUsingNativeHttp(int deviceId, String query, long json
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
+	return retlist;
 }
 
 private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, String locationName) {
