@@ -14,6 +14,16 @@ public class BatteryData extends Data {
 	
 	private int currentHealthPercentage;
 	
+	private String healthStatus;
+	
+	public String getHealthStatus() {
+		return healthStatus;
+	}
+
+	public void setHealthStatus(String healthStatus) {
+		this.healthStatus = healthStatus;
+	}
+
 	private double temperature;
 
 	public int getTotalCapacity() {

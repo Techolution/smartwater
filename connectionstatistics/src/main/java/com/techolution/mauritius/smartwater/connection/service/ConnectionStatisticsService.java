@@ -52,8 +52,14 @@ public class ConnectionStatisticsService {
 	
 	//TODO replace with spring properties or DB
 	private static final int TOTALCAPACITY=4200;
-	private static final int TOTALPOWER=3200;
+	private static final int TOTALPOWER=3500;
 	private static double TEMPERATURE=84.2;
+	
+	//TODO ENum
+	private static String HEALTH_GOOD="GOOD";
+	private static String HEALTH_MODERATE="MODERATE";
+	private static String HEALTH_WEAK="WEAK";
+	private static String HEALTH_POOR="POOR";
 	
 	/**
 	 * 
@@ -296,6 +302,17 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 				resultData.setName(endTimeReturned.split("T")[0]);	
 				double currentPower=((Double)results.get(1)).doubleValue();
 				double currentPercent=(currentPower/TOTALPOWER)*100;
+				
+				if(currentPercent >= 80){
+					resultData.setHealthStatus(HEALTH_GOOD);
+				}else if (currentPercent >=60){
+					resultData.setHealthStatus(HEALTH_MODERATE);
+				}else if(currentPercent >=30){
+					resultData.setHealthStatus(HEALTH_WEAK);
+				}else{
+					resultData.setHealthStatus(HEALTH_POOR);
+				}
+				
 				double currentCapacity=(currentPercent/100)*TOTALCAPACITY;
 				resultData.setCurrentCapacity(new Double(currentCapacity).intValue());
 				resultData.setCurrentHealthPercentage(new Double(currentPercent).intValue());
