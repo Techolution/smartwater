@@ -756,6 +756,7 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
     					
     		}
     	}
+    	influxDB.close();
     	return returnval;
     	
     	
