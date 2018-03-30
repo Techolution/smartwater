@@ -1,5 +1,7 @@
 package com.techolution.mauritius.smartwater.connection.controller;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -161,6 +163,20 @@ public class ConnectionStatisticsController {
 		log.info("Exiting ConnectDataController.getDataForDay");
 		
 		return data;
+		
+	}
+	
+	
+	@RequestMapping(method=RequestMethod.GET,value="/average/monthlycosnsumption/{meterId}")
+	public @ResponseBody Double getMonthlyAverageForLastOneYear(@PathVariable int meterId){
+		
+		log.info("Entering SupplyDataController.getMonthlyAverageForLastOneYear");
+		Double average = null;
+		average = connectionStatisticsService.getAverageMonthlyForOneYear(meterId);
+		
+		
+		log.info("Exiting SupplyDataController.getMonthlyAverageForLastOneYear");
+		return average;
 		
 	}
 

@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.message.StringFormattedMessage;
 import org.influxdb.BatchOptions;
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDB.ConsistencyLevel;
@@ -806,6 +807,56 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 			
 		}
 		return baseReadingValue;
+    	
+    }
+    
+    public Double getAverageMonthlyForOneYear(int meterId){
+    	
+    	log.info("Entering ConnectionStatisticsService.getAverageMonthlyForOneYear");
+    	
+    	Calendar endTimeCal=Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+    	endTimeCal.set(Calendar.DAY_OF_MONTH, 1);
+    	//endTimeCal.add(Calendar.DATE, -1);
+    	
+    	Calendar startTimeCal=Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+    	startTimeCal.set(Calendar.DAY_OF_MONTH, 1);
+    	startTimeCal.add(Calendar.YEAR, -1);
+    	
+    	Double resultValue=0.0;
+    	
+    	SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+    	
+    	String startTime=myFormat.format(startTimeCal.getTime());
+    	
+    	
+    	String endTime=myFormat.format(endTimeCal.getTime());
+    	
+    	String query = "select mean(monthlyconsumption) from (select sum(value) as monthlyconsumption from flowvalues where time >='"+startTime+"' and time<'"+endTime+"' and meter_id='"+meterId+"' group by time(30d))";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
+		log.info("Query is:"+query);
+		
+		
+		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
+		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
+		//String dbName = dbName;
+		QueryResult queryResult = influxDB.query(new Query(query, dbName));
+		
+		List<Result> results=queryResult.getResults();
+		if(results != null && results.size()>0){
+			Result result  = results.get(0);
+			
+			List<Series> serieslist=result.getSeries();
+			if(serieslist !=null && serieslist.size()>0){
+				Series series=serieslist.get(0);
+				List<List<Object>> objects=series.getValues();
+				List<Object> resultvals=objects.get(0);
+				resultValue=(Double)resultvals.get(1);
+				
+			}
+				
+			
+		}
+    	log.info("Exiting ConnectionStatisticsService.getAverageMonthlyForOneYear");
+    	return resultValue;
     	
     }
 
