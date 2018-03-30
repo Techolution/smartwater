@@ -26,7 +26,16 @@ public class TelemetryResponseData implements Serializable {
 		this.series = series;
 	}
 
+	private long last12monthsAverage;
 	
+
+	public long getLast12monthsAverage() {
+		return last12monthsAverage;
+	}
+
+	public void setLast12monthsAverage(long last12monthsAverage) {
+		this.last12monthsAverage = last12monthsAverage;
+	}
 
 	private List<Data> series;
 

@@ -30,7 +30,7 @@ public class AccessDataReadaer {
 		AccessDataReadaer accessDataReadaer=new AccessDataReadaer();
 		try {
 			accessDataReadaer.processNewlyInsertedData(args[0]);
-		} catch (IOException | ClassNotFoundException | SQLException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -112,7 +112,7 @@ public class AccessDataReadaer {
 	private void sendRequest(JSONObject json,CloseableHttpClient httpClient,int meterid ) throws ClientProtocolException, IOException{
 		
 		
-		    HttpPost request = new HttpPost("http://localhost:8085/insert/telemetry/data/"+meterid);
+		    HttpPost request = new HttpPost("http://52.165.177.94:8085/insert/telemetry/data/"+meterid);
 		    StringEntity params = new StringEntity(json.toString());
 		    request.addHeader("content-type", "application/json");
 		    request.setEntity(params);

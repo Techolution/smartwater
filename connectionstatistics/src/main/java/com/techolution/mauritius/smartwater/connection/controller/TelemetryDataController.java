@@ -45,11 +45,12 @@ public class TelemetryDataController {
 		log.info("Entering TelemetryResponseData.getValuesAtTime");
 		
 		List<Data> resultList=connectionStatisticsService.geInstanceTelemetrytData(requestData);
-		
+		Double lastyearaverage=connectionStatisticsService.getAverageMonthlyForOneYear(requestData.getHouseId());
 		
 		TelemetryResponseData responseData=new TelemetryResponseData();
 		responseData.setName(METERREADING);
 		responseData.setSeries(resultList);
+		responseData.setLast12monthsAverage(lastyearaverage.longValue());
 		
 		List<TelemetryResponseData> readingdata=new ArrayList<TelemetryResponseData>(1);
 		readingdata.add(responseData);
