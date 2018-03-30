@@ -28,9 +28,18 @@ public class AnalyticsDataController {
 	@RequestMapping(method=RequestMethod.GET,value="/daily/baseline/analysis/increase")
 	public @ResponseBody List<MeterTrendData> getConnectionsAboveDailyBaseline()
 	{
-		log.info("Entering ConsolidatedDataController.getAllConnections");
+		log.info("Entering ConsolidatedDataController.getConnectionsAboveDailyBaseline");
 		List<MeterTrendData> resultList=analyticService.getConnectionsAboveDailyBaseline();
-		log.info("Exiting ConsolidatedDataController.getAllConnections");
+		log.info("Exiting ConsolidatedDataController.getConnectionsAboveDailyBaseline");
+		return resultList;
+	}
+	
+	@RequestMapping(method=RequestMethod.GET,value="/daily/baseline/analysis/decrease")
+	public @ResponseBody List<MeterTrendData> getConnectionsbelowDailyBaseline()
+	{
+		log.info("Entering ConsolidatedDataController.getConnectionsAboveDailyBaseline");
+		List<MeterTrendData> resultList=analyticService.getConnectionsBelowDailyBaseline();
+		log.info("Exiting ConsolidatedDataController.getConnectionsAboveDailyBaseline");
 		return resultList;
 	}
 

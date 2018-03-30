@@ -31,6 +31,7 @@ public class SupplyAnalyticsService {
 	
 	private static long MONTHLY_THRESHOLD=50000;
 	private static long DAILY_THRESHOLD=4000;
+	private static long DAILY_LOWER_THRESHOLD=1000;
 	
 	private static String METER_ID= "meter_id";
 	
@@ -38,7 +39,7 @@ public class SupplyAnalyticsService {
 	private static String INFLUX_USERNAME="root";
 	private static String INFLUX_PWD="root";
 	private static String EQUALTO_QUOTE="='";
-	private static String QUOTE="='";
+	private static String QUOTE="'";
 	private static String SPACE=" ";
 	private static String OR="OR";
 	
@@ -71,26 +72,12 @@ public class SupplyAnalyticsService {
 		String startTime=myFormat.format(startDate.getTime());
 		String endTime=myFormat.format(endDate.getTime());
 		
-		retList=getMeterConnectionForDates( startTime, endTime,null);
+		retList=getMeterConnectionForDates( startTime, endTime,null,DAILY_THRESHOLD,">");
 		
 		if(retList.size()>0){
 			
 		
-			int index=0;
-			StringBuffer wherclause=new StringBuffer();
-			for(MeterTrendData data:retList){
-				
-				if(index !=0){
-					wherclause.append(OR);
-				}
-				wherclause.append(SPACE);
-				wherclause.append(METER_ID);
-				wherclause.append(EQUALTO_QUOTE);
-				wherclause.append(data.getMeterId());
-				wherclause.append(QUOTE);
-				wherclause.append(SPACE);
-				index++;
-			}
+			StringBuffer wherclause = createWhereClause(retList);
 			
 			
 			
@@ -101,35 +88,9 @@ public class SupplyAnalyticsService {
 			
 			String prevstat=myFormat.format(previousDay.getTime());
 			
-			List<MeterTrendData> yestedayData=getMeterConnectionForDates( prevstat, startTime,wherclause.toString());
+			List<MeterTrendData> yestedayData=getMeterConnectionForDates( prevstat, startTime,wherclause.toString(),DAILY_THRESHOLD,">");
 			
-			Map <Integer, MeterTrendData> previousbucketmap = yestedayData.stream().collect(Collectors.toMap(conn -> conn.getMeterId(),conn -> conn));
-			
-			retList.forEach(meterdata -> {
-				
-				MeterTrendData previousBucketData=previousbucketmap.get(meterdata.getMeterId());
-				if(previousBucketData!=null){
-					meterdata.setPreviousConsumption(previousBucketData.getConsumption());
-					
-					if(meterdata.getConsumption() < previousBucketData.getConsumption()){
-						meterdata.setComparisonResult(DOWN);
-					}else{
-						meterdata.setComparisonResult(UP);
-					}	
-				}else{
-					meterdata.setComparisonResult(UP);
-				}
-				
-				
-				MeterConnection connection=connectionmap.get(meterdata.getMeterId());
-				
-				if(connection!=null){
-					meterdata.setLocation(connection.getHouse_namenum());
-				}else{
-					meterdata.setLocation(DEFAULT_LOCATION);
-				}
-				
-			});
+			populatePreviousucketAndConnectionStatisticsInCurrent(retList, yestedayData);
 		
 		}
 		
@@ -140,10 +101,109 @@ public class SupplyAnalyticsService {
 		
 	}
 
-	private List<MeterTrendData> getMeterConnectionForDates( String startTime, String endTime,String meterIdAndClause) {
+
+	private StringBuffer createWhereClause(List<MeterTrendData> retList) {
+		int index=0;
+		StringBuffer wherclause=new StringBuffer();
+		for(MeterTrendData data:retList){
+			
+			if(index !=0){
+				wherclause.append(OR);
+			}
+			wherclause.append(SPACE);
+			wherclause.append(METER_ID);
+			wherclause.append(EQUALTO_QUOTE);
+			wherclause.append(data.getMeterId());
+			wherclause.append(QUOTE);
+			wherclause.append(SPACE);
+			index++;
+		}
+		return wherclause;
+	}
+	
+	
+  public List<MeterTrendData> getConnectionsBelowDailyBaseline(){
+		
+		log.info("Entering SupplyAnalyticsService.getConnectionsBelowDailyBaseline");
+		
+		List<MeterTrendData> retList=new ArrayList<MeterTrendData>();
+		
+		if(SupplyAnalyticsService.connectionmap == null){
+			SupplyAnalyticsService.connectionmap=getAllConnections();
+		}
+		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar startDate=Calendar.getInstance();
+		
+		Calendar endDate=Calendar.getInstance();
+		endDate.add(Calendar.DATE,1);
+		
+		String startTime=myFormat.format(startDate.getTime());
+		String endTime=myFormat.format(endDate.getTime());
+		
+		retList=getMeterConnectionForDates( startTime, endTime,null,DAILY_LOWER_THRESHOLD,"<");
+		
+		if(retList.size()>0){
+			
+		
+			StringBuffer wherclause = createWhereClause(retList);
+			
+			
+			
+			log.debug("Where clause constructed is:"+wherclause.toString());
+			
+			Calendar previousDay=Calendar.getInstance();
+			previousDay.add(Calendar.DATE, -1);
+			
+			String prevstat=myFormat.format(previousDay.getTime());
+			
+			List<MeterTrendData> yestedayData=getMeterConnectionForDates( prevstat, startTime,wherclause.toString(),DAILY_LOWER_THRESHOLD,"<");
+			
+			populatePreviousucketAndConnectionStatisticsInCurrent(retList, yestedayData);
+		
+		}
 		
 		
-		String query = "select * from (select sum(value) as dailyconsumtpion from flowvalues where time >= '"+startTime+"' and time <'"+endTime+"' group by meter_id) where dailyconsumtpion >"+DAILY_THRESHOLD;
+		log.info("Existing SupplyAnalyticsService.getConnectionsBelowDailyBaseline");
+		return retList;
+		
+		
+	}
+
+	private void populatePreviousucketAndConnectionStatisticsInCurrent(List<MeterTrendData> retList,
+			List<MeterTrendData> yestedayData) {
+		Map <Integer, MeterTrendData> previousbucketmap = yestedayData.stream().collect(Collectors.toMap(conn -> conn.getMeterId(),conn -> conn));
+		
+		retList.forEach(meterdata -> {
+			
+			MeterTrendData previousBucketData=previousbucketmap.get(meterdata.getMeterId());
+			if(previousBucketData!=null){
+				meterdata.setPreviousConsumption(previousBucketData.getConsumption());
+				
+				if(meterdata.getConsumption() < previousBucketData.getConsumption()){
+					meterdata.setComparisonResult(DOWN);
+				}else{
+					meterdata.setComparisonResult(UP);
+				}	
+			}else{
+				meterdata.setComparisonResult(UP);
+			}
+			
+			
+			MeterConnection connection=connectionmap.get(meterdata.getMeterId());
+			
+			if(connection!=null){
+				meterdata.setLocation(connection.getHouse_namenum());
+			}else{
+				meterdata.setLocation(DEFAULT_LOCATION);
+			}
+			
+		});
+	}
+
+	private List<MeterTrendData> getMeterConnectionForDates( String startTime, String endTime,String meterIdAndClause,long threshold,String compareCondition) {
+		
+		
+		String query = "select * from (select sum(value) as dailyconsumtpion from flowvalues where time >= '"+startTime+"' and time <'"+endTime+"' group by meter_id) where dailyconsumtpion "+compareCondition+SPACE+ threshold;
 		
 		if(meterIdAndClause !=null){
 			query = "select * from (select sum(value) as dailyconsumtpion from flowvalues where time >= '"+startTime+"' and time <'"+endTime+"'"+"AND ("+meterIdAndClause+")"+" group by meter_id)";
