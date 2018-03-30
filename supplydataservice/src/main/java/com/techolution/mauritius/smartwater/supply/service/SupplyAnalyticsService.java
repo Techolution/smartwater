@@ -255,6 +255,7 @@ public class SupplyAnalyticsService {
 			});
 			
 		}
+		influxDB.close();
 		
 		return retList;
 	}
