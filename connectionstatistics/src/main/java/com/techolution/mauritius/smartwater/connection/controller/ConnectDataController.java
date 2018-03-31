@@ -19,7 +19,7 @@ import com.techolution.mauritius.smartwater.connection.domain.Dfj;
 import com.techolution.mauritius.smartwater.connection.domain.ResponseData;
 import com.techolution.mauritius.smartwater.connection.domain.Telemetry;
 import com.techolution.mauritius.smartwater.connection.service.ConnectionStatisticsService;
-import com.techolution.mauritius.smartwater.supply.domain.DailyWaterSupplyData;
+
 
 @CrossOrigin(origins = {"*"})
 @RestController
