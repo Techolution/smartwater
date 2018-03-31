@@ -28,6 +28,7 @@ import org.influxdb.dto.QueryResult.Series;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -52,15 +53,19 @@ public class ConnectionStatisticsService {
 	private static String dbName = "mauritius_smartwater";
 	
 	//TODO replace with spring properties or DB
-	private static final int TOTALCAPACITY=4200;
-	private static final int TOTALPOWER=3500;
-	private static double TEMPERATURE=84.2;
+	public  static final int TOTALCAPACITY=4200;
+	public static final int TOTALPOWER=3500;
+	public static double TEMPERATURE=84.2;
 	
 	//TODO ENum
-	private static String HEALTH_GOOD="GOOD";
-	private static String HEALTH_MODERATE="MODERATE";
-	private static String HEALTH_WEAK="WEAK";
-	private static String HEALTH_POOR="POOR";
+	public static String HEALTH_GOOD="GOOD";
+	public static String HEALTH_MODERATE="MODERATE";
+	public static String HEALTH_WEAK="WEAK";
+	public static String HEALTH_POOR="POOR";
+	
+	
+	@Autowired
+	InfluxQueryCallBack querycallback;
 	
 	/**
 	 * 
@@ -72,7 +77,7 @@ public class ConnectionStatisticsService {
 	public List<Data> getData(RequestData data) throws ParseException{
 		
 		
-		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+		//SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 		
 		
 		/*String startTime = myFormat.format(data.getStart_Time().getTime());
@@ -83,6 +88,51 @@ public class ConnectionStatisticsService {
 		String endTime = data.getEnd_Time();
 		//String endTime = "2018-03-15";
 		
+		String groupVal = getGroupVal(data);
+		
+		
+		int deviceId=data.getHouse_ID();
+		//int deviceId=123;
+		String query = "select sum(value)  from flowvalues where time >='"+startTime+"' and time<='"+endTime+"' and meter_id='"+deviceId+"' group by time("+groupVal+") fill(0)";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
+		log.debug("Query is:"+query);
+		
+		
+		List<Data> retlist = getDailyMetrics(deviceId, query);
+		return retlist;
+	}
+	
+	
+public List<Data> getDailyFowRateData(RequestData data) throws ParseException{
+		
+		
+		//SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+		
+		
+		/*String startTime = myFormat.format(data.getStart_Time().getTime());
+		String endTime = myFormat.format(data.getEnd_Time().getTime());*/
+		String startTime = data.getStart_Time();
+		//String startTime = "2018-03-01";
+		
+		String endTime = data.getEnd_Time();
+		//String endTime = "2018-03-15";
+		
+		String groupVal = getGroupVal(data);
+		
+		
+		int deviceId=data.getHouse_ID();
+		//int deviceId=123;
+		
+				
+		
+		String query ="select mean(hourlyval) from (select sum(value) as hourlyval from flowvalues where meter_id='"+deviceId+"' and time >='"+startTime+"' and time < '"+endTime+"' group by time(1h)) group by time("+groupVal+") fill(0)";
+		log.debug("Query is:"+query);
+		
+		
+		List<Data> retlist = getDailyMetrics(deviceId, query);
+		return retlist;
+	}
+
+	private String getGroupVal(RequestData data) {
 		int distanceValue=data.getSample_Distance_value();
 		//int distanceValue=30;
 		String disVal=String.valueOf(distanceValue);
@@ -107,14 +157,10 @@ public class ConnectionStatisticsService {
 			code="d";
 			groupVal=disVal+code;
 		}
-		
-		
-		int deviceId=data.getHouse_ID();
-		//int deviceId=123;
-		String query = "select sum(value)  from flowvalues where time >='"+startTime+"' and time<='"+endTime+"' and meter_id='"+deviceId+"' group by time("+groupVal+") fill(0)";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
-		log.debug("Query is:"+query);
-		
-		
+		return groupVal;
+	}
+
+	private List<Data> getDailyMetrics(int deviceId, String query) {
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32770", "root", "root");
 		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
 		long startStarttime=System.currentTimeMillis();
@@ -179,30 +225,7 @@ public class ConnectionStatisticsService {
 		String endTime = data.getEnd_Time();
 		//String endTime = "2018-03-15";
 		
-		int distanceValue=data.getSample_Distance_value();
-		//int distanceValue=30;
-		String disVal=String.valueOf(distanceValue);
-		
-		String code="d";
-		String groupVal=null;
-		log.debug("Sample Distance:"+data.getSample_Distance());
-		log.debug("distanceValue:"+distanceValue);
-		//String groupVal="1d";
-		if(data.getSample_Distance().equalsIgnoreCase("Day")){
-			code="d";
-			groupVal=disVal+code;
-		}
-		else if(data.getSample_Distance().equalsIgnoreCase("Hour")){
-			code="h";
-			groupVal=disVal+code;
-		}else if(data.getSample_Distance().equalsIgnoreCase("Month")){
-			int monthgroupval=distanceValue*30;
-			groupVal=String.valueOf(monthgroupval)+"d";
-			
-		}else{
-			code="d";
-			groupVal=disVal+code;
-		}
+		String groupVal = getGroupVal(data);
 		
 		
 		int deviceId=data.getHouse_ID();
@@ -235,51 +258,7 @@ private List<Data> getBatteryDataUsingNativeHttp(int deviceId, String query, lon
 		log.debug("JSON response is:"+responsejson.toString());
 		log.debug("Timetake to execute as JSON is:"+(jsonendtime-jsonstarttime));
 		
-		JSONArray resultsArray=responsejson.getJSONArray("results");
-		JSONObject object=(JSONObject)resultsArray.get(0);
-		JSONArray seriesArray=object.getJSONArray("series");
-		log.debug("seriesArray length is:"+seriesArray.length());
-		JSONObject seriesobject=(JSONObject)seriesArray.get(0);
-		JSONArray valuesArray=seriesobject.getJSONArray("values");
-		log.debug("valuesArray length is:"+valuesArray.length());
-		int valueslength=valuesArray.length();
-		BatteryData resultData=null;
-		retlist=new ArrayList<Data>();
-		for(int index=0;index<valueslength;index++){
-			JSONArray valueobj=valuesArray.getJSONArray(index);
-			
-			resultData=new BatteryData();
-			resultData.setDevid(deviceId);
-			resultData.setName(((String)valueobj.get(0)).split("T")[0]);
-			Integer currentPowerVal=(Integer)valueobj.get(1);
-			
-			double currentPower=currentPowerVal.doubleValue();
-			double currentPercent=(currentPower/TOTALPOWER)*100;
-			
-			if(currentPercent >= 80){
-				resultData.setHealthStatus(HEALTH_GOOD);
-			}else if (currentPercent >=60){
-				resultData.setHealthStatus(HEALTH_MODERATE);
-			}else if(currentPercent >=30){
-				resultData.setHealthStatus(HEALTH_WEAK);
-			}else{
-				resultData.setHealthStatus(HEALTH_POOR);
-			}
-			
-			double currentCapacity=(currentPercent/100)*TOTALCAPACITY;
-			resultData.setCurrentCapacity(new Double(currentCapacity).intValue());
-			resultData.setCurrentHealthPercentage(new Double(currentPercent).intValue());
-			resultData.setCurrentPower(new Double(currentPower).intValue());
-			resultData.setTotalPower(TOTALPOWER);
-			resultData.setTotalCapacity(TOTALCAPACITY);
-			resultData.setTemperature(TEMPERATURE);
-			
-			
-			resultData.setValue(((Integer)valueobj.get(1)).doubleValue());
-			resultData.setSensor_locationname(locationName);
-			retlist.add(resultData);
-			
-		}
+		retlist = querycallback.proccessBatteryUsingHTTPCall(deviceId, locationName, responsejson);
 		
 		
 		
@@ -293,6 +272,7 @@ private List<Data> getBatteryDataUsingNativeHttp(int deviceId, String query, lon
 	return retlist;
 }
 
+
 private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, String locationName) {
 	//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32770", "root", "root");
 	InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
@@ -305,65 +285,11 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 	List<Result> resultlist=queryResult.getResults();
 //	int recordSize=0;
 	List<Data> retlist=new ArrayList<Data>();
-//		SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
-	//dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-	//Date date1=new SimpleDateFormat("yyyy-MM-DDTHH:mm:ssz").parse(sDate1);
-	BatteryData resultData=null;
-	
-//	Instant  instant=null;
-	for(Result result:resultlist){
-		List<Series> serieslist=result.getSeries();
-		if(serieslist == null){
-			break;
-		}
-		for(Series series:serieslist){
-			List<List<Object>> valuelist=series.getValues();
-			for(List<Object> results:valuelist){
-				String endTimeReturned=(String)results.get(0);
-				//log.debug("Date is:"+(endTimeReturned.split("T"))[0]);
-			//	instant= Instant.parse( endTimeReturned); 
-		//		Date date=java.util.Date.from(instant);
-			//	Date date=dateFormat.parse(endTimeReturned);
-				if(results.get(1)!=null){
-					
-			//	Date date=dateFormat.parse(endTimeReturned.split("T")[0]);
-				resultData=new BatteryData();
-				resultData.setDevid(deviceId);
-				resultData.setName(endTimeReturned.split("T")[0]);	
-				double currentPower=((Double)results.get(1)).doubleValue();
-				double currentPercent=(currentPower/TOTALPOWER)*100;
-				
-				if(currentPercent >= 80){
-					resultData.setHealthStatus(HEALTH_GOOD);
-				}else if (currentPercent >=60){
-					resultData.setHealthStatus(HEALTH_MODERATE);
-				}else if(currentPercent >=30){
-					resultData.setHealthStatus(HEALTH_WEAK);
-				}else{
-					resultData.setHealthStatus(HEALTH_POOR);
-				}
-				
-				double currentCapacity=(currentPercent/100)*TOTALCAPACITY;
-				resultData.setCurrentCapacity(new Double(currentCapacity).intValue());
-				resultData.setCurrentHealthPercentage(new Double(currentPercent).intValue());
-				resultData.setCurrentPower(new Double(currentPower).intValue());
-				resultData.setTotalPower(TOTALPOWER);
-				resultData.setTotalCapacity(TOTALCAPACITY);
-				resultData.setTemperature(TEMPERATURE);
-				
-				resultData.setValue(currentPower);
-				resultData.setSensor_locationname(locationName);
-				retlist.add(resultData);
-				}
-			}
-			
-			
-		}
-		
-	}
+	querycallback.processBatteryAPIResult(deviceId, locationName, resultlist, retlist);
 	influxDB.close();
 	return retlist;
 }
+
   
   
   /**
