@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.logging.log4j.message.StringFormattedMessage;
 import org.influxdb.BatchOptions;
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDB.ConsistencyLevel;
@@ -25,18 +25,18 @@ import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
 import org.influxdb.dto.QueryResult.Result;
 import org.influxdb.dto.QueryResult.Series;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import com.techolution.mauritius.smartwater.connection.domain.BatteryData;
 import com.techolution.mauritius.smartwater.connection.domain.ConnectionKpiData;
 import com.techolution.mauritius.smartwater.connection.domain.Data;
+import com.techolution.mauritius.smartwater.connection.domain.KeyValue;
 import com.techolution.mauritius.smartwater.connection.domain.Kpi;
 import com.techolution.mauritius.smartwater.connection.domain.RequestData;
+import com.techolution.mauritius.smartwater.connection.domain.SeriesPointData;
 import com.techolution.mauritius.smartwater.connection.domain.Telemetry;
 import com.techolution.mauritius.smartwater.connection.domain.TelemetryRequestData;
 
@@ -124,7 +124,7 @@ public List<Data> getDailyFowRateData(RequestData data) throws ParseException{
 		
 				
 		
-		String query ="select mean(hourlyval) from (select sum(value) as hourlyval from flowvalues where meter_id='"+deviceId+"' and time >='"+startTime+"' and time < '"+endTime+"' group by time(1h)) group by time("+groupVal+") fill(0)";
+		String query ="select mean(hourlyval) from (select sum(value) as hourlyval from flowvalues where meter_id='"+deviceId+"' and time >='"+startTime+"' and time <='"+endTime+"' group by time(1h))  where time >='"+startTime+"' and time <= '"+endTime+"' group by time("+groupVal+") fill(0)";
 		log.debug("Query is:"+query);
 		
 		
@@ -526,6 +526,9 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 		
 	}
 	
+	
+	
+	
 	private void insertFlowrate(Telemetry telemetry,BatchPoints  batchPoints){
 		
 		log.info("Entering ConnectionStatisticsService.insertFlowrate");
@@ -700,6 +703,10 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
     	
     	if("readings".equalsIgnoreCase(metrics)){
     		returnVal="meterreadingvalues";
+    	}else if("meteron".equalsIgnoreCase(metrics)){
+    		returnVal="supplyondata";
+    	}else if ("meteron".equalsIgnoreCase(metrics)){
+    		returnVal="supplyondata";
     	}
     	return returnVal;
     }
@@ -785,6 +792,72 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
     	log.info("Exiting ConnectionStatisticsService.getAverageMonthlyForOneYear");
     	return resultValue;
     	
+    }
+    
+    public void insertTimeSeriesData(SeriesPointData pointData){
+    	
+    	
+    	InfluxDB influxDB =InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
+		
+    	log.info("Entering ConnectionStatisticsService.insertTimeSeriesData");
+
+		influxDB.setDatabase(dbName);
+		influxDB.enableBatch(BatchOptions.DEFAULTS);
+		String rpName = "aRetentionPolicy";
+	//	influxDB.createRetentionPolicy(rpName, dbName, "365d", "30m", 2, true);
+		influxDB.setRetentionPolicy("aRetentionPolicy");
+		
+		BatchPoints batchPoints = BatchPoints
+				.database(dbName)
+//				.tag("async", "true")
+				.retentionPolicy(rpName)
+				.consistency(ConsistencyLevel.ALL)
+				.build();
+		
+		String name=pointData.getName();
+		String seriesName=getSeriesForMetrics(name);
+		
+		Map<String,String> tagMap=new HashMap<String,String>();
+		
+		List<KeyValue> tags=pointData.getTags();
+		tags.forEach(tag -> {
+			tagMap.put(tag.getKey(),(String)tag.getValue());
+		});
+		
+		Map<String,Object> filedMap=new HashMap<String,Object>();
+		List<KeyValue> fieldlist=pointData.getValues();
+		
+		fieldlist.forEach(tag -> {
+			filedMap.put(tag.getKey(),(String)tag.getValue());
+		});
+		
+		Date timeStamp=pointData.getTimestamp();
+		
+		if(timeStamp ==null){
+			Calendar cal=Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+			timeStamp=cal.getTime();
+		}
+		
+		
+		;
+		Point point1 = Point.measurement(seriesName)
+				.time(timeStamp.getTime(), TimeUnit.MILLISECONDS)
+				.tag(tagMap)
+				.fields(filedMap)
+				.build();
+				
+
+		
+		batchPoints.point(point1);
+		
+		influxDB.write(batchPoints);
+
+		influxDB.close();
+		
+		log.info("Exiting ConnectionStatisticsService.insertTimeSeriesData");
+		
+
+		
     }
 
 }

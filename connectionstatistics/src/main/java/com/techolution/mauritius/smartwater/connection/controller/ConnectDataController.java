@@ -6,17 +6,17 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.CrossOrigin;
-
 
 import com.techolution.mauritius.smartwater.connection.domain.Dfj;
 import com.techolution.mauritius.smartwater.connection.domain.ResponseData;
+import com.techolution.mauritius.smartwater.connection.domain.SeriesPointData;
 import com.techolution.mauritius.smartwater.connection.domain.Telemetry;
 import com.techolution.mauritius.smartwater.connection.service.ConnectionStatisticsService;
 
@@ -45,6 +45,23 @@ public class ConnectDataController {
 		
 		telemetry.setMeter_id(meter_id);
 		connectionStatisticsService.insertData(telemetry);
+		log.info("Exiting ConnectDataController.getConsumptionDetails");
+		ResponseData data=new ResponseData();
+		Dfj dfj=new Dfj();
+		dfj.setStatus("REQUEST_SUBMITTED");
+		data.setDfj(dfj);
+		return data;
+		
+	}
+	
+	@PostMapping("/data")
+	public @ResponseBody ResponseData insertTelemetryData(@RequestBody SeriesPointData pointData) throws ParseException, JSONException
+	
+	{
+		log.info("Entering ConnectDataController.insertTelemetryData");
+		
+		
+		connectionStatisticsService.insertTimeSeriesData(pointData);
 		log.info("Exiting ConnectDataController.getConsumptionDetails");
 		ResponseData data=new ResponseData();
 		Dfj dfj=new Dfj();
