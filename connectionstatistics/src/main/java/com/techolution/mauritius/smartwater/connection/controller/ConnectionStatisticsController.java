@@ -132,7 +132,7 @@ public class ConnectionStatisticsController {
 		
 		
      
-		List<Data> resultList=connectionStatisticsService.getData(requestData);
+		List<Data> resultList=connectionStatisticsService.getDailyFowRateData(requestData);
 		
 		
 		/*WaterConsumptionResponseData responseData=new WaterConsumptionResponseData();
