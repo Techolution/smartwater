@@ -41,7 +41,7 @@ public class ConnectDataController {
 	public @ResponseBody ResponseData insertTelemetryData(@RequestBody Telemetry telemetry,@PathVariable int meter_id) throws ParseException, JSONException
 	
 	{
-		log.info("Entering ConnectDataController.getConsumptionDetails");
+		log.info("Entering ConnectDataController.insertTelemetryData");
 		
 		telemetry.setMeter_id(meter_id);
 		connectionStatisticsService.insertData(telemetry);
@@ -50,15 +50,17 @@ public class ConnectDataController {
 		Dfj dfj=new Dfj();
 		dfj.setStatus("REQUEST_SUBMITTED");
 		data.setDfj(dfj);
+		
+		log.info("Exiting ConnectDataController.insertTelemetryData");
 		return data;
 		
 	}
 	
 	@PostMapping("/data")
-	public @ResponseBody ResponseData insertTelemetryData(@RequestBody SeriesPointData pointData) throws ParseException, JSONException
+	public @ResponseBody ResponseData insertTelemetryDataGeneric(@RequestBody SeriesPointData pointData) throws ParseException, JSONException
 	
 	{
-		log.info("Entering ConnectDataController.insertTelemetryData");
+		log.info("Entering ConnectDataController.insertTelemetryDataGeneric");
 		
 		
 		connectionStatisticsService.insertTimeSeriesData(pointData);
@@ -67,6 +69,7 @@ public class ConnectDataController {
 		Dfj dfj=new Dfj();
 		dfj.setStatus("REQUEST_SUBMITTED");
 		data.setDfj(dfj);
+		log.info("Exiting ConnectDataController.insertTelemetryDataGeneric");
 		return data;
 		
 	}

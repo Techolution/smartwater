@@ -5,6 +5,8 @@ import java.text.ParseException;
 import com.techolution.mauritius.data.simulator.service.BatteryDataSimiulator;
 import com.techolution.mauritius.data.simulator.service.FlowDataSimiulator;
 import com.techolution.mauritius.data.simulator.service.IStubData;
+import com.techolution.mauritius.data.simulator.service.MeterOffDataSimulator;
+import com.techolution.mauritius.data.simulator.service.MeterOnDataSimulator;
 
 public class PopulateData {
 
@@ -31,6 +33,15 @@ public class PopulateData {
 			
 		}else if("battery".equalsIgnoreCase(kpi)){
 			data=new BatteryDataSimiulator();
+			data.startProcess(meter, starttime, endtime, sleepval, incrementval);
+		}
+		
+		else if("meteron".equalsIgnoreCase(kpi)){
+			data=new MeterOnDataSimulator();
+			data.startProcess(meter, starttime, endtime, sleepval, incrementval);
+		}
+		else if("meteroff".equalsIgnoreCase(kpi)){
+			data=new MeterOffDataSimulator();
 			data.startProcess(meter, starttime, endtime, sleepval, incrementval);
 		}
 	}

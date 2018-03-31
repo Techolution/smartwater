@@ -705,8 +705,8 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
     		returnVal="meterreadingvalues";
     	}else if("meteron".equalsIgnoreCase(metrics)){
     		returnVal="supplyondata";
-    	}else if ("meteron".equalsIgnoreCase(metrics)){
-    		returnVal="supplyondata";
+    	}else if ("meteroff".equalsIgnoreCase(metrics)){
+    		returnVal="supplyoffdata";
     	}
     	return returnVal;
     }
@@ -821,14 +821,14 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 		
 		List<KeyValue> tags=pointData.getTags();
 		tags.forEach(tag -> {
-			tagMap.put(tag.getKey(),(String)tag.getValue());
+			tagMap.put(tag.getKey(),tag.getValue().toString());
 		});
 		
 		Map<String,Object> filedMap=new HashMap<String,Object>();
 		List<KeyValue> fieldlist=pointData.getValues();
 		
 		fieldlist.forEach(tag -> {
-			filedMap.put(tag.getKey(),(String)tag.getValue());
+			filedMap.put(tag.getKey(),tag.getValue());
 		});
 		
 		Date timeStamp=pointData.getTimestamp();
