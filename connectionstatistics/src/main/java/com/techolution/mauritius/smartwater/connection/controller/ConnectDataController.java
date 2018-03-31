@@ -1,6 +1,7 @@
 package com.techolution.mauritius.smartwater.connection.controller;
 
 import java.text.ParseException;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -16,9 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.techolution.mauritius.smartwater.connection.domain.Dfj;
 import com.techolution.mauritius.smartwater.connection.domain.ResponseData;
-import com.techolution.mauritius.smartwater.connection.domain.SeriesPointData;
 import com.techolution.mauritius.smartwater.connection.domain.Telemetry;
 import com.techolution.mauritius.smartwater.connection.service.ConnectionStatisticsService;
+import com.techolution.mauritius.smartwater.supply.domain.DailyWaterSupplyData;
 
 @CrossOrigin(origins = {"*"})
 @RestController
@@ -56,23 +57,7 @@ public class ConnectDataController {
 		
 	}
 	
-	@PostMapping("/data")
-	public @ResponseBody ResponseData insertTelemetryDataGeneric(@RequestBody SeriesPointData pointData) throws ParseException, JSONException
 	
-	{
-		log.info("Entering ConnectDataController.insertTelemetryDataGeneric");
-		
-		
-		connectionStatisticsService.insertTimeSeriesData(pointData);
-		log.info("Exiting ConnectDataController.getConsumptionDetails");
-		ResponseData data=new ResponseData();
-		Dfj dfj=new Dfj();
-		dfj.setStatus("REQUEST_SUBMITTED");
-		data.setDfj(dfj);
-		log.info("Exiting ConnectDataController.insertTelemetryDataGeneric");
-		return data;
-		
-	}
 	
 
 }

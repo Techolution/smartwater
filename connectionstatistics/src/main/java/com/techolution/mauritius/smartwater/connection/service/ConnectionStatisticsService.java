@@ -166,7 +166,7 @@ public List<Data> getDailyFowRateData(RequestData data) throws ParseException{
 		long startStarttime=System.currentTimeMillis();
 		QueryResult queryResult = influxDB.query(new Query(query, dbName));
 		long endtime=System.currentTimeMillis();
-		log.debug("Time After getBattery query execution:"+endtime);
+		log.debug("Time After getDailyMetrics query execution:"+endtime);
 		log.debug("Time Taken for query execution:"+(endtime-startStarttime));
 		String locationName= "TEST";
 		
