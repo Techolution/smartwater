@@ -212,7 +212,7 @@ public TotalConsolidatedConsumption getConsumptionForToday() throws ClientProtoc
 				break;
 			for(Series series:seriesvalues){
 				List<List<Object>> values=series.getValues();
-				Integer value=(Integer)(values.get(0).get(1));
+				Double value=(Double)(values.get(0).get(1));
 				if(value.intValue() == 0){
 					notworkingdevicescountpreviousbucket++;
 				}
