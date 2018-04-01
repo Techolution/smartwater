@@ -4,7 +4,10 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -107,6 +110,8 @@ public class NotificationDetails implements Serializable {
 	private String information;
 	
 	
-	
+	/*@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name="meter_id", nullable=true)
+	private MeterConnection connection ;*/
 
 }

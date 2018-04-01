@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import com.techolution.mauritius.smartwater.notification.domain.NotificationDetails;
+import com.techolution.mauritius.smartwater.notification.domain.NotificationStatusStatistics;
 import com.techolution.mauritius.smartwater.notification.service.NotificationService;
 
 
@@ -30,11 +30,22 @@ private Log log = LogFactory.getLog(NotificationController.class);
 	@RequestMapping(method=RequestMethod.GET,value="/open")
 	public @ResponseBody List<NotificationDetails> getAllOpenNotification()
 	{
-		log.info("Entering ConsolidatedDataController.getAllConnections");
+		log.info("Entering NotificationController.getAllConnections");
 		List<NotificationDetails> resultList=notificationService.getAllOpenNotifcations();
 		
-		log.info("Exiting ConsolidatedDataController.getAllConnections");
+		log.info("Exiting NotificationController.getAllConnections");
 		return resultList;
+	}
+	
+	@RequestMapping(method=RequestMethod.GET,value="/priroity/count")
+	public @ResponseBody NotificationStatusStatistics getCountByPriority()
+	{
+		log.info("Entering NotificationController.getCountByPriority");
+		NotificationStatusStatistics stats=notificationService.getCountBasedOnStatus();
+		//Object stats=notificationService.getCountBasedOnStatus();
+		
+		log.info("Exiting NotificationController.getCountByPriority");
+		return stats;
 	}
 	
 }

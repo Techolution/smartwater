@@ -60,6 +60,8 @@ public class SupplyAnalyticsService {
 		
 		List<MeterTrendData> retList=new ArrayList<MeterTrendData>();
 		
+		
+		//todo GET ONLY FOR THE SELECTED METER
 		if(SupplyAnalyticsService.connectionmap == null){
 			SupplyAnalyticsService.connectionmap=getAllConnections();
 		}
@@ -259,6 +261,7 @@ public class SupplyAnalyticsService {
 		
 		return retList;
 	}
+	
 	
   public Map <Long, MeterConnection> getAllConnections(){
 		

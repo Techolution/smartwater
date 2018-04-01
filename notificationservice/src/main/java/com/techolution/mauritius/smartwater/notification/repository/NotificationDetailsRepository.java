@@ -19,8 +19,11 @@ import com.techolution.mauritius.smartwater.notification.domain.NotificationDeta
 public interface NotificationDetailsRepository extends  CrudRepository<NotificationDetails,Long> {
 	
 	
-	// @Query("SELECT nt.meter_id,nt.status,nt.problem_date,nt.problem_title,nt.priority,nt.information FROM Notificationdetails nt where nt.issuestatus = :issuestatus") 
+	 //@Query("SELECT nt.meter_id,nt.status,nt.problem_date,nt.problem_title,nt.priority,nt.information FROM Notificationdetails nt join meter_connection mc on mc.house_id=nt.meter_id where nt.issuestatus = :issuestatus") 
 	//public List<NotificationDetails> findByIssuestatus(@Param("issuestatus") String issuestatus);
 	public List<NotificationDetails> findByIssuestatus( String issuestatus);
+	
+	
+	//public List<NotificationDetails> getAlertStatusByCount( String issuestatus);
 
 }
