@@ -56,12 +56,15 @@
 	</section>
 	<section name="wizardPage">
 		<list key="groupId">
+			<item value="accessdatareader"/>
 			<item value="DataSimulator"/>
 		</list>
 		<list key="name">
+			<item value="accessdatareader"/>
 			<item value="DataSimulator"/>
 		</list>
 		<list key="artifactId">
+			<item value="accessdatareader"/>
 			<item value="DataSimulator"/>
 		</list>
 		<list key="version">

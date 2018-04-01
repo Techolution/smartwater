@@ -5,7 +5,252 @@
   <link rel="self" href="https://spring.io/blog.atom" />
   <id>http://spring.io/blog.atom</id>
   <icon>https://spring.io/favicon.ico</icon>
-  <updated>2018-03-27T16:29:11Z</updated>
+  <updated>2018-03-28T16:07:32Z</updated>
+  <entry>
+    <title>Property Binding in Spring Boot 2.0</title>
+    <link rel="alternate" href="https://spring.io/blog/2018/03/28/property-binding-in-spring-boot-2-0" />
+    <category term="engineering" label="Engineering" />
+    <author>
+      <name>Phil Webb</name>
+    </author>
+    <id>tag:spring.io,2018-03-27:3218</id>
+    <updated>2018-03-28T16:07:32Z</updated>
+    <content type="html">&lt;div class="paragraph"&gt;
+&lt;p&gt;Since the first release of Spring Boot, it has been possible to bind properties to classes by using the &lt;code&gt;@ConfigurationProperties&lt;/code&gt; annotation. It has also been possible to specify property names in different forms. For example, &lt;code&gt;person.first-name&lt;/code&gt;, &lt;code&gt;person.firstName&lt;/code&gt; and &lt;code&gt;PERSON_FIRSTNAME&lt;/code&gt; can all be used interchangeably. We call this feature &amp;#8220;relaxed binding&amp;#8221;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Unfortunately, in Spring Boot 1.x, &amp;#8220;relaxed binding&amp;#8221; turned out to be a little bit too relaxed.
+It was quite hard to define exactly what the binding rules were and when specific formats could be used. We also started to get reports of issues that were very hard to fix with our 1.x implementation. For example, in Spring Boot 1.x it is not possible to bind items to a &lt;code&gt;java.util.Set&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;So, in Spring Boot 2.0, we have set about reworking the way that binding happens.
+We have added several new abstractions, and we have developed a completely new binding API.
+In this blog post, we cover some of the new classes and interfaces and describe why they have been added, what they do, and how you can use them in your own code.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="sect1"&gt;
+&lt;h2 id="property-sources"&gt;&lt;a class="anchor" href="#property-sources"&gt;&lt;/a&gt;Property Sources&lt;/h2&gt;
+&lt;div class="sectionbody"&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;If you have been using Spring for a while, you are probably familiar with the &lt;code&gt;Environment&lt;/code&gt; abstraction. This interface is a &lt;code&gt;PropertyResolver&lt;/code&gt; that lets you resolve properties from some underlying &lt;code&gt;PropertySource&lt;/code&gt; implementations.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Spring Framework provides &lt;code&gt;PropertySource&lt;/code&gt; implementations for common things, such as system properties, command line flags, and properties files.
+Spring Boot automatically configures these implementations in a way that makes sense for most applications (for example, loading &lt;code&gt;application.properties&lt;/code&gt;).&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="sect1"&gt;
+&lt;h2 id="configuration-property-sources"&gt;&lt;a class="anchor" href="#configuration-property-sources"&gt;&lt;/a&gt;Configuration Property Sources&lt;/h2&gt;
+&lt;div class="sectionbody"&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Rather than directly use the existing &lt;code&gt;PropertySource&lt;/code&gt; interface for binding, Spring Boot 2.0 introduces a new &lt;code&gt;ConfigurationPropertySource&lt;/code&gt; interface.
+We introduced a new interface to give us a logical place to implement the relaxed binding rules that were previously part of the binder.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The main API for the interface is pretty simple:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code class="language-java" data-lang="java"&gt;ConfigurationProperty getConfigurationProperty(ConfigurationPropertyName name);&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;There&amp;#8217;s also an &lt;code&gt;IterableConfigurationPropertySource&lt;/code&gt; variant that implements &lt;code&gt;Iterable&amp;lt;ConfigurationPropertyName&amp;gt;&lt;/code&gt; so that you can discover all the names that a source contains.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;You can adapt a Spring &lt;code&gt;Environment&lt;/code&gt; to &lt;code&gt;ConfigurationPropertySources&lt;/code&gt; by using the following code:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code class="language-java" data-lang="java"&gt;Iterable&amp;lt;ConfigurationPropertySource&amp;gt; sources =
+	ConfigurationPropertySources.get(environment);&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;In case you need it, we also provide a simple &lt;code&gt;MapConfigurationPropertySource&lt;/code&gt; implementation.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="sect1"&gt;
+&lt;h2 id="configuration-property-names"&gt;&lt;a class="anchor" href="#configuration-property-names"&gt;&lt;/a&gt;Configuration Property Names&lt;/h2&gt;
+&lt;div class="sectionbody"&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;It turns out the idea of relaxed property names is much easier to implement if you restrict it to one direction. You should always access properties in code using a canonical form, regardless of how they are represented in the underlying source.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The &lt;code&gt;ConfigurationPropertyName&lt;/code&gt; class enforces these canonical naming rules, which basically boil down to &amp;#8220;use lowercase kebab-case names&amp;#8221;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;So, for example, you should refer to a property in code as &lt;code&gt;person.first-name&lt;/code&gt; even if &lt;code&gt;person.firstName&lt;/code&gt; or &lt;code&gt;PERSON_FIRSTNAME&lt;/code&gt; is used in the underlying source.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="sect1"&gt;
+&lt;h2 id="origin-support"&gt;&lt;a class="anchor" href="#origin-support"&gt;&lt;/a&gt;Origin Support&lt;/h2&gt;
+&lt;div class="sectionbody"&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;As you would expect, the &lt;code&gt;ConfigurationProperty&lt;/code&gt; object returned from a &lt;code&gt;ConfigurationPropertySource&lt;/code&gt; encapsulates the actual property value, but it can also include an optional &lt;code&gt;Origin&lt;/code&gt; object.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;An &lt;code&gt;Origin&lt;/code&gt; is a new interface introduced in Spring Boot 2.0 that lets you pinpoint the exact location that a value was loaded from. There are a number of &lt;code&gt;Origin&lt;/code&gt; implementations, with perhaps the most useful being &lt;code&gt;TextResourceOrigin&lt;/code&gt;. This provides details of the &lt;code&gt;Resource&lt;/code&gt; that was loaded, along with the line and column number of the value.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;For &lt;code&gt;.properties&lt;/code&gt; and &lt;code&gt;.yaml&lt;/code&gt; files, we have written custom loaders that track origins as the files are loaded. Several existing Spring Boot features have been retrofitted to make use of origin information. For example, binder validation exceptions now show the value that could not be bound &lt;em&gt;and&lt;/em&gt; the origin.
+Here&amp;#8217;s how the failure analyzer shows the error:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre&gt;***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Binding to target org.springframework.boot.context.properties.bind.BindException: Failed to bind properties under 'person' to scratch.PersonProperties failed:
+
+    Property: person.name
+    Value: Joe
+    Origin: class path resource [application.properties]:1:13
+    Reason: length must be between 4 and 2147483647
+
+
+Action:
+
+Update your application's configuration&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="sect1"&gt;
+&lt;h2 id="binder-api"&gt;&lt;a class="anchor" href="#binder-api"&gt;&lt;/a&gt;Binder API&lt;/h2&gt;
+&lt;div class="sectionbody"&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The &lt;code&gt;Binder&lt;/code&gt; class (in &lt;code&gt;org.springframework.boot.context.properties.bind&lt;/code&gt;) lets you take one or more &lt;code&gt;ConfigurationPropertySource&lt;/code&gt; and bind something from them.
+More precisely, a &lt;code&gt;Binder&lt;/code&gt; takes a &lt;code&gt;Bindable&lt;/code&gt; and returns a &lt;code&gt;BindResult&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="sect2"&gt;
+&lt;h3 id="bindable"&gt;&lt;a class="anchor" href="#bindable"&gt;&lt;/a&gt;Bindable&lt;/h3&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;A &lt;code&gt;Bindable&lt;/code&gt; might be an existing Java bean, a class type, or a complex &lt;code&gt;ResolvableType&lt;/code&gt; (such as a &lt;code&gt;List&amp;lt;Person&amp;gt;&lt;/code&gt;).
+Here are some examples:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code class="language-java" data-lang="java"&gt;Bindable.ofInstance(existingBean);
+Bindable.of(Integer.class);
+Bindable.listOf(Person.class);
+Bindable.of(resovableType);&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;&lt;code&gt;Bindable&lt;/code&gt; is also used to carry annotation information, but you usually do not need to worry about that.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="sect2"&gt;
+&lt;h3 id="bindresult"&gt;&lt;a class="anchor" href="#bindresult"&gt;&lt;/a&gt;BindResult&lt;/h3&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Rather than directly return a bound object, the binder returns something called a &lt;code&gt;BindResult&lt;/code&gt;.
+Similar to the way that Java 8 &lt;code&gt;Streams&lt;/code&gt; return &lt;code&gt;Optional&lt;/code&gt;, a &lt;code&gt;BinderResult&lt;/code&gt; represents something that may or may not have been bound.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;If you try to get the actual result of an unbound object, an exception is thrown.
+We also provide methods that let you supply alternative values when nothing was bound or &lt;code&gt;map&lt;/code&gt; to different types:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code class="language-java" data-lang="java"&gt;var bound = binder.bind("person.date-of-birth",
+	Bindable.of(LocalDate.class));
+
+// Return LocalDate or throws if not bound
+bound.get();
+
+// Return a formatted date or "No DOB"
+bound.map(dateFormatter::format).orElse("No DOB");
+
+// Return LocalDate or throws a custom exception
+bound.orElseThrow(NoDateOfBirthException::new);&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="sect2"&gt;
+&lt;h3 id="formatting-and-conversion"&gt;&lt;a class="anchor" href="#formatting-and-conversion"&gt;&lt;/a&gt;Formatting and Conversion&lt;/h3&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Most &lt;code&gt;ConfigurationPropertySource&lt;/code&gt; implementations expose their underlying values as strings. When the &lt;code&gt;Binder&lt;/code&gt; needs to convert a source value to a different type, it delegates to Spring&amp;#8217;s &lt;code&gt;ConversionService&lt;/code&gt; API.  If you need to adjust the way that values are converted, you are free to use formatter annotations such as &lt;code&gt;@NumberFormat&lt;/code&gt; or &lt;code&gt;@DateFormat&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Spring Boot 2.0 also introduces some new annotations and converters that are particularly useful for binding. For example, you can now convert values such as &lt;code&gt;4s&lt;/code&gt; to &lt;code&gt;Duration&lt;/code&gt;.
+Look at the &lt;code&gt;org.springframework.boot.convert&lt;/code&gt; package for details.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="sect2"&gt;
+&lt;h3 id="bindhandler"&gt;&lt;a class="anchor" href="#bindhandler"&gt;&lt;/a&gt;BindHandler&lt;/h3&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Sometimes, you might need to implement additional logic when binding, and the &lt;code&gt;BindHandler&lt;/code&gt; interface provides a nice way to do this. Each &lt;code&gt;BindHandler&lt;/code&gt; has &lt;code&gt;onStart&lt;/code&gt;, &lt;code&gt;onSuccess&lt;/code&gt;, &lt;code&gt;onFailure&lt;/code&gt;, and &lt;code&gt;onFinish&lt;/code&gt; methods that can be implemented to override behavior.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Spring Boot provides a number of handlers, primarily to support existing &lt;code&gt;@ConfigurationProperties&lt;/code&gt; binding. For example, the &lt;code&gt;ValidationBindHandler&lt;/code&gt; can be used to apply &lt;code&gt;Validator&lt;/code&gt; validation on bound objects.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="sect1"&gt;
+&lt;h2 id="configurationproperties"&gt;&lt;a class="anchor" href="#configurationproperties"&gt;&lt;/a&gt;@ConfigurationProperties&lt;/h2&gt;
+&lt;div class="sectionbody"&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;As mentioned at the start of this blog post, &lt;code&gt;@ConfigurationProperties&lt;/code&gt; has been a Spring Boot feature since the beginning. It is most likely that &lt;code&gt;@ConfigurationProperties&lt;/code&gt; will continue to be the way that most people perform binding.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Despite the fact that we have re-written the entire binding process, most people do not seem to have had too many problems upgrading Spring Boot 1.5 applications.
+As long as you follow &lt;a href="https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.0-Migration-Guide#relaxed-binding"&gt;the advice in the migration guide&lt;/a&gt;, you should find things continue to work just fine.
+If you do find issues when upgrading your applications, please report them on the &lt;a href="https://github.com/spring-projects/spring-boot/issues"&gt;GitHub issue tracker&lt;/a&gt; with a small sample that reproduces the problem.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="sect1"&gt;
+&lt;h2 id="future-work"&gt;&lt;a class="anchor" href="#future-work"&gt;&lt;/a&gt;Future Work&lt;/h2&gt;
+&lt;div class="sectionbody"&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;We plan to continue developing the &lt;code&gt;Binder&lt;/code&gt; in Spring Boot 2.1, and the first feature we would like to support is immutable configuration properties.
+It would be very nice if configuration properties that currently need getters and setters could use constructor-based binding instead:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code class="language-java" data-lang="java"&gt;public class Person {
+
+	private final String firstName;
+	private final String lastName;
+	private final LocalDateTime dateOfBirth;
+
+	public Person(String firstName, String lastName,
+			LocalDateTime dateOfBirth) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.dateOfBirth = dateOfBirth;
+	}
+
+	// getters
+
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;We think constructor binding will also work very well with &lt;a href="https://kotlinlang.org/docs/reference/data-classes.html"&gt;Kotlin data classes&lt;/a&gt;.
+If you are interested in tracking progress on this feature, subscribe to &lt;a href="https://github.com/spring-projects/spring-boot/issues/8762"&gt;issue #8762&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="sect1"&gt;
+&lt;h2 id="summary"&gt;&lt;a class="anchor" href="#summary"&gt;&lt;/a&gt;Summary&lt;/h2&gt;
+&lt;div class="sectionbody"&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;We hope that you find the new binding features in Spring Boot 2.0 useful and that you will consider upgrading your existing Spring Boot applications.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;If you want to talk generally about binding, or if you have specific enhancement suggestions or issues please do &lt;a href="https://gitter.im/spring-projects/spring-boot"&gt;join us on Gitter&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</content>
+  </entry>
   <entry>
     <title>Spring Cloud Open Service Broker 2.0.0.M2 Released</title>
     <link rel="alternate" href="https://spring.io/blog/2018/03/27/spring-cloud-open-service-broker-2-0-0-m2-released" />
@@ -1351,20 +1596,5 @@ public void serviceIsIgnoredIfLibraryIsNotPresent() {&#xD;
                 .doesNotHaveBean(&amp;quot;userService&amp;quot;));&#xD;
 }
 &lt;/code&gt;&lt;/pre&gt;</content>
-  </entry>
-  <entry>
-    <title>Spring Batch 3.0.9.RELEASE and 4.0.1.RELEASE are now available</title>
-    <link rel="alternate" href="https://spring.io/blog/2018/03/07/spring-batch-3-0-9-release-and-4-0-1-release-are-now-available" />
-    <category term="releases" label="Releases" />
-    <author>
-      <name>Mahmoud Ben Hassine</name>
-    </author>
-    <id>tag:spring.io,2018-03-02:3200</id>
-    <updated>2018-03-07T16:26:00Z</updated>
-    <content type="html">&lt;p&gt;We are pleased to announce the release of Spring Batch 3.0.9.RELEASE and 4.0.1.RELEASE via Maven Central, Github, and the Pivotal download repository.&lt;/p&gt;
-&lt;p&gt;These two maintenance releases address a number of bug fixes, enhancements and documentation updates. For a complete list of changes, please refer to the change logs for &lt;a href="https://jira.spring.io/jira/secure/ReleaseNote.jspa?projectId=10090&amp;version=16254"&gt;3.0.9&lt;/a&gt; and &lt;a href="https://jira.spring.io/jira/secure/ReleaseNote.jspa?projectId=10090&amp;version=16626"&gt;4.0.1&lt;/a&gt;. Many thanks to all of those who submitted &lt;a href="https://github.com/spring-projects/spring-batch/pulls"&gt;pull requests&lt;/a&gt; that went into these releases.&lt;/p&gt;
-&lt;p&gt;Please note that the next patch version, 3.0.10.RELEASE, will be the &lt;strong&gt;last&lt;/strong&gt; maintenance release of the 3.x line. We strongly recommend users to migrate to the latest and greatest Spring Batch 4 (now available via Spring Boot 2).&lt;/p&gt;
-&lt;p&gt;We look forward to your feedback in &lt;a href="https://jira.spring.io/browse/BATCH"&gt;Jira&lt;/a&gt;, &lt;a href="https://stackoverflow.com/questions/tagged/spring-batch"&gt;StackOverflow&lt;/a&gt;, &lt;a href="https://gitter.im/spring-batch/Lobby"&gt;Gitter&lt;/a&gt;, or directly via Twitter at &lt;a href="https://twitter.com/_benas_"&gt;@_benas_&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://projects.spring.io/spring-batch/"&gt;Spring Batch Home&lt;/a&gt; | &lt;a href="https://github.com/spring-projects/spring-batch"&gt;Source on GitHub&lt;/a&gt; | &lt;a href="https://docs.spring.io/spring-batch/4.0.x/reference/html/index.html"&gt;Reference Documentation&lt;/a&gt;&lt;/p&gt;</content>
   </entry>
 </feed>
