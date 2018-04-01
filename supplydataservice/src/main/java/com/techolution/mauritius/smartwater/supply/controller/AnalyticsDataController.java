@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.techolution.mauritius.smartwater.supply.domain.MeterTrendData;
+import com.techolution.mauritius.smartwater.supply.domain.WaterSupplyDailyConnectionStats;
 import com.techolution.mauritius.smartwater.supply.service.SupplyAnalyticsService;
 
 @CrossOrigin(origins = {"*"})
@@ -41,6 +42,16 @@ public class AnalyticsDataController {
 		List<MeterTrendData> resultList=analyticService.getConnectionsBelowDailyBaseline();
 		log.info("Exiting ConsolidatedDataController.getConnectionsAboveDailyBaseline");
 		return resultList;
+	}
+	
+	
+	@RequestMapping(method=RequestMethod.GET,value="/stats")
+	public @ResponseBody WaterSupplyDailyConnectionStats getStats()
+	{
+		log.info("Entering ConsolidatedDataController.getStats");
+		WaterSupplyDailyConnectionStats output=analyticService.getStats();
+		log.info("Exiting ConsolidatedDataController.getStats");
+		return output;
 	}
 
 }

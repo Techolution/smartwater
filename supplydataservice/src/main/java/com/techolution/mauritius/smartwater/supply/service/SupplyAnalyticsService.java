@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import org.apache.commons.logging.Log;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Component;
 
 import com.techolution.mauritius.smartwater.supply.domain.MeterConnection;
 import com.techolution.mauritius.smartwater.supply.domain.MeterTrendData;
+import com.techolution.mauritius.smartwater.supply.domain.WaterSupplyDailyConnectionStats;
 import com.techolution.mauritius.smartwater.supply.repository.ConnectionDetailsRepository;
 
 
@@ -277,6 +279,121 @@ public class SupplyAnalyticsService {
 		Map <Long, MeterConnection> map = returnList.stream().collect(Collectors.toMap(conn -> conn.getHouse_id(),conn -> conn));
 		
 		return map;
+	}
+  
+  
+  public WaterSupplyDailyConnectionStats getStats(){
+		
+		log.info("Entering SupplyDataService.getStats");
+		
+		WaterSupplyDailyConnectionStats connectionStats=new WaterSupplyDailyConnectionStats();
+		if(SupplyAnalyticsService.connectionmap == null){
+			SupplyAnalyticsService.connectionmap=getAllConnections();
+		}
+		int totalMeters=SupplyAnalyticsService.connectionmap.size();
+		connectionStats.setTotalMeters(totalMeters);
+		
+		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		Calendar start=Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+		String startTime=myFormat.format(start.getTime());
+		
+		start.add(Calendar.DATE,1);
+		String endTime=myFormat.format(start.getTime());
+		
+		String countOfSupply="select count(*) from supplyondata where time >='"+startTime+"' and time <'"+endTime+"' group by meter_id";
+		
+		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
+		long startStarttime=System.currentTimeMillis();
+		QueryResult queryResult = influxDB.query(new Query(countOfSupply, dbName));
+		long endtime=System.currentTimeMillis();
+		log.debug("Time After countOfSupply query execution:"+endtime);
+		log.debug("Time Taken for query execution:"+(endtime-startStarttime));
+		
+		log.debug("Count of supply query is:"+countOfSupply);
+		
+		List<Result> results=queryResult.getResults();
+		
+		int nummetersupplied=0;
+		
+		if(results != null && !results.isEmpty()){
+			
+			Result result=results.get(0);
+			
+			List<Series> serieslist=result.getSeries();
+			//log.debug("supply Series list size is:"+serieslist.size());
+			if(serieslist !=null && !serieslist.isEmpty())
+			{
+				nummetersupplied=serieslist.size();
+					/*for(Series series:serieslist)
+					{
+					
+						List<List<Object>> res=series.getValues();
+						
+						if(res !=null && !res.isEmpty()){
+						
+							res.forEach( val -> System.out.println("Value is:"+val));
+							nummetersupplied=res.size();
+						}
+				}*/
+			}
+		}
+		log.debug("totalMeters:"+totalMeters);
+		log.debug("nummetersupplied:"+nummetersupplied);
+		
+		int nosupply=totalMeters-nummetersupplied;
+		if(nosupply < 0){
+			nosupply=0;
+		}
+		connectionStats.setNoSupplyCount(nosupply);
+		
+		int noResponseDevices =0;
+		
+		String noResponseQuery="select meter_id,last(value) from devicestatus group by meter_id";
+		
+		QueryResult queryResult2 = influxDB.query(new Query(noResponseQuery, dbName));
+		
+		List<Result> results2=queryResult2.getResults();
+		
+		
+		if(results2 != null && !results2.isEmpty()){
+			
+			Result result=results2.get(0);
+			
+			List<Series> serieslist=result.getSeries();
+			
+			if(serieslist !=null && !serieslist.isEmpty()){
+				
+				log.debug("Series list size is:"+serieslist.size());
+				for(Series series:serieslist)
+				{
+				
+					List<List<Object>> res=series.getValues();
+					
+					if(res !=null && !res.isEmpty()){
+						
+						for(List<Object> list:res){
+							
+				/*			log.debug("Meterid:"+list.get(1));
+							log.debug("value:"+list.get(2));*/
+							Double statusval=(Double)list.get(2);
+							if(statusval == -1){
+								noResponseDevices++;
+							}
+							
+						}
+					}
+				}
+			}
+		}
+		
+		
+		connectionStats.setNoResponseCount(noResponseDevices);
+		
+		
+		influxDB.close();
+		log.info("Exiting SupplyDataService.getStats");
+		return connectionStats;
 	}
 
 }
