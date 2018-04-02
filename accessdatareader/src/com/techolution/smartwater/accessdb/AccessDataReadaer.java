@@ -58,7 +58,7 @@ public class AccessDataReadaer {
 		while(rs.next()){
 			try {
 				 httpClient = HttpClientBuilder.create().build();
-				System.out.println("TF1:"+rs.getLong("TF1"));
+				System.out.println("RFQ:"+rs.getDouble("RF1"));
 				System.out.println("timestamp"+rs.getTimestamp("SampleTime"));
 				JSONObject jsonObject=getRowToFlowJson(rs);
 				int meterId=rs.getInt("UnitID");
@@ -100,7 +100,7 @@ public class AccessDataReadaer {
 	}
 	
 	private JSONObject getRowToFlowJson(ResultSet rs) throws SQLException{
-		Double flow=rs.getDouble("TF1");
+		Double flow=rs.getDouble("RF1");
 		Timestamp timestamp=rs.getTimestamp("SampleTime");
 		
 		Date date=new Date(timestamp.getTime());

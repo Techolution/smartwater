@@ -23,21 +23,16 @@ public class InfluxDBUtils {
 	@Autowired
     InfluxProperties influxProperties;
 
-	private static String INFLUX_CONNECTION_STRING="http://52.170.92.62:8086";
-	/*private static String INFLUX_USERNAME="root";
-	private static String INFLUX_PWD="root";*/
 	
 	
-	private static String DBNAME = "mauritius_smartwater";
-	//private static String QUERY_TEMPLATE=INFLUX_CONNECTION_STRING+"/query?db="+DBNAME+"&q=";
-	private static String QUERY_TEMPLATE=INFLUX_CONNECTION_STRING+"/query";
 	public  JSONObject executeQuery(String query) throws ClientProtocolException, IOException, JSONException, URISyntaxException{
 		
 	//	CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-		URIBuilder ub = new URIBuilder(QUERY_TEMPLATE);
-		ub.addParameter("db", DBNAME);
+		String queryTemplate=influxProperties.getUrl()+"/query";
+		URIBuilder ub = new URIBuilder(queryTemplate);
+		ub.addParameter("db", influxProperties.getDbname());
 		ub.addParameter("q", query);
-		String finalquery=QUERY_TEMPLATE+query;
+	//	String finalquery=queryTemplate+query;
 		//Apche commons API always gave error with URL though URL was working fine independently
 		/*HttpGet request=new HttpGet(finalquery);
 		CloseableHttpResponse response=httpClient.execute(request);

@@ -47,11 +47,6 @@ public class ConnectionStatisticsService {
 	
 	private Log log = LogFactory.getLog(ConnectionStatisticsService.class);
 	
-	/*private static String INFLUX_CONNECTION_STRING="http://52.170.92.62:8086";
-	private static String INFLUX_USERNAME="root";
-	private static String INFLUX_PWD="root";
-	
-	private static String influxProperties.getDbname() = "mauritius_smartwater";*/
 	
 	
 	@Autowired
@@ -248,12 +243,12 @@ public List<Data> getDailyFowRateData(RequestData data) throws ParseException{
 		long jsonstarttime=System.currentTimeMillis();
 		List<Data> retlist =null;
 		String locationName= "TEST";
-		retlist=getBatteryDataUsingNativeHttp(deviceId, query, jsonstarttime, locationName);
+	//	retlist=getBatteryDataUsingNativeHttp(deviceId, query, jsonstarttime, locationName);
 		
 		
 		
 		
-	//	 retlist = getBatteryResultUsingInfluxAPI(deviceId, query, locationName);
+		 retlist = getBatteryResultUsingInfluxAPI(deviceId, query, locationName);
 		log.debug("Exiting ConnectionStatisticsService.geBatterytData");
 		return retlist;
 	}
