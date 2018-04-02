@@ -51,11 +51,14 @@ public class AccessDataReadaer {
 
 
 		Statement st=conn.createStatement();
-		ResultSet rs=st.executeQuery("select * from last30MinutesData");
-		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+		String detailedQuery="SELECT ChData.UnitID, DistName.DistName, ChData.RF1, ChData.TF1, ChData.SampleTime, DATEDIFF(\"n\",ChData.SampleTime,Now()) AS timediffinmutes FROM ChData LEFT JOIN DistName ON ChData.UnitID = DistName.UnitID WHERE DATEDIFF(\"n\",ChData.SampleTime,Now()) <31 ORDER BY ChData.SampleTime";
+		//ResultSet rs=st.executeQuery("select * from last30MinutesData");
+		ResultSet rs=st.executeQuery(detailedQuery);
+		CloseableHttpClient httpClient = null;
 		while(rs.next()){
 			try {
-				System.out.println("RF1"+rs.getLong("RF1"));
+				 httpClient = HttpClientBuilder.create().build();
+				System.out.println("TF1:"+rs.getLong("TF1"));
 				System.out.println("timestamp"+rs.getTimestamp("SampleTime"));
 				JSONObject jsonObject=getRowToFlowJson(rs);
 				int meterId=rs.getInt("UnitID");
@@ -63,10 +66,12 @@ public class AccessDataReadaer {
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}finally{
+				httpClient.close();
 			}
 		}
 		
-		httpClient.close();
+		
 		/*Database db = new DatabaseBuilder(new File(dbPath)).open();
 		List<Query> queries=db.getQueries();
 		Query querytouse=null;
@@ -95,7 +100,7 @@ public class AccessDataReadaer {
 	}
 	
 	private JSONObject getRowToFlowJson(ResultSet rs) throws SQLException{
-		Double flow=rs.getDouble("RF1");
+		Double flow=rs.getDouble("TF1");
 		Timestamp timestamp=rs.getTimestamp("SampleTime");
 		
 		Date date=new Date(timestamp.getTime());
