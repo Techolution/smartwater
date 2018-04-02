@@ -10,12 +10,18 @@ import java.net.URL;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import com.techolution.mauritius.smartwater.InfluxProperties;
+
+@Component
 public class InfluxDBUtils {
+	
+	@Autowired
+    InfluxProperties influxProperties;
 
 	private static String INFLUX_CONNECTION_STRING="http://52.170.92.62:8086";
 	/*private static String INFLUX_USERNAME="root";
@@ -25,7 +31,7 @@ public class InfluxDBUtils {
 	private static String DBNAME = "mauritius_smartwater";
 	//private static String QUERY_TEMPLATE=INFLUX_CONNECTION_STRING+"/query?db="+DBNAME+"&q=";
 	private static String QUERY_TEMPLATE=INFLUX_CONNECTION_STRING+"/query";
-	public static JSONObject executeQuery(String query) throws ClientProtocolException, IOException, JSONException, URISyntaxException{
+	public  JSONObject executeQuery(String query) throws ClientProtocolException, IOException, JSONException, URISyntaxException{
 		
 	//	CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 		URIBuilder ub = new URIBuilder(QUERY_TEMPLATE);
@@ -62,7 +68,7 @@ public class InfluxDBUtils {
 	 * againsa options in JDK8 and IOUtils as mentioned in 
 	 * https://stackoverflow.com/questions/309424/read-convert-an-inputstream-to-a-string
 	 */
-	private static String convertStreamToString(InputStream inputStream) throws IOException{
+	private  String convertStreamToString(InputStream inputStream) throws IOException{
 		
 		/*final int bufferSize = 1024;
 		final char[] buffer = new char[bufferSize];

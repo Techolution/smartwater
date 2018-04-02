@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import com.techolution.mauritius.smartwater.InfluxProperties;
 import com.techolution.mauritius.smartwater.connection.domain.ConnectionKpiData;
 import com.techolution.mauritius.smartwater.connection.domain.Data;
 import com.techolution.mauritius.smartwater.connection.domain.KeyValue;
@@ -46,11 +47,19 @@ public class ConnectionStatisticsService {
 	
 	private Log log = LogFactory.getLog(ConnectionStatisticsService.class);
 	
-	private static String INFLUX_CONNECTION_STRING="http://52.170.92.62:8086";
+	/*private static String INFLUX_CONNECTION_STRING="http://52.170.92.62:8086";
 	private static String INFLUX_USERNAME="root";
 	private static String INFLUX_PWD="root";
 	
-	private static String dbName = "mauritius_smartwater";
+	private static String influxProperties.getDbname() = "mauritius_smartwater";*/
+	
+	
+	@Autowired
+    InfluxProperties influxProperties;
+	
+	
+	@Autowired
+	InfluxDBUtils influxdbutils;
 	
 	//TODO replace with spring properties or DB
 	public  static final int TOTALCAPACITY=4200;
@@ -162,9 +171,9 @@ public List<Data> getDailyFowRateData(RequestData data) throws ParseException{
 
 	private List<Data> getDailyMetrics(int deviceId, String query) {
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32770", "root", "root");
-		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
+		InfluxDB influxDB = InfluxDBFactory.connect(influxProperties.getUrl(),influxProperties.getUsername(),influxProperties.getPassword());
 		long startStarttime=System.currentTimeMillis();
-		QueryResult queryResult = influxDB.query(new Query(query, dbName));
+		QueryResult queryResult = influxDB.query(new Query(query, influxProperties.getDbname()));
 		long endtime=System.currentTimeMillis();
 		log.debug("Time After getDailyMetrics query execution:"+endtime);
 		log.debug("Time Taken for query execution:"+(endtime-startStarttime));
@@ -252,7 +261,7 @@ public List<Data> getDailyFowRateData(RequestData data) throws ParseException{
 private List<Data> getBatteryDataUsingNativeHttp(int deviceId, String query, long jsonstarttime, String locationName) {
 	List<Data> retlist = null;
 	try {
-		JSONObject responsejson=InfluxDBUtils.executeQuery(query);
+		JSONObject responsejson=influxdbutils.executeQuery(query);
 		long jsonendtime=System.currentTimeMillis();
 		
 		log.debug("JSON response is:"+responsejson.toString());
@@ -275,10 +284,10 @@ private List<Data> getBatteryDataUsingNativeHttp(int deviceId, String query, lon
 
 private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, String locationName) {
 	//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32770", "root", "root");
-	InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
+	InfluxDB influxDB = InfluxDBFactory.connect(influxProperties.getUrl(),influxProperties.getUsername(),influxProperties.getPassword());
 	long startStarttime=System.currentTimeMillis();
 	log.debug("Time before getBattery query execution:"+startStarttime);
-	QueryResult queryResult = influxDB.query(new Query(query, dbName));
+	QueryResult queryResult = influxDB.query(new Query(query, influxProperties.getDbname()));
 	long endtime=System.currentTimeMillis();
 	log.debug("Time After getBattery query execution:"+endtime);
 	log.debug("Time Taken for query execution:"+(endtime-startStarttime));
@@ -345,9 +354,9 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 			
 			
 			//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32770", "root", "root");
-			InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
+			InfluxDB influxDB = InfluxDBFactory.connect(influxProperties.getUrl(),influxProperties.getUsername(),influxProperties.getPassword());
 			long startStarttime=System.currentTimeMillis();
-			QueryResult queryResult = influxDB.query(new Query(query, dbName));
+			QueryResult queryResult = influxDB.query(new Query(query, influxProperties.getDbname()));
 			long endtime=System.currentTimeMillis();
 			log.debug("Time After getBattery query execution:"+endtime);
 			log.debug("Time Taken for query execution:"+(endtime-startStarttime));
@@ -412,16 +421,16 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 			log.info("Time to set is:"+telemetry.getDate().getTime());
 		}
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32770", "root", "root");
-		InfluxDB influxDB =InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
+		InfluxDB influxDB =InfluxDBFactory.connect(influxProperties.getUrl(),influxProperties.getUsername(),influxProperties.getPassword());
 		
-		influxDB.setDatabase(dbName);
+		influxDB.setDatabase(influxProperties.getDbname());
 		influxDB.enableBatch(BatchOptions.DEFAULTS);
 		String rpName = "aRetentionPolicy";
-	//	influxDB.createRetentionPolicy(rpName, dbName, "365d", "30m", 2, true);
+	//	influxDB.createRetentionPolicy(rpName, influxProperties.getDbname(), "365d", "30m", 2, true);
 		influxDB.setRetentionPolicy("aRetentionPolicy");
 		
 		BatchPoints batchPoints = BatchPoints
-				.database(dbName)
+				.database(influxProperties.getDbname())
 //				.tag("async", "true")
 				.retentionPolicy(rpName)
 				.consistency(ConsistencyLevel.ALL)
@@ -659,9 +668,9 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 		
 		
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32770", "root", "root");
-		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
+		InfluxDB influxDB = InfluxDBFactory.connect(influxProperties.getUrl(),influxProperties.getUsername(),influxProperties.getPassword());
 		long startStarttime=System.currentTimeMillis();
-		QueryResult queryResult = influxDB.query(new Query(query, dbName));
+		QueryResult queryResult = influxDB.query(new Query(query, influxProperties.getDbname()));
     	log.info("Entering ConnectionStatisticsService.getCurrentDeviceStatus");
     	long endtime=System.currentTimeMillis();
 		log.debug("Time After getBattery query execution:"+endtime);
@@ -721,9 +730,9 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 		
 		
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
-		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
-		String dbName = "mauritius_smartwater";
-		QueryResult queryResult = influxDB.query(new Query(query, dbName));
+		InfluxDB influxDB = InfluxDBFactory.connect(influxProperties.getUrl(),influxProperties.getUsername(),influxProperties.getPassword());
+		
+		QueryResult queryResult = influxDB.query(new Query(query, influxProperties.getDbname()));
 		
 		List<Result> results=queryResult.getResults();
 		if(results != null && results.size()>0){
@@ -770,9 +779,9 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 		
 		
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
-		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
-		//String dbName = dbName;
-		QueryResult queryResult = influxDB.query(new Query(query, dbName));
+		InfluxDB influxDB = InfluxDBFactory.connect(influxProperties.getUrl(),influxProperties.getUsername(),influxProperties.getPassword());
+		//String influxProperties.getDbname() = influxProperties.getDbname();
+		QueryResult queryResult = influxDB.query(new Query(query, influxProperties.getDbname()));
 		
 		List<Result> results=queryResult.getResults();
 		if(results != null && results.size()>0){
@@ -797,18 +806,18 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
     public void insertTimeSeriesData(SeriesPointData pointData){
     	
     	
-    	InfluxDB influxDB =InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
+    	InfluxDB influxDB =InfluxDBFactory.connect(influxProperties.getUrl(),influxProperties.getUsername(),influxProperties.getPassword());
 		
     	log.info("Entering ConnectionStatisticsService.insertTimeSeriesData");
 
-		influxDB.setDatabase(dbName);
+		influxDB.setDatabase(influxProperties.getDbname());
 		influxDB.enableBatch(BatchOptions.DEFAULTS);
 		String rpName = "aRetentionPolicy";
-	//	influxDB.createRetentionPolicy(rpName, dbName, "365d", "30m", 2, true);
+	//	influxDB.createRetentionPolicy(rpName, influxProperties.getDbname(), "365d", "30m", 2, true);
 		influxDB.setRetentionPolicy("aRetentionPolicy");
 		
 		BatchPoints batchPoints = BatchPoints
-				.database(dbName)
+				.database(influxProperties.getDbname())
 //				.tag("async", "true")
 				.retentionPolicy(rpName)
 				.consistency(ConsistencyLevel.ALL)
