@@ -11,7 +11,18 @@ public class InfluxProperties {
 	private String url;
 	private String username;
 	private String password;
+	private String datatimezone;
 	
+	
+
+	public String getDatatimezone() {
+		return datatimezone;
+	}
+
+	public void setDatatimezone(String datatimezone) {
+		this.datatimezone = datatimezone;
+	}
+
 	private String retentionPolicyName;
 	public String getRetentionPolicyName() {
 		return retentionPolicyName;

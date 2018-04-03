@@ -19,6 +19,7 @@ import org.influxdb.dto.QueryResult.Series;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.techolution.mauritius.smartwater.supply.InfluxProperties;
 import com.techolution.mauritius.smartwater.supply.domain.MeterConnection;
 import com.techolution.mauritius.smartwater.supply.domain.MeterTrendData;
 import com.techolution.mauritius.smartwater.supply.domain.WaterSupplyDailyConnectionStats;
@@ -31,15 +32,17 @@ public class SupplyAnalyticsService {
 	@Autowired
 	private ConnectionDetailsRepository connectionDetailsRepository;
 	
+	
+	@Autowired
+    InfluxProperties influxProperties;
+	
 	private static long MONTHLY_THRESHOLD=50000;
 	private static long DAILY_THRESHOLD=4000;
 	private static long DAILY_LOWER_THRESHOLD=1000;
 	
 	private static String METER_ID= "meter_id";
 	
-	private static String INFLUX_CONNECTION_STRING="http://52.170.92.62:8086";
-	private static String INFLUX_USERNAME="root";
-	private static String INFLUX_PWD="root";
+	
 	private static String EQUALTO_QUOTE="='";
 	private static String QUOTE="'";
 	private static String SPACE=" ";
@@ -50,7 +53,7 @@ public class SupplyAnalyticsService {
 	private static String DEFAULT_LOCATION="TEST";
 	
 	
-	private static String dbName = "mauritius_smartwater";
+	
 	
 	private Log log = LogFactory.getLog(SupplyAnalyticsService.class);
 	
@@ -218,9 +221,9 @@ public class SupplyAnalyticsService {
 		List<MeterTrendData> retList=new ArrayList<MeterTrendData>();
 		
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32770", "root", "root");
-		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
+		InfluxDB influxDB = InfluxDBFactory.connect(influxProperties.getUrl(),influxProperties.getUsername(),influxProperties.getPassword());
 		long startStarttime=System.currentTimeMillis();
-		QueryResult queryResult = influxDB.query(new Query(query, dbName));
+		QueryResult queryResult = influxDB.query(new Query(query, influxProperties.getDbname()));
 		long endtime=System.currentTimeMillis();
 		log.debug("Time After getConnectionsAboveDailyBaseline query execution:"+endtime);
 		log.debug("Time Taken for query execution:"+(endtime-startStarttime));
@@ -303,9 +306,9 @@ public class SupplyAnalyticsService {
 		
 		String countOfSupply="select count(*) from supplyondata where time >='"+startTime+"' and time <'"+endTime+"' group by meter_id";
 		
-		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
+		InfluxDB influxDB = InfluxDBFactory.connect(influxProperties.getUrl(),influxProperties.getUsername(),influxProperties.getPassword());
 		long startStarttime=System.currentTimeMillis();
-		QueryResult queryResult = influxDB.query(new Query(countOfSupply, dbName));
+		QueryResult queryResult = influxDB.query(new Query(countOfSupply, influxProperties.getDbname()));
 		long endtime=System.currentTimeMillis();
 		log.debug("Time After countOfSupply query execution:"+endtime);
 		log.debug("Time Taken for query execution:"+(endtime-startStarttime));
@@ -351,7 +354,7 @@ public class SupplyAnalyticsService {
 		
 		String noResponseQuery="select meter_id,last(value) from devicestatus group by meter_id";
 		
-		QueryResult queryResult2 = influxDB.query(new Query(noResponseQuery, dbName));
+		QueryResult queryResult2 = influxDB.query(new Query(noResponseQuery, influxProperties.getDbname()));
 		
 		List<Result> results2=queryResult2.getResults();
 		

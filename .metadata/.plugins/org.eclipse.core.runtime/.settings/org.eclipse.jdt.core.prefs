@@ -1,7 +1,11 @@
 eclipse.preferences.version=1
+org.eclipse.jdt.core.classpathVariable.ASPECTJRT_LIB=C\:/Softwares/spring-tool-suite-3.8.3.RELEASE-e4.6.2-win32-x86_64/sts-bundle/sts-3.8.3.RELEASE/plugins/org.aspectj.runtime_1.8.10.201612122115.jar
+org.eclipse.jdt.core.classpathVariable.ECLIPSE_HOME=C\:/Softwares/spring-tool-suite-3.8.3.RELEASE-e4.6.2-win32-x86_64/sts-bundle/sts-3.8.3.RELEASE/
 org.eclipse.jdt.core.classpathVariable.JRE_LIB=C\:/Program Files/Java/jdk1.8.0_121/jre/lib/rt.jar
 org.eclipse.jdt.core.classpathVariable.JRE_SRC=C\:/Program Files/Java/jdk1.8.0_121/src.zip
 org.eclipse.jdt.core.classpathVariable.JRE_SRCROOT=
+org.eclipse.jdt.core.classpathVariable.JUNIT_HOME=C\:/Softwares/spring-tool-suite-3.8.3.RELEASE-e4.6.2-win32-x86_64/sts-bundle/sts-3.8.3.RELEASE/plugins/org.junit_4.12.0.v201504281640/
+org.eclipse.jdt.core.classpathVariable.M2_REPO=C\:/Users/Lenovo/.m2/repository
 org.eclipse.jdt.core.codeComplete.visibilityCheck=enabled
 org.eclipse.jdt.core.compiler.codegen.inlineJsrBytecode=enabled
 org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.8

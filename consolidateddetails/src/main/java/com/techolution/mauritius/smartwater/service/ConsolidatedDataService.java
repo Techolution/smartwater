@@ -20,6 +20,7 @@ import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.techolution.mauritius.smartwater.InfluxProperties;
 import com.techolution.mauritius.smartwater.domain.MeterConnection;
 import com.techolution.mauritius.smartwater.domain.TotalConsolidatedConsumption;
 import com.techolution.mauritius.smartwater.domain.TotalConsolidatedDeviceStatus;
@@ -29,11 +30,11 @@ import com.techolution.mauritius.smartwater.repository.ConnectionDetailsReposito
 public class ConsolidatedDataService {
 	private Log log = LogFactory.getLog(ConsolidatedDataService.class);
 	
-	private static String INFLUX_CONNECTION_STRING="http://52.170.92.62:8086";
-	private static String INFLUX_USERNAME="root";
-	private static String INFLUX_PWD="root"; 
+	/*private static String influxProperties.getUrl()="http://52.170.92.62:8086";
+	private static String influxProperties.getUsername()="root";
+	private static StringinfluxProperties.getPassword()="root"; 
 	
-	private static String dbName = "mauritius_smartwater";
+	private static String influxProperties.getDbname() = "mauritius_smartwater";*/
 	private static String TAG_METER_ID = "meter_id";
 	private static String WORKING = "WORKING";
 	private static String NOT_WORKING = "NOT WORKING";
@@ -41,6 +42,8 @@ public class ConsolidatedDataService {
 	@Autowired
 	private ConnectionDetailsRepository connectionDetailsRepository;
 	
+	@Autowired
+    InfluxProperties influxProperties;
 	
 	
 	public List<MeterConnection> getAllConnections(){
@@ -92,11 +95,11 @@ public class ConsolidatedDataService {
 		
 		
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
-		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
+		InfluxDB influxDB = InfluxDBFactory.connect(influxProperties.getUrl(), influxProperties.getUsername(),influxProperties.getPassword());
 		
-		QueryResult queryResult = influxDB.query(new Query(query, dbName));
+		QueryResult queryResult = influxDB.query(new Query(query, influxProperties.getDbname()));
 		Double consumption = getConsumption(queryResult);
-		QueryResult queryResultPreviousBucket = influxDB.query(new Query(query_previousbucket, dbName));
+		QueryResult queryResultPreviousBucket = influxDB.query(new Query(query_previousbucket, influxProperties.getDbname()));
 		Double previousconsumption = getConsumption(queryResultPreviousBucket);
 		log.debug("consumption:"+consumption);
 		
@@ -129,11 +132,11 @@ public TotalConsolidatedConsumption getConsumptionForToday() throws ClientProtoc
 		
 		
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
-		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
+		InfluxDB influxDB = InfluxDBFactory.connect(influxProperties.getUrl(), influxProperties.getUsername(),influxProperties.getPassword());
 		
-		QueryResult queryResult = influxDB.query(new Query(query, dbName));
+		QueryResult queryResult = influxDB.query(new Query(query, influxProperties.getDbname()));
 		Double consumption = getConsumption(queryResult);
-		QueryResult queryResultPreviousBucket = influxDB.query(new Query(query_previousbucket, dbName));
+		QueryResult queryResultPreviousBucket = influxDB.query(new Query(query_previousbucket, influxProperties.getDbname()));
 		Double previousconsumption = getConsumption(queryResultPreviousBucket);
 		log.debug("consumption:"+consumption);
 		
@@ -169,9 +172,9 @@ public TotalConsolidatedConsumption getConsumptionForToday() throws ClientProtoc
 		
 		
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
-		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
+		InfluxDB influxDB = InfluxDBFactory.connect(influxProperties.getUrl(), influxProperties.getUsername(),influxProperties.getPassword());
 		
-		QueryResult queryResult = influxDB.query(new Query(query, dbName));
+		QueryResult queryResult = influxDB.query(new Query(query, influxProperties.getDbname()));
 		List<Result> results=queryResult.getResults();
 		
 		int totalDevices=results.size();
@@ -200,7 +203,7 @@ public TotalConsolidatedConsumption getConsumptionForToday() throws ClientProtoc
 		}
 		
 		
-		QueryResult queryResultPreviousBucket = influxDB.query(new Query(query_previousbucket, dbName));
+		QueryResult queryResultPreviousBucket = influxDB.query(new Query(query_previousbucket, influxProperties.getDbname()));
 		
 		
 		int notworkingdevicescountpreviousbucket = 0;
@@ -250,9 +253,9 @@ public TotalConsolidatedConsumption getConsumptionForToday() throws ClientProtoc
 		
 		
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
-		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
+		InfluxDB influxDB = InfluxDBFactory.connect(influxProperties.getUrl(), influxProperties.getUsername(),influxProperties.getPassword());
 		
-		QueryResult queryResult = influxDB.query(new Query(query, dbName));
+		QueryResult queryResult = influxDB.query(new Query(query, influxProperties.getDbname()));
 		List<Result> results=queryResult.getResults();
 		
 		int totalDevices=results.size();
@@ -282,7 +285,7 @@ public TotalConsolidatedConsumption getConsumptionForToday() throws ClientProtoc
 		}
 		
 		
-		QueryResult queryResultPreviousBucket = influxDB.query(new Query(query_previousbucket, dbName));
+		QueryResult queryResultPreviousBucket = influxDB.query(new Query(query_previousbucket, influxProperties.getDbname()));
 		
 		
 		int notworkingdevicescountpreviousbucket = 0;
@@ -294,8 +297,8 @@ public TotalConsolidatedConsumption getConsumptionForToday() throws ClientProtoc
 				break;
 			for(Series series:seriesvalues){
 				List<List<Object>> values=series.getValues();
-				Integer value=(Integer)(values.get(0).get(1));
-				if(value.intValue() == 0){
+				int value=((Double)(values.get(0).get(1))).intValue();
+				if(value == 0){
 					notworkingdevicescountpreviousbucket++;
 				}
 			}
@@ -316,7 +319,7 @@ public TotalConsolidatedConsumption getConsumptionForToday() throws ClientProtoc
 			List<List<Object>> values=valueobj.getSeries().get(0).getValues();
 //			String consumption=(String)(values.get(0).get(1));
 			Double consumption=(Double)(values.get(0).get(1));
-			return consumption;	
+			return Math.round(consumption*100D)/100D;	
 		}else{
 			return new Double(0.0);
 		}
@@ -342,9 +345,9 @@ public TotalConsolidatedConsumption getConsumptionForToday() throws ClientProtoc
 		
 		
 		
-		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
+		InfluxDB influxDB = InfluxDBFactory.connect(influxProperties.getUrl(), influxProperties.getUsername(),influxProperties.getPassword());
 		
-		QueryResult queryResult = influxDB.query(new Query(query, dbName));
+		QueryResult queryResult = influxDB.query(new Query(query, influxProperties.getDbname()));
 		List<Result> results=queryResult.getResults();
 		Map<String,String> statusMap=new HashMap<String,String>();
 		

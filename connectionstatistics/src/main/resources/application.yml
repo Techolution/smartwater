@@ -31,7 +31,8 @@ influx:
     url: http://52.170.92.62:8086
     username: root
     password: root
-    dbname: mauritius_smartwater
+    dbname: mauritius_smartwater_uat
+    datatimezone: MUT
      
 
 

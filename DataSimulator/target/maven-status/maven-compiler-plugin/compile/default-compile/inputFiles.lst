@@ -1,5 +1,9 @@
 C:\Techolution\IOTPractise\MauritiusProject\Code\DataSimulator\src\com\techolution\mauritus\data\Telemetry.java
+C:\Techolution\IOTPractise\MauritiusProject\Code\DataSimulator\src\com\techolution\mauritius\data\simulator\service\InsertSeriesData.java
 C:\Techolution\IOTPractise\MauritiusProject\Code\DataSimulator\src\com\techolution\mauritius\data\simulator\service\IStubData.java
 C:\Techolution\IOTPractise\MauritiusProject\Code\DataSimulator\src\com\techolution\mauritus\data\simulator\PopulateData.java
 C:\Techolution\IOTPractise\MauritiusProject\Code\DataSimulator\src\com\techolution\mauritius\data\simulator\service\BatteryDataSimiulator.java
+C:\Techolution\IOTPractise\MauritiusProject\Code\DataSimulator\src\com\techolution\mauritus\data\KeyValue.java
+C:\Techolution\IOTPractise\MauritiusProject\Code\DataSimulator\src\com\techolution\mauritius\data\simulator\service\MeterOffDataSimulator.java
 C:\Techolution\IOTPractise\MauritiusProject\Code\DataSimulator\src\com\techolution\mauritius\data\simulator\service\FlowDataSimiulator.java
+C:\Techolution\IOTPractise\MauritiusProject\Code\DataSimulator\src\com\techolution\mauritius\data\simulator\service\MeterOnDataSimulator.java

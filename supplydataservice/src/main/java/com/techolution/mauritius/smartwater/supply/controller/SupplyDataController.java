@@ -58,10 +58,10 @@ public class SupplyDataController {
 	}
 	
 	@PostMapping("/data")
-	public @ResponseBody List<WaterSupplyUIData> insertTelemetryDataGeneric(@RequestBody SupplyStatisticsRequestData requestData) throws ParseException, JSONException
+	public @ResponseBody List<WaterSupplyUIData> getSupplyStats(@RequestBody SupplyStatisticsRequestData requestData) throws ParseException, JSONException
 	
 	{
-		log.info("Entering SupplyDataController.insertTelemetryDataGeneric");
+		log.info("Entering SupplyDataController.getSupplyStats");
 		
 		
 		List<DailyWaterSupplyData> result=supplyDataService.getDataForList(requestData);
@@ -125,7 +125,7 @@ public class SupplyDataController {
 			
 		});
 		
-		log.info("Exiting SupplyDataController.insertTelemetryDataGeneric");
+		log.info("Exiting SupplyDataController.getSupplyStats");
 		return uidatalist;
 		
 	}

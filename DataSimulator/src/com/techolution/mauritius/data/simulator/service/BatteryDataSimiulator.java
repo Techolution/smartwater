@@ -43,7 +43,7 @@ public class BatteryDataSimiulator implements IStubData {
 		Date startDate=null;
 		Date endDate=null;
 		if(startTime.length() <= 2){
-			startDate=Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime();
+			startDate=Calendar.getInstance(TimeZone.getTimeZone("MUT")).getTime();
 			
 		}else{
 			try {
@@ -55,7 +55,7 @@ public class BatteryDataSimiulator implements IStubData {
 		}
 		
 		if(endTime.length()<=2){
-			Calendar enddateCal=Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+			Calendar enddateCal=Calendar.getInstance(TimeZone.getTimeZone("MUT"));
 			enddateCal.add(Calendar.DATE,1);
 			endDate=enddateCal.getTime();
 			
@@ -95,7 +95,7 @@ public class BatteryDataSimiulator implements IStubData {
 				if(sleepTime > 100){
 					Thread.sleep(sleepTime);
 				}
-				Calendar calendar=Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+				Calendar calendar=Calendar.getInstance(TimeZone.getTimeZone("MUT"));
 				calendar.setTime(startDate);
 				calendar.add(Calendar.MILLISECOND,incrementtime);
 				startDate=calendar.getTime();

@@ -10,28 +10,37 @@ import java.net.URL;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import com.techolution.mauritius.smartwater.supply.InfluxProperties;
+
+@Component
 public class InfluxDBUtils {
 
-	private static String INFLUX_CONNECTION_STRING="http://52.170.92.62:8086";
+	@Autowired
+    InfluxProperties influxProperties;
+	
+	//private static String INFLUX_CONNECTION_STRING="http://52.170.92.62:8086";
 	/*private static String INFLUX_USERNAME="root";
 	private static String INFLUX_PWD="root";*/
 	
 	
 	private static String DBNAME = "mauritius_smartwater";
 	//private static String QUERY_TEMPLATE=INFLUX_CONNECTION_STRING+"/query?db="+DBNAME+"&q=";
-	private static String QUERY_TEMPLATE=INFLUX_CONNECTION_STRING+"/query";
-	public static JSONObject executeQuery(String query) throws ClientProtocolException, IOException, JSONException, URISyntaxException{
+	//private static String QUERY_TEMPLATE=INFLUX_CONNECTION_STRING+"/query";
+	public  JSONObject executeQuery(String query) throws ClientProtocolException, IOException, JSONException, URISyntaxException{
 		
 	//	CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-		URIBuilder ub = new URIBuilder(QUERY_TEMPLATE);
+		String queryTemplate=influxProperties.getUrl()+"/query";
+		URIBuilder ub = new URIBuilder(queryTemplate);
 		ub.addParameter("db", DBNAME);
 		ub.addParameter("q", query);
-		String finalquery=QUERY_TEMPLATE+query;
+		
+		/*String queryTemplate=influxProperties.getUrl()+"/query";
+		String finalquery=queryTemplate+query;*/
 		//Apche commons API always gave error with URL though URL was working fine independently
 		/*HttpGet request=new HttpGet(finalquery);
 		CloseableHttpResponse response=httpClient.execute(request);
@@ -62,7 +71,7 @@ public class InfluxDBUtils {
 	 * againsa options in JDK8 and IOUtils as mentioned in 
 	 * https://stackoverflow.com/questions/309424/read-convert-an-inputstream-to-a-string
 	 */
-	private static String convertStreamToString(InputStream inputStream) throws IOException{
+	private  String convertStreamToString(InputStream inputStream) throws IOException{
 		
 		/*final int bufferSize = 1024;
 		final char[] buffer = new char[bufferSize];

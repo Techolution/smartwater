@@ -5,10 +5,10 @@ import java.util.Date;
 
 public class Telemetry implements Serializable {
 	
-	public Long getReading() {
+	public double getReading() {
 		return reading;
 	}
-	public void setReading(Long reading) {
+	public void setReading(Double reading) {
 		this.reading = reading;
 	}
 	/**
@@ -16,10 +16,10 @@ public class Telemetry implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private int meter_id;
-	private Long flow;
+	private double flow;
 	private Long battery;
 	private Long flowrate;
-	private Long reading;
+	private double reading;
 	private Date date;
 	public int getMeter_id() {
 		return meter_id;
@@ -27,10 +27,10 @@ public class Telemetry implements Serializable {
 	public void setMeter_id(int meter_id) {
 		this.meter_id = meter_id;
 	}
-	public Long getFlow() {
+	public double getFlow() {
 		return flow;
 	}
-	public void setFlow(Long flow) {
+	public void setFlow(double flow) {
 		this.flow = flow;
 	}
 	public Long getBattery() {

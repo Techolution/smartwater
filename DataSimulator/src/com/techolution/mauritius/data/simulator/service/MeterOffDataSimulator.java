@@ -100,7 +100,7 @@ public class MeterOffDataSimulator extends InsertSeriesData implements IStubData
 				if(sleepTime > 100){
 					Thread.sleep(sleepTime);
 				}
-				Calendar calendar=Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+				Calendar calendar=Calendar.getInstance(TimeZone.getTimeZone("MUT"));
 				calendar.setTime(startDate);
 				int rand=new Long(ThreadLocalRandom.current().nextLong(-90000, 900000)).intValue();
 				calendar.add(Calendar.MILLISECOND,(incrementtime+rand));

@@ -2,22 +2,28 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="instant" key="selection"/>
+		<item value="add" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="Instant"/>
-			<item value="Forma"/>
-			<item value="rpName"/>
-			<item value="batchPoints"/>
-			<item value="insert"/>
-			<item value="StringBuffer wherclause = createWhereClause(retList);"/>
-			<item value="createWhereClause"/>
-			<item value="getMeterConnectionForDates"/>
+			<item value="add"/>
+			<item value="dbName"/>
+			<item value=" INFLUX_PWD"/>
+			<item value="INFLUX_USERNAME"/>
+			<item value="INFLUX_CONNECTION_STRING"/>
+			<item value="influxProperties"/>
+			<item value="aRetentionPolicy"/>
+			<item value="mauritius_smartwater"/>
 		</list>
 		<list key="replacehistory">
+			<item value="influxProperties.getDbname()"/>
+			<item value="influxProperties.getPassword()"/>
+			<item value="influxProperties.getUsername()"/>
+			<item value="influxProperties.getUrl()"/>
+			<item value="influxdbutils"/>
+			<item value="influxProperties.getUrl(),influxProperties.getUsername(),influxProperties.getPassword()"/>
 			<item value="int"/>
 		</list>
 	</section>

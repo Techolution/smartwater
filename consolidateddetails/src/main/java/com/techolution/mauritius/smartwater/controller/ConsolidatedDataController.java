@@ -60,18 +60,18 @@ public class ConsolidatedDataController {
 	@RequestMapping(method=RequestMethod.GET,value="/monthly/devicestatus")
 	public @ResponseBody TotalConsolidatedDeviceStatus getTillDateMonthlyDeviceStatus() throws ClientProtocolException, IOException, JSONException
 	{
-		log.info("Entering ConsolidatedDataController.getTillDateMonthlyConsumption");
+		log.info("Entering ConsolidatedDataController.getTillDateMonthlyDeviceStatus");
 		TotalConsolidatedDeviceStatus  result=consolidatedDataService.getDeviceStatusForThisMonth();
-		log.info("Exiting ConsolidatedDataController.getAllConnections");
+		log.info("Exiting ConsolidatedDataController.getTillDateMonthlyDeviceStatus");
 		return result;
 	}
 	
 	@RequestMapping(method=RequestMethod.GET,value="/daily/devicestatus")
 	public @ResponseBody TotalConsolidatedDeviceStatus getTodayDeviceStatus() throws ClientProtocolException, IOException, JSONException
 	{
-		log.info("Entering ConsolidatedDataController.getTillDateMonthlyConsumption");
+		log.info("Entering ConsolidatedDataController.getTodayDeviceStatus");
 		TotalConsolidatedDeviceStatus  result=consolidatedDataService.getDeviceStatusForToday();
-		log.info("Exiting ConsolidatedDataController.getAllConnections");
+		log.info("Exiting ConsolidatedDataController.getTodayDeviceStatus");
 		return result;
 	}
 

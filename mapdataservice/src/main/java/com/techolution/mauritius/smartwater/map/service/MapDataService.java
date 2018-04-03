@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -17,6 +18,7 @@ import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
 import org.influxdb.dto.QueryResult.Result;
 import org.influxdb.dto.QueryResult.Series;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -24,12 +26,11 @@ import org.springframework.web.client.RestTemplate;
 import com.techolution.mauritius.smartwater.domain.MeterConnection;
 import com.techolution.mauritius.smartwater.domain.MeterConsumption;
 import com.techolution.mauritius.smartwater.domain.RequestData;
+import com.techolution.mauritius.smartwater.map.InfluxProperties;
 
 @Component
 public class MapDataService {
-	private static String INFLUX_CONNECTION_STRING="http://52.170.92.62:8086";
-	private static String INFLUX_USERNAME="root";
-	private static String INFLUX_PWD="root"; 
+	
 	
 	private Log log = LogFactory.getLog(MapDataService.class);
 	
@@ -39,8 +40,12 @@ public class MapDataService {
 		    return new RestTemplate();
 		}
 		
+	 
+
+		@Autowired
+	    InfluxProperties influxProperties;
 	
-	public List<MeterConsumption> getDataForAllConnections(RequestData data){
+	public List<MeterConsumption> getDataForAllConnections(RequestData data) throws ParseException{
 		
 		
 		log.info("Entering MapDataService.getDataForAllConnections ");
@@ -62,7 +67,7 @@ public class MapDataService {
 		log.debug("List size returned is:"+availableConnections.size());
 		//For each of the returned value call influx and resturn
 		
-		String endTime = data.getEnd_Time();
+		String endTime = getNextDay(data.getEnd_Time());
 		//String endTime = "2018-03-15";
 		
 		String startTime = data.getStart_Time();
@@ -72,11 +77,11 @@ public class MapDataService {
 				
 		
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
-		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
-		String dbName = "mauritius_smartwater";
+		InfluxDB influxDB = InfluxDBFactory.connect(influxProperties.getUrl(),influxProperties.getUsername(),influxProperties.getPassword());
+		
 		
 		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		myFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+		myFormat.setTimeZone(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
 		String locationName= "TEST";
 		
 		List<MeterConsumption> resultList=new ArrayList<MeterConsumption>();
@@ -85,7 +90,7 @@ public class MapDataService {
 			
 			String query = "select sum(value)  from flowvalues where time >='"+startTime+"' and time<'"+endTime+"' and meter_id='"+meterConnection.getHouse_id()+"'";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
 			log.debug("Query is:"+query);
-			QueryResult queryResult = influxDB.query(new Query(query, dbName));
+			QueryResult queryResult = influxDB.query(new Query(query, influxProperties.getDbname()));
 			List<Result> resultlist=queryResult.getResults();
 			double consumption=0.0;
 			String endDate=null;
@@ -119,6 +124,18 @@ public class MapDataService {
 		influxDB.close();
 		log.info("Exiting MapDataService.getDataForAllConnections ");
 		return resultList;
+	}
+	
+private String getNextDay(String endTime) throws ParseException {
+		
+		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date date=myFormat.parse(endTime);
+		
+		Calendar calendar=Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.add(Calendar.DATE, 1);
+		endTime = myFormat.format(calendar.getTime());
+		return endTime;
 	}
 
 }

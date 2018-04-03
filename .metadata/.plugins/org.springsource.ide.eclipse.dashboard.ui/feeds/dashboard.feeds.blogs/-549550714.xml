@@ -5,7 +5,64 @@
   <link rel="self" href="https://spring.io/blog.atom" />
   <id>http://spring.io/blog.atom</id>
   <icon>https://spring.io/favicon.ico</icon>
-  <updated>2018-03-28T16:07:32Z</updated>
+  <updated>2018-04-03T21:07:51Z</updated>
+  <entry>
+    <title>This Week in Spring - April 3, 2018</title>
+    <link rel="alternate" href="https://spring.io/blog/2018/04/03/this-week-in-spring-april-3-2018" />
+    <category term="engineering" label="Engineering" />
+    <author>
+      <name>Josh Long</name>
+    </author>
+    <id>tag:spring.io,2018-04-03:3223</id>
+    <updated>2018-04-03T21:07:51Z</updated>
+    <content type="html">&lt;p&gt;Hi Spring fans! What a week! This week I&amp;rsquo;m in beautiful Dallas, TX, for the Spring One Tour Dallas event which is, like so many of the other cities already, utterly and completely sold out! What a crowd! &lt;/p&gt;
+&lt;p&gt;&lt;blockquote class="twitter-tweet" data-lang="en"&gt;&lt;p lang="en" dir="ltr"&gt;Wow &lt;a href="https://twitter.com/hashtag/SpringOneTour?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#SpringOneTour&lt;/a&gt; Dallas, you’re so &lt;a href="https://twitter.com/hashtag/bootiful?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#bootiful&lt;/a&gt; ! &lt;a href="https://t.co/SySCBw4UNX"&gt;pic.twitter.com/SySCBw4UNX&lt;/a&gt;&lt;/p&gt;&amp;mdash; Josh Long (???, ???) (@starbuxman) &lt;a href="https://twitter.com/starbuxman/status/981241053612298240?ref_src=twsrc%5Etfw"&gt;April 3, 2018&lt;/a&gt;&lt;/blockquote&gt;&lt;br/&gt;&lt;script async src="https://platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;&lt;/p&gt;
+&lt;p&gt;And, so, without further ado, let&amp;rsquo;s get to it!&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Spring Framework Juergen Hoeller has just &lt;a href="https://spring.io/blog/2018/04/03/spring-framework-5-0-5-and-4-3-15-available-now"&gt;announced Spring Framework 5.0.5 and 4.3.15 are now available.&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Check out the PR &lt;a href="https://github.com/spring-cloud/spring-cloud-contract/pull/569"&gt;supporting Pact v3 in Spring Cloud Contract.next&lt;/a&gt;. Now would be a good time to try it out and feedback!&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://content.pivotal.io/blog/pcf-2-1-and-the-quest-for-a-one-pizza-ops-team"&gt;PCF 2.1 and the Quest for a One Pizza Ops Team&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Check out this shiny new &lt;a href="https://github.com/spring-projects/spring-data-cassandra/pull/125"&gt;Kotlin DSL for Spring Data Cassandra!&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Spring Boot lead Phil Webb has &lt;a href="https://spring.io/blog/2018/03/28/property-binding-in-spring-boot-2-0"&gt;published a nice look at property binding in Spring Boot 2.0&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Spring Batch 1.0.0. was released ten years and a week ago, &lt;a href="https://github.com/spring-projects/spring-batch/releases/tag/spring-batch-1.0.0.FINAL"&gt;on March 28th, 2018&lt;/a&gt;. Happy tenth anniversary, Spring Batch!&lt;/li&gt;
+  &lt;li&gt;Roy Clarkson &lt;a href="https://spring.io/blog/2018/03/27/spring-cloud-open-service-broker-2-0-0-m2-released"&gt;has just announced that the Spring Cloud Open Service Broker 2.0.0.M2&lt;/a&gt; is now available. Spring Cloud Open Service Broker is a framework for building Spring Boot applications that implement the Open Service Broker API.&lt;/li&gt;
+  &lt;li&gt;Ryan Baxter &lt;a href="https://spring.io/blog/2018/03/27/spring-cloud-edgware-sr3-has-been-released"&gt;has just announced Spring Cloud Edware SR3&lt;/a&gt; which includes a number of refinements which you should definitely check out!&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://github.com/dsyer/riff-http"&gt;GitHub - dsyer/riff-http&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://jaxenter.com/java-10-interview-series-part-3-142957.html"&gt;Java 10 migration: Is it a breeze or a tornado? - JAXenter&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Check out this post &lt;a href="https://www.petrikainulainen.net/programming/testing/junit-5-tutorial-running-unit-tests-with-gradle/"&gt;on using JUnit 5 with Gradle &lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;This &lt;a href="http://www.bytesville.com/springboot-micrometer-prometheus-grafana/"&gt;post&lt;/a&gt; looks at using &lt;a href="http://start.spring.io"&gt;Spring Boot 2&lt;/a&gt;, &lt;a href="http://micrometer.io"&gt;Micrometer&lt;/a&gt;, Prometheus and Grafana together - check it out!&lt;/li&gt;
+  &lt;li&gt;It was &lt;a href="https://twitter.com/springcentral/status/979814661058043904"&gt;recently Greg Turnquist&amp;rsquo;s birthday&lt;/a&gt;. Greg is the chap who toils tirelessly on all the amazing &lt;a href="http://spring.io/guides"&gt;http://Spring.io/guides&lt;/a&gt;. So, for his birthday, won&amp;rsquo;t you take a moment &lt;a href="http://twitter.com/gregturn"&gt;and say &amp;ldquo;thanks&amp;rdquo;&lt;/a&gt;?&lt;/li&gt;
+  &lt;li&gt;This is an interesting template application that demonstrates how to &lt;a href="https://github.com/pram/spring-react-boilerplate"&gt;wire up Spring, JWT, React and Redux together.&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Hey Atlanta, I&amp;rsquo;ll be there April 10 looking at building reactive microservices with &lt;a href="https://twitter.com/springcentral/status/979421909443010560"&gt;Project Reactor, Spring Boot 2.0, and Spring Cloud Finchley&lt;/a&gt;. Check it out!&lt;/li&gt;
+  &lt;li&gt;This is an oldie-but-a-goodie: it looks at &lt;a href="https://beansroasted.wordpress.com/2017/07/29/connection-pool-analysis/amp/?__twitter_impression=true"&gt;the details of connection pools&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Check out this link for an epic 5 part webinar series on domain-driven design &lt;a href="https://twitter.com/PieterHumphrey/status/979392883198324737"&gt;with Spring Boot, event-sourcing, microservices and more.&lt;/a&gt;!&lt;/li&gt;
+  &lt;li&gt;The latest &lt;a href="https://blog.camunda.com/post/2018/03/camunda-bpm-790-alpha3-released/"&gt;Camunda BPMN Spring Boot Starter (3.0-alpha1) now supports Spring Boot 2.0!&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;March 28th, 2018, &lt;a href="https://twitter.com/_benas_/status/978901174039580672"&gt;was the ten year anniversary of Spring Batch 1.0&lt;/a&gt;! What a wicked, wonderful journey it&amp;rsquo;s been since then! Happy birthday, Batch!&lt;/li&gt;
+  &lt;li&gt;I&amp;rsquo;m so looking forward to this upcoming webinar on &lt;a href="https://twitter.com/springcentral/status/979126491307896833"&gt;why Spring Boot and Java are magic together on Microsoft Azure&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Lettuce, a Redis driver that you can use with Spring Data Redis, &lt;a href="https://twitter.com/SpringData/status/978943126017593344"&gt;4.4.4.Final and 5.0.3.RELEASE are out now&lt;/a&gt;. &lt;a href="https://twitter.com/SpringData/status/978943126017593344"&gt;5.0.3.RELEASE fixes a critical Redis Cluster issue that left connections open&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;TL;DR: &lt;a href="https://twitter.com/rseroter/status/978684516616224773?s=12"&gt;the Spring Initializr&amp;rsquo;s use is expanding massively&lt;/a&gt;! Over the past 30 days, 38.5% more projects created at &lt;a href="http://start.spring.io"&gt;http://start.spring.io&lt;/a&gt; than the previous &lt;em&gt;month&lt;/em&gt; (not year!) before. Well over 850,000 projects, now!&lt;/li&gt;
+  &lt;li&gt;Check out this SpringOne Platform 2017 &lt;a href="https://twitter.com/SpringData/status/978883190533345280"&gt;talk from Christoph Strobl and Mark Paluch introducing reactive Spring Data&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;JAXenter have a nice German-language post &lt;a href="https://twitter.com/springcentral/status/978762188788719616"&gt;on using Micrometer and Spring Boot 2.0 to collect metrics&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Check out this talk on creating reactive applications that can be deployed on Apache Tomcat or any &lt;a href="https://twitter.com/springcentral/status/978718447260418048"&gt;Servlet 3.1 compatible containers from SpringOne Platform 2017&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Hat tip to Matt Stine who says this is the best article he&amp;rsquo;s read on testing in a long time. &lt;a href="https://medium.com/@copyconstruct/testing-in-production-the-safe-way-18ca102d0ef1"&gt;Hes right! It&amp;rsquo;s good&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Check out the &lt;a href="https://twitter.com/java/status/978698228974538752?s=12"&gt;second part of my series on building Reactive applications with Spring Boot&lt;/a&gt; in Java Magazine this month! (It&amp;rsquo;s a free download!)&lt;/li&gt;
+&lt;/ul&gt;</content>
+  </entry>
+  <entry>
+    <title>Spring Framework 5.0.5 and 4.3.15 available now</title>
+    <link rel="alternate" href="https://spring.io/blog/2018/04/03/spring-framework-5-0-5-and-4-3-15-available-now" />
+    <category term="releases" label="Releases" />
+    <author>
+      <name>Juergen Hoeller</name>
+    </author>
+    <id>tag:spring.io,2018-04-03:3222</id>
+    <updated>2018-04-03T21:02:00Z</updated>
+    <content type="html">&lt;p&gt;Dear Spring community,&lt;/p&gt;
+&lt;p&gt;I’m pleased to announce that Spring Framework &lt;a href="https://jira.spring.io/secure/ReleaseNote.jspa?projectId=10000&amp;version=16634"&gt;5.0.5&lt;/a&gt; and &lt;a href="https://jira.spring.io/secure/ReleaseNote.jspa?projectId=10000&amp;version=16633"&gt;4.3.15&lt;/a&gt; are &lt;a href="https://projects.spring.io/spring-framework/"&gt;available now&lt;/a&gt;, as another pair of refinement releases which are recommended as immediate upgrades for all users. Our 5.0.5 release is the foundation for the upcoming Spring Boot 2.0.1 release later this week, and 4.3.15 will be picked up by Boot 1.5.11 around the same time.&lt;/p&gt;
+&lt;p&gt;Both framework releases come with plenty of bug fixes but also with a wide selection of refinements, wrapping up before we branch towards Spring Framework 5.1 and turn the 5.0.x and 4.3.x lines into low-volume maintenance mode. Our 5.0.5 build is also prepared for running on the recently released JDK 10, allowing the framework to be built and tested on JDK 8 as well as 9 and 10 in the meantime. Last but not least, 5.0.5 (and to a minor degree 4.3.15 as well) includes significant performance improvements for annotation introspection on startup.&lt;/p&gt;
+&lt;p&gt;In terms of the roadmap, we have 5.0.6 and 4.3.16 planned for May before we aim for 5.1 RC1 at the very end of June&amp;hellip; preparing for JDK 11 and other infrastructure upgrades. Stay tuned!&lt;/p&gt;
+&lt;p&gt;Cheers,&lt;br/&gt;Juergen&lt;/p&gt;</content>
+  </entry>
   <entry>
     <title>Property Binding in Spring Boot 2.0</title>
     <link rel="alternate" href="https://spring.io/blog/2018/03/28/property-binding-in-spring-boot-2-0" />
@@ -1538,63 +1595,5 @@ public WebMvcConfigurer initializrWebMvcConfigurer() {&#xD;
 &lt;/code&gt;&lt;/pre&gt;&lt;h2&gt;&lt;a href="#wrapping-up" class="anchor" name="wrapping-up"&gt;&lt;/a&gt;Wrapping up&lt;/h2&gt;
 &lt;p&gt;Migrating Spring Initializr to Spring Boot 2 was quite easy in the end. Reading the release notes and the migration guide to know beforehand the changes that may affect your app was key. Since the Spring Boot 2 release, &lt;a href="https://start.spring.io"&gt;start.spring.io&lt;/a&gt; has been happily generating tens of thousands of projects a day for the community around the World.&lt;/p&gt;
 &lt;p&gt;The next step is to properly migrate metrics to Micrometer, abandoning hierarchical names and using tags instead. Subscribe to &lt;a href="https://github.com/spring-io/initializr/issues/526"&gt;#526&lt;/a&gt; if you are interested to know more about that. &lt;/p&gt;</content>
-  </entry>
-  <entry>
-    <title>Spring Web Flow 2.5 released</title>
-    <link rel="alternate" href="https://spring.io/blog/2018/03/07/spring-web-flow-2-5-released" />
-    <category term="engineering" label="Engineering" />
-    <author>
-      <name>Rossen Stoyanchev</name>
-    </author>
-    <id>tag:spring.io,2018-03-07:3204</id>
-    <updated>2018-03-07T19:14:59Z</updated>
-    <content type="html">&lt;p&gt;Spring Web Flow 2.5 is now GA and available for use. This release provides an upgrade path for applications using Web Flow to Spring Framework 5 with Java 8, Servlet 3.1, Hibernate 5, Tiles 3, and JSF 2.2 as minimum requirements.&lt;/p&gt;</content>
-  </entry>
-  <entry>
-    <title>Testing auto-configurations with Spring Boot 2.0</title>
-    <link rel="alternate" href="https://spring.io/blog/2018/03/07/testing-auto-configurations-with-spring-boot-2-0" />
-    <category term="engineering" label="Engineering" />
-    <author>
-      <name>Madhura Bhave</name>
-    </author>
-    <id>tag:spring.io,2018-01-03:3134</id>
-    <updated>2018-03-07T16:30:00Z</updated>
-    <content type="html">&lt;p&gt;Auto-configuration is one of the most powerful features of Spring Boot. Tests for auto-configuration classes usually follow the same pattern. Most tests start up an &lt;code&gt;ApplicationContext&lt;/code&gt; with the auto-configuration class under test and depending on the test, also load additional configuration to simulate user behavior. The recurrence of this pattern can add a lot of repetition in the code base.&lt;/p&gt;
-&lt;p&gt;Spring Boot 2.0 provides a suite of new test helpers for easily configuring an &lt;code&gt;ApplicationContext&lt;/code&gt; to simulate auto-configuration test scenarios. The following example configures an &lt;code&gt;ApplicationContextRunner&lt;/code&gt; to test the &lt;code&gt;UserServiceAutoConfiguration&lt;/code&gt;:&lt;/p&gt;
-&lt;pre&gt;&lt;code class="prettyprint java"&gt;private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()&#xD;
-    .withConfiguration(AutoConfigurations.of(UserServiceAutoConfiguration.class));
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Since most tests in a test class share similar configuration, &lt;code&gt;ApplicationContextRunner&lt;/code&gt; is best used as a field of the test class that is set up with some common configuration. &lt;/p&gt;
-&lt;p&gt;Each test can further customize the &lt;code&gt;ApplicationContext&lt;/code&gt; with the desired configuration and properties.&lt;/p&gt;
-&lt;pre&gt;&lt;code class="prettyprint java"&gt;@Test&#xD;
-public void someTest() {&#xD;
-    this.contextRunner&#xD;
-        .withPropertyValues(&amp;quot;user.my.property=test&amp;quot;)&#xD;
-	    .withUserConfiguration(MyConfiguration.class)&#xD;
-	    .run(...);&#xD;
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;In addition to invoking &lt;code&gt;UserServiceAutoConfiguration&lt;/code&gt;, the example above registers &lt;code&gt;MyConfiguration&lt;/code&gt; and sets the &lt;code&gt;user.my.property&lt;/code&gt; property to &lt;code&gt;test&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;ApplicationContextRunner&lt;/code&gt; transparently replicates the configuration initialization order that Spring Boot uses (scanning user configuration first, then auto-configurations according to their defined order).&lt;/p&gt;
-&lt;p&gt;There is support for an &lt;code&gt;AssertableApplicationContext&lt;/code&gt; which provides AssertJ style assertions on an &lt;code&gt;ApplicationContext&lt;/code&gt;. You can also chain multiple assertions as shown in the following example:&lt;/p&gt;
-&lt;pre&gt;&lt;code class="prettyprint java"&gt;@Test&#xD;
-public void someTest() {&#xD;
-    this.contextRunner.run((context) -&amp;gt; {&#xD;
-        assertThat(context).hasSingleBean(MyBean.class);&#xD;
-        assertThat(context).getBeanNames(UserRule.class).hasSize(2);&#xD;
-    });&#xD;
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Assertions can also be used on an &lt;code&gt;ApplicationContext&lt;/code&gt; that has failed to start to check the cause of the failure. Regardless, the lifecycle of the context does not need to be managed by the test anymore, i.e the context is automatically closed.&lt;/p&gt;
-&lt;p&gt;For tests that require a &lt;code&gt;WebApplicationContext&lt;/code&gt;, &lt;code&gt;WebApplicationContextRunner&lt;/code&gt; or &lt;code&gt;ReactiveWebApplicationContextRunner&lt;/code&gt; can be used.&lt;/p&gt;
-&lt;p&gt;An auto-configuration can also be affected by the presence of a particular &lt;code&gt;Class&lt;/code&gt; on the classpath using the &lt;code&gt;@ConditionalOnClass&lt;/code&gt; annotation. &lt;code&gt;ApplicationContextRunner&lt;/code&gt; lets you test what happens when a given &lt;code&gt;Class&lt;/code&gt; is not present at runtime. Spring Boot ships with a &lt;code&gt;FilteredClassLoader&lt;/code&gt; that can easily be used by the runner. In the following example, we assert that if &lt;code&gt;UserService&lt;/code&gt; is not present, the auto-configuration is properly disabled:&lt;/p&gt;
-&lt;pre&gt;&lt;code class="prettyprint java"&gt;@Test&#xD;
-public void serviceIsIgnoredIfLibraryIsNotPresent() {&#xD;
-    this.contextRunner&#xD;
-        .withClassLoader(new FilteredClassLoader(UserService.class))&#xD;
-        .run((context) -&amp;gt; assertThat(context)&#xD;
-                .doesNotHaveBean(&amp;quot;userService&amp;quot;));&#xD;
-}
-&lt;/code&gt;&lt;/pre&gt;</content>
   </entry>
 </feed>

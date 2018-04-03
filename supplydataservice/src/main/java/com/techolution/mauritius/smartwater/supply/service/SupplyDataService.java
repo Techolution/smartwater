@@ -25,8 +25,10 @@ import org.influxdb.dto.QueryResult.Series;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.techolution.mauritius.smartwater.supply.InfluxProperties;
 import com.techolution.mauritius.smartwater.supply.domain.DailyWaterSupplyData;
 import com.techolution.mauritius.smartwater.supply.domain.SupplyStatisticsRequestData;
 import com.techolution.mauritius.smartwater.supply.domain.WaterSupplyData;
@@ -35,12 +37,15 @@ import com.techolution.mauritius.smartwater.supply.domain.WaterSupplyData;
 public class SupplyDataService {
 	
 	
-	private static String INFLUX_CONNECTION_STRING="http://52.170.92.62:8086";
-	private static String INFLUX_USERNAME="root";
-	private static String INFLUX_PWD="root";
+	
 	private static String SERIES_OFF_DATA="supplyoffdata";
 	private static String SERIES_ON_DATA="supplyondata";
-	private static String dbName = "mauritius_smartwater";
+	
+	@Autowired
+    InfluxProperties influxProperties;
+	
+	@Autowired
+    InfluxDBUtils influxDBUtils;
 	
 	private Log log = LogFactory.getLog(SupplyDataService.class);
 	public WaterSupplyData getLatestWaterSupplyData(int meterId) throws ClientProtocolException, IOException, JSONException, URISyntaxException{
@@ -49,7 +54,7 @@ public class SupplyDataService {
 		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String query="select last(value) from supplyondata,supplyoffdata where meter_id='"+meterId+"'";
 		
-		JSONObject jsonObject=InfluxDBUtils.executeQuery(query);
+		JSONObject jsonObject=influxDBUtils.executeQuery(query);
 		
 		JSONArray  array=jsonObject.getJSONArray("results");
 		log.debug("Array Length is:"+array.length());
@@ -107,9 +112,9 @@ public class SupplyDataService {
 		
 		
 		
-		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
+		InfluxDB influxDB = InfluxDBFactory.connect(influxProperties.getUrl(),influxProperties.getUsername(),influxProperties.getPassword());
 		long startStarttime=System.currentTimeMillis();
-		QueryResult queryResult = influxDB.query(new Query(query, dbName));
+		QueryResult queryResult = influxDB.query(new Query(query, influxProperties.getDbname()));
 		long endtime=System.currentTimeMillis();
 		log.debug("Time After getDailyMetrics query execution:"+endtime);
 		log.debug("Time Taken for query execution:"+(endtime-startStarttime));

@@ -43,7 +43,7 @@ public class FlowDataSimiulator implements IStubData {
 		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		myFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 		
-		long baseReadingValue = 20000;
+		double baseReadingValue = 20000;
 		Date startDate=null;
 		Date endDate=null;
 		if(startTime.length() <= 2){
@@ -78,7 +78,7 @@ public class FlowDataSimiulator implements IStubData {
 		
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
 		InfluxDB influxDB = InfluxDBFactory.connect(INFLUX_CONNECTION_STRING, INFLUX_USERNAME, INFLUX_PWD);
-		String dbName = "mauritius_smartwater";
+		String dbName = "mauritius_smartwater_uat";
 		QueryResult queryResult = influxDB.query(new Query(query, dbName));
 		
 		List<Result> results=queryResult.getResults();
@@ -103,7 +103,7 @@ public class FlowDataSimiulator implements IStubData {
 			try {
 				Telemetry telemetry=new Telemetry();
 				telemetry.setDate(startDate);
-				long flow=ThreadLocalRandom.current().nextLong(200, 300); 
+				double flow=ThreadLocalRandom.current().nextDouble(200.25, 300.85); 
 				telemetry.setFlow(flow);
 				baseReadingValue=baseReadingValue+flow;
 				telemetry.setReading(baseReadingValue);
@@ -113,7 +113,7 @@ public class FlowDataSimiulator implements IStubData {
 				if(sleepTime > 100){
 					Thread.sleep(sleepTime);
 				}
-				Calendar calendar=Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+				Calendar calendar=Calendar.getInstance(TimeZone.getTimeZone("MUT"));
 				calendar.setTime(startDate);
 				calendar.add(Calendar.MILLISECOND,incrementtime);
 				startDate=calendar.getTime();

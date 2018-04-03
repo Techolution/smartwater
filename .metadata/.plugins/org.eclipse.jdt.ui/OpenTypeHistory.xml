@@ -6,6 +6,7 @@
 <typeInfo handle="=DataSimulator/C:\/Program Files\/Java\/jdk1.8.0_121\/jre\/lib\/rt.jar&lt;java.time.format(DateTimeFormatter.class[DateTimeFormatter" modifiers="49" timestamp="1485242307596"/>
 <typeInfo handle="=connectionstatistics/src\/main\/java&lt;com.techolution.mauritius.smartwater.connection.domain{TelemetryRequestData.java[TelemetryRequestData" modifiers="1" timestamp="1521971286801"/>
 <typeInfo handle="=connectionstatistics/src\/main\/java&lt;com.techolution.mauritius.smartwater.connection.domain{Data.java[Data" modifiers="1" timestamp="1521945805230"/>
-<typeInfo handle="=connectionstatistics/src\/main\/java&lt;com.techolution.mauritius.smartwater.connection.service{ConnectionStatisticsService.java[ConnectionStatisticsService" modifiers="1" timestamp="1522489107853"/>
+<typeInfo handle="=connectionstatistics/src\/main\/java&lt;com.techolution.mauritius.smartwater.connection.service{ConnectionStatisticsService.java[ConnectionStatisticsService" modifiers="1" timestamp="1522685142865"/>
+<typeInfo handle="=consolidateddetails/src\/main\/java&lt;com.techolution.mauritius.smartwater.domain{MeterConnection.java[MeterConnection" modifiers="1" timestamp="1521797929921"/>
 <typeInfo handle="=consolidateddetails/C:\/Program Files\/Java\/jdk1.8.0_121\/jre\/lib\/rt.jar&lt;java.io(Serializable.class[Serializable" modifiers="1537" timestamp="1485242307596"/>
 </typeInfoHistroy>

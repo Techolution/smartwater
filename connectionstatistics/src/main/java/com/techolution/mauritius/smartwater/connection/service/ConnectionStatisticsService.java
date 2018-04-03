@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -114,7 +115,9 @@ public class ConnectionStatisticsService {
 	private String getNextDay(String endTime) throws ParseException {
 		
 		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+		//Instant instant=Instant.parse(endTime);
 		Date date=myFormat.parse(endTime);
+		//Date date=Date.from(instant);
 		
 		Calendar calendar=Calendar.getInstance();
 		calendar.setTime(date);
@@ -221,7 +224,7 @@ public List<Data> getDailyFowRateData(RequestData data) throws ParseException{
 					resultData=new Data();
 					resultData.setDevid(deviceId);
 					resultData.setName(endTimeReturned.split("T")[0]);	
-					resultData.setValue(((Double)results.get(1)).doubleValue());
+					resultData.setValue(Math.round(((Double)results.get(1)).doubleValue()*100D)/100D);
 					resultData.setSensor_locationname(locationName);
 					retlist.add(resultData);
 				}
@@ -429,11 +432,26 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 	public void insertData(Telemetry telemetry){
 		
 		log.info("Entering ConnectionStatisticsService.insertData");
+		log.debug(" TimeZone is:"+influxProperties.getDatatimezone());
+		log.debug(" dbname is:"+influxProperties.getDbname());
 		if(telemetry.getDate()==null){
-			log.info("Date is null.Setting defaule date");
-			Calendar date=Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+			log.info("Date is null.Setting defaule date.");
+			Calendar date=Calendar.getInstance(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
 			telemetry.setDate(date.getTime());
 		}else{
+			
+			Calendar date=Calendar.getInstance(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
+			//Date inputDate=telemetry.getDate();
+			Calendar inputCal=Calendar.getInstance();
+			inputCal.setTime(telemetry.getDate());
+			date.set(Calendar.YEAR,inputCal.get(Calendar.YEAR));
+			date.set(Calendar.MONTH,inputCal.get(Calendar.MONTH));
+			date.set(Calendar.DAY_OF_MONTH, inputCal.get(Calendar.DAY_OF_MONTH));
+			date.set(Calendar.HOUR,inputCal.get(Calendar.HOUR_OF_DAY));
+			date.set(Calendar.MINUTE,inputCal.get(Calendar.MINUTE));
+			date.set(Calendar.SECOND,inputCal.get(Calendar.SECOND));
+			date.set(Calendar.MILLISECOND,inputCal.get(Calendar.MILLISECOND));
+			telemetry.setDate(date.getTime());
 			log.info("Time to set is:"+telemetry.getDate().getTime());
 		}
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32770", "root", "root");
@@ -441,9 +459,9 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 		
 		influxDB.setDatabase(influxProperties.getDbname());
 		influxDB.enableBatch(BatchOptions.DEFAULTS);
-		String rpName = "aRetentionPolicy";
+		String rpName = "aRetentionPolicy2";
 	//	influxDB.createRetentionPolicy(rpName, influxProperties.getDbname(), "365d", "30m", 2, true);
-		influxDB.setRetentionPolicy("aRetentionPolicy");
+		influxDB.setRetentionPolicy("aRetentionPolicy2");
 		
 		BatchPoints batchPoints = BatchPoints
 				.database(influxProperties.getDbname())
@@ -462,7 +480,7 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 				
 				long meterReading=getLastMeterReading(myFormat.format(telemetry.getDate()), telemetry.getMeter_id());
 				log.debug("last flow value:"+meterReading);
-				long newmeterreading= meterReading+telemetry.getFlow();
+				double newmeterreading= meterReading+telemetry.getFlow();
 				telemetry.setReading(newmeterreading);
 			}
 		}else{
@@ -810,6 +828,9 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 				List<List<Object>> objects=series.getValues();
 				List<Object> resultvals=objects.get(0);
 				resultValue=(Double)resultvals.get(1);
+				if(resultValue!=null){
+					resultValue= Math.round(resultValue*100D)/100D;
+				}
 				
 			}
 				
@@ -829,7 +850,7 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 
 		influxDB.setDatabase(influxProperties.getDbname());
 		influxDB.enableBatch(BatchOptions.DEFAULTS);
-		String rpName = "aRetentionPolicy";
+		String rpName = "aRetentionPolicy2";
 	//	influxDB.createRetentionPolicy(rpName, influxProperties.getDbname(), "365d", "30m", 2, true);
 		influxDB.setRetentionPolicy("aRetentionPolicy");
 		
@@ -860,12 +881,30 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 		Date timeStamp=pointData.getTimestamp();
 		
 		if(timeStamp ==null){
-			Calendar cal=Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+			Calendar cal=Calendar.getInstance(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
 			timeStamp=cal.getTime();
-		}
+		}else{
+			
+			
+				
+				Calendar date=Calendar.getInstance(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
+				//Date inputDate=telemetry.getDate();
+				Calendar inputCal=Calendar.getInstance();
+				inputCal.setTime(pointData.getTimestamp());
+				date.set(Calendar.YEAR,inputCal.get(Calendar.YEAR));
+				date.set(Calendar.MONTH,inputCal.get(Calendar.MONTH));
+				date.set(Calendar.DAY_OF_MONTH, inputCal.get(Calendar.DAY_OF_MONTH));
+				date.set(Calendar.HOUR,inputCal.get(Calendar.HOUR_OF_DAY));
+				date.set(Calendar.MINUTE,inputCal.get(Calendar.MINUTE));
+				date.set(Calendar.SECOND,inputCal.get(Calendar.SECOND));
+				date.set(Calendar.MILLISECOND,inputCal.get(Calendar.MILLISECOND));
+				pointData.setTimestamp(date.getTime());
+				
+			}
 		
 		
-		;
+		
+		
 		Point point1 = Point.measurement(seriesName)
 				.time(timeStamp.getTime(), TimeUnit.MILLISECONDS)
 				.tag(tagMap)

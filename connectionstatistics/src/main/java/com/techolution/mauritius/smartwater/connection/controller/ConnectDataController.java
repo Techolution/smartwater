@@ -43,7 +43,7 @@ public class ConnectDataController {
 	
 	{
 		log.info("Entering ConnectDataController.insertTelemetryData");
-		
+		log.info("insertTelemetryData to be inserted:"+telemetry.toString());
 		telemetry.setMeter_id(meter_id);
 		connectionStatisticsService.insertData(telemetry);
 		log.info("Exiting ConnectDataController.getConsumptionDetails");

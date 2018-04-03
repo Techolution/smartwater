@@ -29,6 +29,7 @@ public class MapDataController {
 	@Autowired
 	private MapDataService mapDataService;
 	
+	
 	private Log log = LogFactory.getLog(MapDataController.class);
 	
 	@PostMapping("/r/Data")
