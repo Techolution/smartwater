@@ -221,7 +221,7 @@ public class ConnectionStatisticsController {
 	
 	
 	@RequestMapping(method=RequestMethod.GET,value="/average/monthlycosnsumption/{meterId}")
-	public @ResponseBody Double getMonthlyAverageForLastOneYear(@PathVariable int meterId){
+	public @ResponseBody Double getMonthlyAverageForLastOneYear(@PathVariable int meterId) throws ParseException{
 		
 		log.info("Entering SupplyDataController.getMonthlyAverageForLastOneYear");
 		Double average = null;

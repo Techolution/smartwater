@@ -5,6 +5,7 @@ import java.util.Date;
 
 public class Telemetry implements Serializable {
 	
+	
 	public Long getReading() {
 		return reading;
 	}
@@ -27,6 +28,7 @@ public class Telemetry implements Serializable {
 	public void setMeter_id(int meter_id) {
 		this.meter_id = meter_id;
 	}
+	
 	public Long getFlow() {
 		return flow;
 	}

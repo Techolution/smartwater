@@ -81,7 +81,9 @@ public class ConnectionStatisticsService {
 	public List<Data> getData(RequestData data) throws ParseException{
 		
 		
-		//SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+	
+		
+		
 		
 		
 		/*String startTime = myFormat.format(data.getStart_Time().getTime());
@@ -90,6 +92,9 @@ public class ConnectionStatisticsService {
 		//String startTime = "2018-03-01";
 		
 		String endTime = data.getEnd_Time();
+		
+		endTime = getNextDay( endTime);
+		
 		//String endTime = "2018-03-15";
 		
 		String groupVal = getGroupVal(data);
@@ -97,12 +102,25 @@ public class ConnectionStatisticsService {
 		
 		int deviceId=data.getHouse_ID();
 		//int deviceId=123;
-		String query = "select sum(value)  from flowvalues where time >='"+startTime+"' and time<='"+endTime+"' and meter_id='"+deviceId+"' group by time("+groupVal+") fill(0)";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
+		String query = "select sum(value)  from flowvalues where time >='"+startTime+"' and time<'"+endTime+"' and meter_id='"+deviceId+"' group by time("+groupVal+") fill(0)";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
 		log.debug("Query is:"+query);
 		
 		
 		List<Data> retlist = getDailyMetrics(deviceId, query);
 		return retlist;
+	}
+
+
+	private String getNextDay(String endTime) throws ParseException {
+		
+		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date date=myFormat.parse(endTime);
+		
+		Calendar calendar=Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.add(Calendar.DATE, 1);
+		endTime = myFormat.format(calendar.getTime());
+		return endTime;
 	}
 	
 	
@@ -120,15 +138,17 @@ public List<Data> getDailyFowRateData(RequestData data) throws ParseException{
 		String endTime = data.getEnd_Time();
 		//String endTime = "2018-03-15";
 		
+		
+		
 		String groupVal = getGroupVal(data);
 		
 		
 		int deviceId=data.getHouse_ID();
 		//int deviceId=123;
-		
+		endTime = getNextDay( endTime);
 				
 		
-		String query ="select mean(hourlyval) from (select sum(value) as hourlyval from flowvalues where meter_id='"+deviceId+"' and time >='"+startTime+"' and time <='"+endTime+"' group by time(1h))  where time >='"+startTime+"' and time <= '"+endTime+"' group by time("+groupVal+") fill(0)";
+		String query ="select mean(hourlyval) from (select sum(value) as hourlyval from flowvalues where meter_id='"+deviceId+"' and time >='"+startTime+"' and time <'"+endTime+"' group by time(1h))  where time >='"+startTime+"' and time <= '"+endTime+"' group by time("+groupVal+") fill(0)";
 		log.debug("Query is:"+query);
 		
 		
@@ -229,12 +249,13 @@ public List<Data> getDailyFowRateData(RequestData data) throws ParseException{
 		String endTime = data.getEnd_Time();
 		//String endTime = "2018-03-15";
 		
+		endTime = getNextDay( endTime);
 		String groupVal = getGroupVal(data);
 		
 		
 		int deviceId=data.getHouse_ID();
 		//int deviceId=123;
-		String query = "select last(value)  from batterylevelvalues where time >='"+startTime+"' and time<='"+endTime+"' and meter_id='"+deviceId+"' group by time("+groupVal+")";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
+		String query = "select last(value)  from batterylevelvalues where time >='"+startTime+"' and time<'"+endTime+"' and meter_id='"+deviceId+"' group by time("+groupVal+")";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
 		log.debug("Query is:"+query);
 		
 		
@@ -338,10 +359,10 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 			int deviceId=data.getHouseId();
 			String seriesname=getSeriesForMetrics(data.getMetrics());
 			
-			
-			
+			String endTime=data.getEndTime();
+			endTime = getNextDay( endTime);
 			//int deviceId=123;
-			String query = "select last(value)  from "+ seriesname+" where time >='"+data.getStartTime()+"' and time<='"+data.getEndTime()+"' and meter_id='"+deviceId+"' group by time("+groupVal+")";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
+			String query = "select last(value)  from "+ seriesname+" where time >='"+data.getStartTime()+"' and time< '"+endTime+"' and meter_id='"+deviceId+"' group by time("+groupVal+")";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
 			if(data.getDefaultValueForMissingData()!=null){
 				query = query+"fill("+data.getDefaultValueForMissingData()+")";
 			}
@@ -441,7 +462,7 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 				
 				long meterReading=getLastMeterReading(myFormat.format(telemetry.getDate()), telemetry.getMeter_id());
 				log.debug("last flow value:"+meterReading);
-				long newmeterreading=meterReading+telemetry.getFlow();
+				long newmeterreading= meterReading+telemetry.getFlow();
 				telemetry.setReading(newmeterreading);
 			}
 		}else{
@@ -748,7 +769,7 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
     	
     }
     
-    public Double getAverageMonthlyForOneYear(int meterId){
+    public Double getAverageMonthlyForOneYear(int meterId) throws ParseException{
     	
     	log.info("Entering ConnectionStatisticsService.getAverageMonthlyForOneYear");
     	
@@ -769,6 +790,7 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
     	
     	String endTime=myFormat.format(endTimeCal.getTime());
     	
+    	endTime = getNextDay( endTime);
     	String query = "select mean(monthlyconsumption) from (select sum(value) as monthlyconsumption from flowvalues where time >='"+startTime+"' and time<'"+endTime+"' and meter_id='"+meterId+"' group by time(30d))";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
 		log.info("Query is:"+query);
 		
