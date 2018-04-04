@@ -1,5 +1,6 @@
 package com.techolution.mauritius.smartwater.map.controller;
 
+import java.text.ParseException;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -33,7 +34,7 @@ public class MapDataController {
 	private Log log = LogFactory.getLog(MapDataController.class);
 	
 	@PostMapping("/r/Data")
-	public @ResponseBody ResponseData getData(@RequestBody String jsonRequest) throws JSONException
+	public @ResponseBody ResponseData getData(@RequestBody String jsonRequest) throws JSONException, ParseException
 	{
 		log.info("Entering MapDataController.getData ");
 		
