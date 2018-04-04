@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8084
 
 
 
@@ -27,12 +27,13 @@ spring:
     hikari:
       maximum-pool-size: 5
       
+      
 influx:
     url: http://localhost:8086
     username: root
     password: root
     dbname: mauritius_smartwater_uat
-    datatimezone: MUT 
+    datatimezone: MUT      
 
 
   

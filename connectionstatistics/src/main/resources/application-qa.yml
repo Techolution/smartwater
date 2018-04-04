@@ -28,7 +28,7 @@ spring:
       maximum-pool-size: 5
     
 influx:
-    url: http://52.170.92.62:8086
+    url: http://localhost:8086
     username: root
     password: root
     dbname: mauritius_smartwater_uat
