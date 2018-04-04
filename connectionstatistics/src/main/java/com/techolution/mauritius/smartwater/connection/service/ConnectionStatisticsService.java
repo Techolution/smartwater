@@ -409,7 +409,7 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 						}
 							
 						
-						resultData.setValue(((Double)results.get(1)).doubleValue());
+						resultData.setValue(Math.round(((Double)results.get(1)).doubleValue()*100D)/100D);
 						resultData.setSensor_locationname(locationName);
 						retlist.add(resultData);
 						}
