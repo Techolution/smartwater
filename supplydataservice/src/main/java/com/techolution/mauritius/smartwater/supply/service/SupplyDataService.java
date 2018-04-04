@@ -101,6 +101,7 @@ public class SupplyDataService {
 		waterSupplyData.setLastOnTime(startTime);
 		waterSupplyData.setMeterId(new Long(meterId).longValue());
 		waterSupplyData.setLocation(connection.getHouse_namenum());
+		waterSupplyData.setCustomerId(connection.getCustomer_id());
 		
 		
 		log.info("Exiting SupplyDataService.getLatestWaterSupplyData");
