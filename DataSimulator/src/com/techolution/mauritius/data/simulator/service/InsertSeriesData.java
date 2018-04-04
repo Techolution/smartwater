@@ -35,7 +35,7 @@ public class InsertSeriesData {
 		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 
 		try {
-		    HttpPost request = new HttpPost("http://localhost:8085/insert/data/");
+		    HttpPost request = new HttpPost("http://localhost:8085/telemetry/insert/data/");
 		    StringEntity params = new StringEntity(json.toString());
 		    request.addHeader("content-type", "application/json");
 		    request.setEntity(params);

@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.techolution.mauritius.smartwater.connection.domain.BatteryConsumptionResponseData;
 import com.techolution.mauritius.smartwater.connection.domain.Data;
+import com.techolution.mauritius.smartwater.connection.domain.Dfj;
+import com.techolution.mauritius.smartwater.connection.domain.ResponseData;
+import com.techolution.mauritius.smartwater.connection.domain.SeriesPointData;
 import com.techolution.mauritius.smartwater.connection.domain.TelemetryRequestData;
 import com.techolution.mauritius.smartwater.connection.domain.TelemetryResponseData;
 import com.techolution.mauritius.smartwater.connection.service.ConnectionStatisticsService;
@@ -60,5 +62,24 @@ public class TelemetryDataController {
 		return readingdata;
 		
 	}
+	
+	
+	@RequestMapping(method=RequestMethod.POST,value="/insert/data")
+	public @ResponseBody ResponseData insertTimeSeriesData(@RequestBody SeriesPointData seriesPointData) throws ParseException{
+		
+		log.info("Entering TelemetryResponseData.insertTimeSeriesData");
+		
+		connectionStatisticsService.insertTimeSeriesData(seriesPointData);;
+		ResponseData data=new ResponseData();
+		Dfj dfj=new Dfj();
+		dfj.setStatus("REQUEST_SUBMITTED");
+		data.setDfj(dfj);
+		
+		log.info("Exiting ConnectDataController.insertTimeSeriesData");
+		return data;
+		
+		
+	}
+
 
 }
