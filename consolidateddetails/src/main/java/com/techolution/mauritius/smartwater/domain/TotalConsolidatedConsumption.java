@@ -11,25 +11,26 @@ public class TotalConsolidatedConsumption implements Serializable {
 	public double getConsumptionInPreviousBucket() {
 		return consumptionInPreviousBucket;
 	}
-	public void setConsumptionInPreviousBucket(double consumptionInPreviousBucket) {
+	public void setConsumptionInPreviousBucket(long consumptionInPreviousBucket) {
 		this.consumptionInPreviousBucket = consumptionInPreviousBucket;
 	}
-	private Double totalConsumption;
+	//private Double totalConsumption;
+	private long totalConsumption;
 	private double normalPercentage;
 	private double abnormalPercentage;
-	private double consumptionInPreviousBucket;
-	public TotalConsolidatedConsumption(Double totalConsumption, double normalPercentage, double abnormalPercentage,
-			double trend) {
+	private long consumptionInPreviousBucket;
+	public TotalConsolidatedConsumption(long totalConsumption, double normalPercentage, double abnormalPercentage,
+			long trend) {
 		super();
 		this.totalConsumption = totalConsumption;
 		this.normalPercentage = normalPercentage;
 		this.abnormalPercentage = abnormalPercentage;
 		this.consumptionInPreviousBucket = trend;
 	}
-	public Double getTotalConsumption() {
+	public long getTotalConsumption() {
 		return totalConsumption;
 	}
-	public void setTotalConsumption(Double totalConsumption) {
+	public void setTotalConsumption(long totalConsumption) {
 		this.totalConsumption = totalConsumption;
 	}
 	public double getNormalPercentage() {

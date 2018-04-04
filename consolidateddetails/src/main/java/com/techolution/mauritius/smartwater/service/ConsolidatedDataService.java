@@ -104,7 +104,7 @@ public class ConsolidatedDataService {
 		log.debug("consumption:"+consumption);
 		
 		//TotalConsolidatedConsumption consolidatedConsumption=new TotalConsolidatedConsumption(Long.valueOf(consumption).longValue(), 100.00, 0.00, 0.00);
-		TotalConsolidatedConsumption consolidatedConsumption=new TotalConsolidatedConsumption(consumption, 100.00, 0.00, previousconsumption);
+		TotalConsolidatedConsumption consolidatedConsumption=new TotalConsolidatedConsumption(consumption.longValue(), 100.00, 0.00, previousconsumption.longValue());
 		return consolidatedConsumption;
 		
 	}
@@ -141,7 +141,7 @@ public TotalConsolidatedConsumption getConsumptionForToday() throws ClientProtoc
 		log.debug("consumption:"+consumption);
 		
 		//TotalConsolidatedConsumption consolidatedConsumption=new TotalConsolidatedConsumption(Long.valueOf(consumption).longValue(), 100.00, 0.00, 0.00);
-		TotalConsolidatedConsumption consolidatedConsumption=new TotalConsolidatedConsumption(consumption, 100.00, 0.00, previousconsumption);
+		TotalConsolidatedConsumption consolidatedConsumption=new TotalConsolidatedConsumption(consumption.longValue(), 100.00, 0.00, previousconsumption.longValue());
 		return consolidatedConsumption;
 		
 	}
