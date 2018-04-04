@@ -478,7 +478,7 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 			if(telemetry.getReading() == null){
 				SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				
-				long meterReading=getLastMeterReading(myFormat.format(telemetry.getDate()), telemetry.getMeter_id());
+				double meterReading=getLastMeterReading(myFormat.format(telemetry.getDate()), telemetry.getMeter_id());
 				log.debug("last flow value:"+meterReading);
 				double newmeterreading= meterReading+telemetry.getFlow();
 				telemetry.setReading(newmeterreading);
@@ -754,10 +754,10 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
     	return returnVal;
     }
 
-    private long getLastMeterReading(String startTime,int meterId){
+    private double getLastMeterReading(String startTime,int meterId){
     	
     	
-    	long baseReadingValue =0;
+    	double baseReadingValue =0;
     	
     	String query = "select last(value)  from meterreadingvalues where time <='"+startTime+"' and meter_id='"+meterId+"'";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
 		log.info("Query is:"+query);
@@ -778,7 +778,7 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 				List<List<Object>> objects=series.getValues();
 				List<Object> resultvals=objects.get(0);
 				Double double1=(Double)resultvals.get(1);
-				baseReadingValue=double1.longValue();
+				baseReadingValue=double1.doubleValue();
 			}
 				
 			
