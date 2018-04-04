@@ -30,6 +30,7 @@ import org.springframework.stereotype.Component;
 
 import com.techolution.mauritius.smartwater.supply.InfluxProperties;
 import com.techolution.mauritius.smartwater.supply.domain.DailyWaterSupplyData;
+import com.techolution.mauritius.smartwater.supply.domain.MeterConnection;
 import com.techolution.mauritius.smartwater.supply.domain.SupplyStatisticsRequestData;
 import com.techolution.mauritius.smartwater.supply.domain.WaterSupplyData;
 
@@ -46,6 +47,9 @@ public class SupplyDataService {
 	
 	@Autowired
     InfluxDBUtils influxDBUtils;
+	
+	@Autowired
+	SupplyAnalyticsService supplyAnalyticService;
 	
 	private Log log = LogFactory.getLog(SupplyDataService.class);
 	public WaterSupplyData getLatestWaterSupplyData(int meterId) throws ClientProtocolException, IOException, JSONException, URISyntaxException{
@@ -88,9 +92,15 @@ public class SupplyDataService {
 			
 		}
 		
+		Map <Long, MeterConnection> connectionmap= supplyAnalyticService.getAllConnections();
+		
+		System.out.println(connectionmap);
+		MeterConnection connection=connectionmap.get(new Long(meterId));
 		WaterSupplyData waterSupplyData=new WaterSupplyData();
 		waterSupplyData.setLastOffTime(endTime);
 		waterSupplyData.setLastOnTime(startTime);
+		waterSupplyData.setMeterId(new Long(meterId).longValue());
+		waterSupplyData.setLocation(connection.getHouse_namenum());
 		
 		
 		log.info("Exiting SupplyDataService.getLatestWaterSupplyData");
