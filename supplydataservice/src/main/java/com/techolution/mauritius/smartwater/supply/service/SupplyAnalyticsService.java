@@ -66,10 +66,7 @@ public class SupplyAnalyticsService {
 		List<MeterTrendData> retList=new ArrayList<MeterTrendData>();
 		
 		
-		//todo GET ONLY FOR THE SELECTED METER
-		if(SupplyAnalyticsService.connectionmap == null){
-			SupplyAnalyticsService.connectionmap=getAllConnections();
-		}
+		getConnectionsMap();
 		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar startDate=Calendar.getInstance();
 		
@@ -135,9 +132,7 @@ public class SupplyAnalyticsService {
 		
 		List<MeterTrendData> retList=new ArrayList<MeterTrendData>();
 		
-		if(SupplyAnalyticsService.connectionmap == null){
-			SupplyAnalyticsService.connectionmap=getAllConnections();
-		}
+		getConnectionsMap();
 		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar startDate=Calendar.getInstance();
 		
@@ -175,6 +170,14 @@ public class SupplyAnalyticsService {
 		
 		
 	}
+
+
+public Map <Long, MeterConnection> getConnectionsMap() {
+	if(SupplyAnalyticsService.connectionmap == null){
+		SupplyAnalyticsService.connectionmap=getAllConnections();
+	}
+	return SupplyAnalyticsService.connectionmap;
+}
 
 	private void populatePreviousucketAndConnectionStatisticsInCurrent(List<MeterTrendData> retList,
 			List<MeterTrendData> yestedayData) {
@@ -290,9 +293,7 @@ public class SupplyAnalyticsService {
 		log.info("Entering SupplyDataService.getStats");
 		
 		WaterSupplyDailyConnectionStats connectionStats=new WaterSupplyDailyConnectionStats();
-		if(SupplyAnalyticsService.connectionmap == null){
-			SupplyAnalyticsService.connectionmap=getAllConnections();
-		}
+		getConnectionsMap();
 		int totalMeters=SupplyAnalyticsService.connectionmap.size();
 		connectionStats.setTotalMeters(totalMeters);
 		

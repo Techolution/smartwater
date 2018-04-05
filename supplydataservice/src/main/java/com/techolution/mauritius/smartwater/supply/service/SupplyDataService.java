@@ -58,7 +58,11 @@ public class SupplyDataService {
 		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String query="select last(value) from supplyondata,supplyoffdata where meter_id='"+meterId+"'";
 		
+		long startStarttime=System.currentTimeMillis();
 		JSONObject jsonObject=influxDBUtils.executeQuery(query);
+		long endtime=System.currentTimeMillis();
+		//log.debug("Time After getDailyMetrics query execution:"+endtime);
+		log.debug("Time Taken for getLatestWaterSupplyData query execution:"+(endtime-startStarttime));
 		
 		JSONArray  array=jsonObject.getJSONArray("results");
 		log.debug("Array Length is:"+array.length());
@@ -92,7 +96,7 @@ public class SupplyDataService {
 			
 		}
 		
-		Map <Long, MeterConnection> connectionmap= supplyAnalyticService.getAllConnections();
+		Map <Long, MeterConnection> connectionmap= supplyAnalyticService.getConnectionsMap();
 		
 		System.out.println(connectionmap);
 		MeterConnection connection=connectionmap.get(new Long(meterId));

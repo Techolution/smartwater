@@ -111,8 +111,8 @@ public class NotificationDetails implements Serializable {
 	private String information;
 	
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	/*@ManyToOne(fetch = FetchType.EAGER)
 	@JoinTable(name="connection_details",joinColumns= @JoinColumn(name="meter_id", referencedColumnName = "house_id"))
-	private MeterConnection connection ;
+	private MeterConnection connection ;*/
 
 }
