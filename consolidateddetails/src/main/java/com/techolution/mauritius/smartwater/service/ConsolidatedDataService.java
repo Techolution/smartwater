@@ -44,12 +44,21 @@ public class ConsolidatedDataService {
 	
 	@Autowired
     InfluxProperties influxProperties;
-	
+	//TODO CHANGE TO PROPER CACHING
+	private static List<MeterConnection> connections=null;
+	//private 
 	
 	public List<MeterConnection> getAllConnections(){
 		
 		log.info("Entering ConsolidatedDataService.getAllConnections ");
-		List<MeterConnection> returnList= (List<MeterConnection>)connectionDetailsRepository.findAll();
+		if(connections == null){
+			connections= (List<MeterConnection>)connectionDetailsRepository.findAll();
+			
+		}
+		else{
+			return connections;
+		}
+		List<MeterConnection> returnList= connections;
 		log.info("Exiting ConsolidatedDataService.getAllConnections ");
 		if(returnList == null) {
 			log.debug("returnList size is null");
