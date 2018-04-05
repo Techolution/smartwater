@@ -448,7 +448,7 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 			date.set(Calendar.YEAR,inputCal.get(Calendar.YEAR));
 			date.set(Calendar.MONTH,inputCal.get(Calendar.MONTH));
 			date.set(Calendar.DAY_OF_MONTH, inputCal.get(Calendar.DAY_OF_MONTH));
-			date.set(Calendar.HOUR,inputCal.get(Calendar.HOUR_OF_DAY));
+			date.set(Calendar.HOUR_OF_DAY,inputCal.get(Calendar.HOUR_OF_DAY));
 			date.set(Calendar.MINUTE,inputCal.get(Calendar.MINUTE));
 			date.set(Calendar.SECOND,inputCal.get(Calendar.SECOND));
 			date.set(Calendar.MILLISECOND,inputCal.get(Calendar.MILLISECOND));
