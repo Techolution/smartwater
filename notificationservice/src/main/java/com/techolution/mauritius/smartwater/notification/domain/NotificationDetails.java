@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -110,8 +111,8 @@ public class NotificationDetails implements Serializable {
 	private String information;
 	
 	
-	/*@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name="meter_id", nullable=true)
-	private MeterConnection connection ;*/
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinTable(name="connection_details",joinColumns= @JoinColumn(name="meter_id", referencedColumnName = "house_id"))
+	private MeterConnection connection ;
 
 }

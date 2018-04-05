@@ -1,9 +1,11 @@
 package com.techolution.mauritius.smartwater.notification.domain;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -109,5 +111,8 @@ public class MeterConnection implements Serializable {
 	public void setCurrentstatus(String currentstatus) {
 		this.currentstatus = currentstatus;
 	}
+	
+	@OneToMany(mappedBy="house_id")
+	Set<NotificationDetails> notifications;
 
 }

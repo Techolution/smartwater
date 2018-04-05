@@ -106,7 +106,7 @@ public class AccessDataReadaer {
 		Date date=new Date(timestamp.getTime());
 		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 		String dateVal=myFormat.format(date);
-		
+		System.out.println("Date val is:"+dateVal);
 		JSONObject json = new JSONObject();
 		json.put("flow", flow);    
 		json.put("date", dateVal);

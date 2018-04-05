@@ -441,8 +441,9 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 		}else{
 			
 			Calendar date=Calendar.getInstance(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
+			
 			//Date inputDate=telemetry.getDate();
-			Calendar inputCal=Calendar.getInstance();
+			Calendar inputCal=Calendar.getInstance(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
 			inputCal.setTime(telemetry.getDate());
 			date.set(Calendar.YEAR,inputCal.get(Calendar.YEAR));
 			date.set(Calendar.MONTH,inputCal.get(Calendar.MONTH));
@@ -889,7 +890,7 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 				
 				Calendar date=Calendar.getInstance(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
 				//Date inputDate=telemetry.getDate();
-				Calendar inputCal=Calendar.getInstance();
+				Calendar inputCal=Calendar.getInstance(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
 				inputCal.setTime(pointData.getTimestamp());
 				date.set(Calendar.YEAR,inputCal.get(Calendar.YEAR));
 				date.set(Calendar.MONTH,inputCal.get(Calendar.MONTH));
