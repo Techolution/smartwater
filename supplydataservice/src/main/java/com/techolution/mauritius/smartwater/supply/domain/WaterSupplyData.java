@@ -9,6 +9,16 @@ public class WaterSupplyData implements Serializable {
 	private String lastOffTime;
 	
 	private String metertype;
+	
+	private String currentstatus;
+
+	public String getCurrentstatus() {
+		return currentstatus;
+	}
+
+	public void setCurrentstatus(String currentstatus) {
+		this.currentstatus = currentstatus;
+	}
 
 	public String getMetertype() {
 		return metertype;

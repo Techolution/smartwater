@@ -61,6 +61,8 @@ public class SupplyDataService {
 		long startStarttime=System.currentTimeMillis();
 		String startTime;
 		String endTime;
+		Date startDate=null;
+		Date endDate=null;
 		try {
 			JSONObject jsonObject=influxDBUtils.executeQuery(query);
 			log.debug("jsonObject:"+jsonObject.toString());
@@ -79,6 +81,7 @@ public class SupplyDataService {
 			
 			startTime = null;
 			endTime = null;
+			
 			for(int index=0;index<length;index++){
 				
 				JSONObject object=(JSONObject)seriesArray.get(index);
@@ -91,7 +94,9 @@ public class SupplyDataService {
 					Date date=Date.from(instant);
 					if(SERIES_OFF_DATA.equalsIgnoreCase(name)){
 						endTime=myFormat.format(date);
+						endDate=date;
 					}else{
+						startDate=date;
 						startTime=myFormat.format(date);
 					}
 					
@@ -113,6 +118,14 @@ public class SupplyDataService {
 		}
 		
 		Map <Long, MeterConnection> connectionmap= supplyAnalyticService.getConnectionsMap();
+		Date currentTime=Calendar.getInstance().getTime();
+		
+		String STATUS= "ON";
+		if(endDate != null && endDate.before(currentTime) &&  startDate!=null && startDate.before(currentTime) && endDate.after(startDate) ){
+			
+			STATUS= "OFF";
+		}
+		
 		
 		System.out.println(connectionmap);
 		MeterConnection connection=connectionmap.get(new Long(meterId));
@@ -123,7 +136,7 @@ public class SupplyDataService {
 		waterSupplyData.setLocation(connection.getHouse_namenum());
 		waterSupplyData.setCustomerId(connection.getCustomer_id());
 		waterSupplyData.setMetertype(connection.getMetertype());
-		
+		waterSupplyData.setCurrentstatus(STATUS);
 		
 		log.info("Exiting SupplyDataService.getLatestWaterSupplyData");
 		return waterSupplyData;
@@ -139,6 +152,13 @@ public class SupplyDataService {
 		
 		String startTime=myFormat.format(data.getStartDate());
 		String endTime=myFormat.format(data.getEndDate());
+		Calendar currentCal=Calendar.getInstance();
+		Date currentTime=currentCal.getTime();
+		if(data.getEndDate().after(currentTime)){
+			
+			currentCal.add(Calendar.DATE, -1);
+			endTime=myFormat.format(currentCal.getTime());
+		}
 		
 		String query = "select time,value from "+SERIES_ON_DATA+" , "+SERIES_OFF_DATA+ " where meter_id='"+data.getMeterId()+"' and time >= '"+startTime+"' and time <='"+endTime+"' order by time asc";
 		
