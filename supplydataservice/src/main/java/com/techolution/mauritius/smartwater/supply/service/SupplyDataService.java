@@ -52,48 +52,64 @@ public class SupplyDataService {
 	SupplyAnalyticsService supplyAnalyticService;
 	
 	private Log log = LogFactory.getLog(SupplyDataService.class);
-	public WaterSupplyData getLatestWaterSupplyData(int meterId) throws ClientProtocolException, IOException, JSONException, URISyntaxException{
+	public WaterSupplyData getLatestWaterSupplyData(int meterId) throws ClientProtocolException, IOException,  URISyntaxException{
 		
 		log.info("Entering SupplyDataService.getLatestWaterSupplyData");
 		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String query="select last(value) from supplyondata,supplyoffdata where meter_id='"+meterId+"'";
-		
+		log.debug("Query:"+query);
 		long startStarttime=System.currentTimeMillis();
-		JSONObject jsonObject=influxDBUtils.executeQuery(query);
-		long endtime=System.currentTimeMillis();
-		//log.debug("Time After getDailyMetrics query execution:"+endtime);
-		log.debug("Time Taken for getLatestWaterSupplyData query execution:"+(endtime-startStarttime));
-		
-		JSONArray  array=jsonObject.getJSONArray("results");
-		log.debug("Array Length is:"+array.length());
-		JSONObject jsonObject2=array.getJSONObject(0);
-		
-		JSONArray seriesArray=jsonObject2.getJSONArray("series");
-		int length=seriesArray.length();
-		log.debug("Series Length is:"+length);
-		
-		String startTime=null;
-		String endTime=null;
-		for(int index=0;index<length;index++){
+		String startTime;
+		String endTime;
+		try {
+			JSONObject jsonObject=influxDBUtils.executeQuery(query);
+			log.debug("jsonObject:"+jsonObject.toString());
+			long endtime=System.currentTimeMillis();
+			//log.debug("Time After getDailyMetrics query execution:"+endtime);
+			log.debug("Time Taken for getLatestWaterSupplyData query execution:"+(endtime-startStarttime));
 			
-			JSONObject object=(JSONObject)seriesArray.get(index);
-			String name=object.getString("name");
-			JSONArray values=object.getJSONArray("values");
-			if(values.length()>0){
-				JSONArray value=values.getJSONArray(0);
-				String dateTime=(String)value.get(0);
-				Instant instant=Instant.parse(dateTime);
-				Date date=Date.from(instant);
-				if(SERIES_OFF_DATA.equalsIgnoreCase(name)){
-					endTime=myFormat.format(date);
-				}else{
-					startTime=myFormat.format(date);
+			JSONArray  array=jsonObject.getJSONArray("results");
+			log.debug("Array Length is:"+array.length());
+			JSONObject jsonObject2=array.getJSONObject(0);
+			log.debug("jsonObject2:"+jsonObject2.toString());
+			
+			JSONArray seriesArray=jsonObject2.getJSONArray("series");
+			int length=seriesArray.length();
+			log.debug("Series Length is:"+length);
+			
+			startTime = null;
+			endTime = null;
+			for(int index=0;index<length;index++){
+				
+				JSONObject object=(JSONObject)seriesArray.get(index);
+				String name=object.getString("name");
+				JSONArray values=object.getJSONArray("values");
+				if(values.length()>0){
+					JSONArray value=values.getJSONArray(0);
+					String dateTime=(String)value.get(0);
+					Instant instant=Instant.parse(dateTime);
+					Date date=Date.from(instant);
+					if(SERIES_OFF_DATA.equalsIgnoreCase(name)){
+						endTime=myFormat.format(date);
+					}else{
+						startTime=myFormat.format(date);
+					}
+					
 				}
 				
+				
+				
 			}
+		} catch (JSONException e) {
+			log.error("JSON Exception occured. So setting default values");
+			Calendar startCal=Calendar.getInstance();
+			Calendar endCal=Calendar.getInstance();
 			
+			startCal.set(Calendar.HOUR_OF_DAY,6);
+			endCal.set(Calendar.HOUR_OF_DAY,18);
 			
-			
+			startTime=myFormat.format(startCal.getTime());
+			endTime=myFormat.format(endCal.getTime());
 		}
 		
 		Map <Long, MeterConnection> connectionmap= supplyAnalyticService.getConnectionsMap();
@@ -106,6 +122,7 @@ public class SupplyDataService {
 		waterSupplyData.setMeterId(new Long(meterId).longValue());
 		waterSupplyData.setLocation(connection.getHouse_namenum());
 		waterSupplyData.setCustomerId(connection.getCustomer_id());
+		waterSupplyData.setMetertype(connection.getMetertype());
 		
 		
 		log.info("Exiting SupplyDataService.getLatestWaterSupplyData");

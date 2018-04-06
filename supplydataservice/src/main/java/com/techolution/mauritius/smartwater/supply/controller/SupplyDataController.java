@@ -47,7 +47,7 @@ public class SupplyDataController {
 		WaterSupplyData returnData = null;
 		try {
 			returnData = supplyDataService.getLatestWaterSupplyData(meterId);
-		} catch (IOException | JSONException | URISyntaxException e) {
+		} catch (IOException |  URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

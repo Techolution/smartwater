@@ -23,6 +23,13 @@ public class MeterConnection implements Serializable {
 	private long block_id;
 	private String house_namenum;
 	private boolean isprivate;
+	private String metertype;
+	public String getMetertype() {
+		return metertype;
+	}
+	public void setMetertype(String metertype) {
+		this.metertype = metertype;
+	}
 	public long getId() {
 		return id;
 	}

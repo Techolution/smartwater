@@ -7,6 +7,16 @@ public class WaterSupplyData implements Serializable {
 	private String lastOnTime;
 	
 	private String lastOffTime;
+	
+	private String metertype;
+
+	public String getMetertype() {
+		return metertype;
+	}
+
+	public void setMetertype(String metertype) {
+		this.metertype = metertype;
+	}
 
 	public String getLastOnTime() {
 		return lastOnTime;
