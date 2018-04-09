@@ -44,6 +44,7 @@ management:
 
 custom:
     dataserviceurl: http://localhost:8085/read/r/GetData
+    readingserviceurl: http://localhost:8085/telemetry/instance/data
     csvpath: /data/smartwater/reports  
     storageconnectionstring: DefaultEndpointsProtocol=https;AccountName=techotiotplatformstorage;AccountKey=XmoKg/Col+yWznyXGG/xkSpIOd+bnqbqgsUE/rdDOuerM1jzakXA6FoOuMGdlHfZICq1jXGPMd/ihepmcJlHwQ==
     filesharename: mauritiussmartwtaer

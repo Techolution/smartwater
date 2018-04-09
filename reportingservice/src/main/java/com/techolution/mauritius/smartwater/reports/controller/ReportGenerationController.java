@@ -47,5 +47,27 @@ public class ReportGenerationController {
 		return reportData;
 		
 	}
+	
+	@PostMapping("/readings/hourly")
+	public @ResponseBody  ReportData getHourlyRedingsReport(@RequestBody SupplyStatisticsRequestData data) throws JSONException 	
+	{
+		log.info("Entering ReportGenerationController.getHourlyConsumptionReport");
+		
+		String filePath=null;
+		ReportData reportData=new ReportData();
+		try {
+			filePath = service.generateConsumptionReport(data);
+			log.debug("filePath obtained is:"+filePath);
+			reportData.setReportPath(filePath);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		log.info("Exiting ReportGenerationController.getHourlyConsumptionReport");
+		
+		return reportData;
+		
+	}
 
 }

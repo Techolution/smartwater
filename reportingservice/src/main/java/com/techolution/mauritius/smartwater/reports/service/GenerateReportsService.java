@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 import com.techolution.mauritius.smartwater.reports.CustomProperties;
 import com.techolution.mauritius.smartwater.reports.domain.Data;
 import com.techolution.mauritius.smartwater.reports.domain.SupplyStatisticsRequestData;
+import com.techolution.mauritius.smartwater.reports.domain.TelemetryResponseData;
 
 
 @Component
@@ -103,6 +105,79 @@ public class GenerateReportsService {
 			 writer.close();
 			
 			 String cloudpath=azureFileService.uploadFile(filePath.toString(), fileName.toString());
+			log.info("Entering GenerateReportsService.generateReport ");
+			return cloudpath;
+		 
+	 }
+	 
+	 
+	 
+	 public String generateConsumptionReport(SupplyStatisticsRequestData data) throws JSONException, IOException{
+		 
+		 	log.info("Entering GenerateReportsService.generateReport ");
+		 	SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+		 	SimpleDateFormat fileNameFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+		 	JSONObject json = new JSONObject();
+			json.put("vendorId", 123);
+			json.put("customerId", 123);
+			json.put("blockId", 123);
+			json.put("houseId", data.getMeterId());
+			json.put("startTime", myFormat.format(data.getStartDate()));
+			json.put("endTime", myFormat.format(data.getEndDate()));
+			json.put("Location_Details", "Yes");
+			json.put("sampleDistance", "Hour");
+			json.put("sampleDistanceValue",1);
+			json.put("metrics","readings");
+			//json.put("defaultValueForMissingData", "No");
+			
+			String cloudpath=null;
+			
+			log.debug("URL is:"+customProperties.getReadingserviceurl());
+			log.debug("JSON is:"+json.toString());
+			ResponseEntity<TelemetryResponseData[]> responseEntity = restTemplate().postForEntity(customProperties.getReadingserviceurl(),json.toString(),TelemetryResponseData[].class);
+			Calendar cal=Calendar.getInstance();
+			
+			TelemetryResponseData[] outputobjects =(TelemetryResponseData[])responseEntity.getBody();;
+			if(outputobjects!=null && outputobjects.length >0){
+				
+			
+				List<Data> returnedobjects = outputobjects[0].getSeries();
+				log.debug("Output size is:"+returnedobjects.size());
+				
+				StringBuffer fileName=new StringBuffer();
+				fileName.append(data.getMeterId());
+				fileName.append(GenerateReportsService.UNDERSCORE);
+				fileName.append(fileNameFormat.format(cal.getTime()));
+				fileName.append(".csv");
+				
+				
+				StringBuffer filePath=new StringBuffer(customProperties.getCsvpath());
+				filePath.append(fileName);
+				File file=new File(filePath.toString());
+				
+				
+				Path path = Paths.get(filePath.toString());
+				 
+				//Use try-with-resource to get auto-closeable writer instance
+				BufferedWriter writer = Files.newBufferedWriter(path);
+			
+				writer.write("Hourly Cosumption Report For meter:"+data.getMeterId());
+				writer.write(GenerateReportsService.NL);
+				writer.write("Time");
+				writer.write(GenerateReportsService.COMMA);
+				writer.write("Meter Reading");
+				writer.write(GenerateReportsService.NL);
+				for(Data dataobj:returnedobjects){
+					writer.write((String)dataobj.getName());
+					writer.write(GenerateReportsService.COMMA);
+					writer.write(new Double(dataobj.getValue()).toString());
+					writer.write(GenerateReportsService.NL);
+				}
+				writer.flush();
+				 writer.close();
+				 cloudpath=azureFileService.uploadFile(filePath.toString(), fileName.toString());
+			}
+			
 			log.info("Entering GenerateReportsService.generateReport ");
 			return cloudpath;
 		 

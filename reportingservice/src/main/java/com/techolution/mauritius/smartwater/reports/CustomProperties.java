@@ -11,7 +11,14 @@ public class CustomProperties {
 	private String dataserviceurl;
 	private String csvpath;
 	private String containername;
+	private String readingserviceurl;
 	
+	public String getReadingserviceurl() {
+		return readingserviceurl;
+	}
+	public void setReadingserviceurl(String readingserviceurl) {
+		this.readingserviceurl = readingserviceurl;
+	}
 	public String getContainername() {
 		return containername;
 	}
