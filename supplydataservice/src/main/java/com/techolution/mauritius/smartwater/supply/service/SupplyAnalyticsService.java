@@ -1,6 +1,8 @@
 package com.techolution.mauritius.smartwater.supply.service;
 
+import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -20,6 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.techolution.mauritius.smartwater.supply.InfluxProperties;
+import com.techolution.mauritius.smartwater.supply.domain.ConsumptionLeakage;
+import com.techolution.mauritius.smartwater.supply.domain.LeakageData;
 import com.techolution.mauritius.smartwater.supply.domain.MeterConnection;
 import com.techolution.mauritius.smartwater.supply.domain.MeterTrendData;
 import com.techolution.mauritius.smartwater.supply.domain.WaterSupplyDailyConnectionStats;
@@ -52,6 +56,8 @@ public class SupplyAnalyticsService {
 	private static String DOWN="DOWN";
 	private static String DEFAULT_LOCATION="TEST";
 	
+	private static String SERIES_NAME_CONSUMERLEAKAGE="consumerleakage";
+	private static String SERIES_NAME_NETWORKLEAKAGE="networkleakage";
 	
 	
 	
@@ -290,7 +296,7 @@ public Map <Long, MeterConnection> getConnectionsMap() {
   
   public WaterSupplyDailyConnectionStats getStats(){
 		
-		log.info("Entering SupplyDataService.getStats");
+		log.info("Entering SupplyAnalyticsService.getStats");
 		
 		WaterSupplyDailyConnectionStats connectionStats=new WaterSupplyDailyConnectionStats();
 		getConnectionsMap();
@@ -396,8 +402,125 @@ public Map <Long, MeterConnection> getConnectionsMap() {
 		
 		
 		influxDB.close();
-		log.info("Exiting SupplyDataService.getStats");
+		log.info("Exiting SupplyAnalyticsService.getStats");
 		return connectionStats;
 	}
+  
+  public LeakageData  getCurrentDayLeakageData(){
+	  
+		  log.info("Entering SupplyAnalyticsService.getStats");
+		  
+		  SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+			
+		  Calendar start=Calendar.getInstance(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
+		  String startTime=myFormat.format(start.getTime());
+			
+		  start.add(Calendar.DATE,1);
+		  String endTime=myFormat.format(start.getTime());
+		  
+		  String leakageval="select sum(value) from networkleakage,consumerleakage where time >='"+startTime+"' and time <'"+endTime+"' ";
+		  
+		  
+		  InfluxDB influxDB = InfluxDBFactory.connect(influxProperties.getUrl(),influxProperties.getUsername(),influxProperties.getPassword());
+	      long startStarttime=System.currentTimeMillis();
+		  QueryResult queryResult = influxDB.query(new Query(leakageval, influxProperties.getDbname()));
+		  long endtime=System.currentTimeMillis();
+		  log.debug("Time After countOfSupply query execution:"+endtime);
+		  log.debug("Time Taken for query execution:"+(endtime-startStarttime));
+			
+		  LeakageData leakageData=new LeakageData();
+		 // leakageData.setMetricsDate((Calendar.getInstance(influxProperties.getDatatimezone())));
+			
+		 List<Result> results=queryResult.getResults();
+		 if(results!=null && results.size()>0){
+			 Result result=results.get(0);
+			 List<Series> serieslist=result.getSeries();
+			 serieslist.forEach(series -> {
+				 String seriesName= series.getName();
+				 List<List<Object>> values=series.getValues();
+				 if(values !=null && values.size()>0){
+					 List<Object> value=values.get(0);
+					 if(SERIES_NAME_CONSUMERLEAKAGE.equalsIgnoreCase(seriesName)){
+						 leakageData.setConsumptionLeakage((Double)value.get(1));
+						 String time=(String)value.get(0);
+						 Instant instant=Instant.parse(time);
+						 
+						 leakageData.setMetricsDate(Date.from(instant));
+					 }else{
+						 leakageData.setNetworkLeakage((Double)value.get(1));
+						 String time=(String)value.get(0);
+						 Instant instant=Instant.parse(time);
+						 
+						 leakageData.setMetricsDate(Date.from(instant));
+					 }
+				 }
+				 
+			 });
+		 }
+		  
+		  
+		 log.info("Exiting SupplyAnalyticsService.getStats");
+		 return leakageData;
+	  
+  }
+  
+  
+  public List<ConsumptionLeakage>  getCurrentDayConsumerLeakage(){
+	  
+	  log.info("Entering SupplyAnalyticsService.getCurrentDayConsumerLeakage");
+	  
+	  SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+	  Calendar start=Calendar.getInstance(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
+	  String startTime=myFormat.format(start.getTime());
+		
+	  start.add(Calendar.DATE,1);
+	  String endTime=myFormat.format(start.getTime());
+	  
+	  String leakageval="select sum(value) from consumerleakage where time >='"+startTime+"' and time <'"+endTime+"' group by meter_id ";
+	  
+	  
+	  InfluxDB influxDB = InfluxDBFactory.connect(influxProperties.getUrl(),influxProperties.getUsername(),influxProperties.getPassword());
+      long startStarttime=System.currentTimeMillis();
+	  QueryResult queryResult = influxDB.query(new Query(leakageval, influxProperties.getDbname()));
+	  long endtime=System.currentTimeMillis();
+	  log.debug("Time After countOfSupply query execution:"+endtime);
+	  log.debug("Time Taken for query execution:"+(endtime-startStarttime));
+		
+	  
+	  List<ConsumptionLeakage> resultList=new ArrayList<ConsumptionLeakage>();
+	
+	 // leakageData.setMetricsDate((Calendar.getInstance(influxProperties.getDatatimezone())));
+		
+	 List<Result> results=queryResult.getResults();
+	 if(results!=null && results.size()>0){
+		 Result result=results.get(0);
+		 List<Series> serieslist=result.getSeries();
+		 serieslist.forEach(series -> {
+			 ConsumptionLeakage leakage= new ConsumptionLeakage();
+			
+			 String meterId=series.getTags().get(METER_ID);
+			 leakage.setMeterId(meterId);
+			 List<List<Object>> values=series.getValues();
+			 if(values !=null && values.size()>0){
+				 	List<Object> value=values.get(0);
+				 	leakage.setLeakage( (Double)value.get(1));
+					 
+					 String time=(String)value.get(0);
+					 Instant instant=Instant.parse(time);
+					 leakage.setDate(Date.from(instant));
+					 
+					 
+				}
+			 resultList.add(leakage);
+			 
+		 });
+	 }
+	  
+	  
+	 log.info("Exiting SupplyAnalyticsService.getCurrentDayConsumerLeakage");
+	 return resultList;
+  
+}
 
 }

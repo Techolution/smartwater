@@ -72,7 +72,7 @@ public class FlowDataSimiulator implements IStubData {
 			}
 		}
 		
-		String query = "select last(value)  from meterreadingvalues where time <='"+startTime+"' and meter_id='"+meterId+"'";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
+		String query = "select last(value)  from meterreadingvalues where time <'"+startTime+"' and meter_id='"+meterId+"'";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
 		System.out.println("Query is:"+query);
 		
 		
@@ -103,7 +103,7 @@ public class FlowDataSimiulator implements IStubData {
 			try {
 				Telemetry telemetry=new Telemetry();
 				telemetry.setDate(startDate);
-				double flow=ThreadLocalRandom.current().nextDouble(200.25, 300.85); 
+				double flow=ThreadLocalRandom.current().nextDouble(1.00, 2.00); 
 				telemetry.setFlow(flow);
 				baseReadingValue=baseReadingValue+flow;
 				telemetry.setReading(baseReadingValue);
