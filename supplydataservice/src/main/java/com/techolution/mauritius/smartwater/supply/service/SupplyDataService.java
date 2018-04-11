@@ -2,7 +2,6 @@ package com.techolution.mauritius.smartwater.supply.service;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -32,6 +31,7 @@ import com.techolution.mauritius.smartwater.supply.InfluxProperties;
 import com.techolution.mauritius.smartwater.supply.domain.DailyWaterSupplyData;
 import com.techolution.mauritius.smartwater.supply.domain.MeterConnection;
 import com.techolution.mauritius.smartwater.supply.domain.SupplyStatisticsRequestData;
+import com.techolution.mauritius.smartwater.supply.domain.TotalConsolidatedConsumption;
 import com.techolution.mauritius.smartwater.supply.domain.WaterSupplyData;
 
 @Component
@@ -41,6 +41,8 @@ public class SupplyDataService {
 	
 	private static String SERIES_OFF_DATA="supplyoffdata";
 	private static String SERIES_ON_DATA="supplyondata";
+	
+	private static double UNIT_RATE=10.0;
 	
 	@Autowired
     InfluxProperties influxProperties;
@@ -126,6 +128,42 @@ public class SupplyDataService {
 			STATUS= "OFF";
 		}
 		
+		double currentMonthConsumption=0.0;
+		double lastMonthConsumption= 0.0;
+		try {
+			TotalConsolidatedConsumption consumptionStats=getConsumptionForThisMonth(meterId);
+			currentMonthConsumption=consumptionStats.getTotalConsumption();
+			lastMonthConsumption=consumptionStats.getConsumptionInPreviousBucket();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Calendar today=Calendar.getInstance();
+		int daysPastInMonth=today.get(Calendar.DAY_OF_MONTH);
+		double estimatedCurrentMonthConsumption=currentMonthConsumption;
+		if(daysPastInMonth<30){
+			double averagePerDay=currentMonthConsumption/30;
+			
+			 estimatedCurrentMonthConsumption=currentMonthConsumption+(averagePerDay*(30-daysPastInMonth));
+	
+		}
+				
+		int factor=1;
+		
+		if(estimatedCurrentMonthConsumption<lastMonthConsumption){
+			factor=-1;
+		}
+		
+		double percent=Math.abs((estimatedCurrentMonthConsumption-lastMonthConsumption)/lastMonthConsumption);
+		double effectivePercent=1+((factor)*percent);
+		
+		double estimatedConsumptionForNextMonth=effectivePercent*estimatedCurrentMonthConsumption;
+		
+		double revenueLastMonth=Math.round((lastMonthConsumption*UNIT_RATE)*100D)/100D;
+		double expectedRevenueThisMonth=Math.round((estimatedCurrentMonthConsumption*UNIT_RATE)*100D)/100D;
+		double projectedRevenueNextMonth=Math.round((estimatedConsumptionForNextMonth*UNIT_RATE)*100D)/100D;
+		
 		
 		System.out.println(connectionmap);
 		MeterConnection connection=connectionmap.get(new Long(meterId));
@@ -140,6 +178,15 @@ public class SupplyDataService {
 		waterSupplyData.setImage(connection.getImage());
 		waterSupplyData.setPipesize(connection.getPipesize());
 		waterSupplyData.setPipesizeunit(connection.getPipesizeunit());
+		
+		waterSupplyData.setCurrentMonthConsumptionTillDate(Math.round(currentMonthConsumption*100D)/100D);
+		waterSupplyData.setLastMonthConsumption(Math.round(lastMonthConsumption*100D)/100D);
+		waterSupplyData.setProjectedCurrentMonthConsumption(Math.round(estimatedCurrentMonthConsumption*100D)/100D);
+		waterSupplyData.setProjectedNextMonthConsumption(Math.round(estimatedConsumptionForNextMonth*100D)/100D);
+		
+		waterSupplyData.setRevenueLastMonth(revenueLastMonth);
+		waterSupplyData.setProjectedRevenueNextMonth(projectedRevenueNextMonth);
+		waterSupplyData.setProjectedRevenueThisMonth(expectedRevenueThisMonth);
 		
 		log.info("Exiting SupplyDataService.getLatestWaterSupplyData");
 		return waterSupplyData;
@@ -230,5 +277,58 @@ public class SupplyDataService {
 		log.info("Exiting SupplyDataService.getDataForList");
 		return outputlist;
 	}
+	
+	public TotalConsolidatedConsumption getConsumptionForThisMonth( int meterid) throws ClientProtocolException, IOException, JSONException{
+		
+		
+		Calendar calendar=Calendar.getInstance();
+		calendar.set(Calendar.DAY_OF_MONTH, 1);
+		
+		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String reformattedStr = null;
+		reformattedStr = myFormat.format(calendar.getTime());
+		
+		Calendar calendarlastmonth=Calendar.getInstance();
+		calendarlastmonth.set(Calendar.DAY_OF_MONTH, 1);
+		calendarlastmonth.add(Calendar.MONTH, -1);
+		String reformattedStrlastmonth = myFormat.format(calendarlastmonth.getTime());
+		
+		//String query=INFLUX_ENDPOINT+"select sum(value) from flow where time >='"+reformattedStr+"'";
+		String query="select sum(value) from flowvalues where time >='"+reformattedStr+"' and meter_id='"+meterid+"'";
+		
+		String query_previousbucket="select sum(value) from flowvalues where time >='"+reformattedStrlastmonth+"' and time < '"+reformattedStr+"' and meter_id='"+meterid+"'" ;
+		
+		
+		
+		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
+		InfluxDB influxDB = InfluxDBFactory.connect(influxProperties.getUrl(), influxProperties.getUsername(),influxProperties.getPassword());
+		
+		QueryResult queryResult = influxDB.query(new Query(query, influxProperties.getDbname()));
+		Double consumption = getConsumption(queryResult);
+		QueryResult queryResultPreviousBucket = influxDB.query(new Query(query_previousbucket, influxProperties.getDbname()));
+		Double previousconsumption = getConsumption(queryResultPreviousBucket);
+		log.debug("consumption:"+consumption);
+		
+		influxDB.close();
+		
+		//TotalConsolidatedConsumption consolidatedConsumption=new TotalConsolidatedConsumption(Long.valueOf(consumption).longValue(), 100.00, 0.00, 0.00);
+		TotalConsolidatedConsumption consolidatedConsumption=new TotalConsolidatedConsumption(consumption, 100.00, 0.00, previousconsumption);
+		return consolidatedConsumption;
+		
+	}
+
+private Double getConsumption(QueryResult queryResult) {
+	List<Result> results=queryResult.getResults();
+	Result valueobj=results.get(0);
+	if(valueobj != null && valueobj.getSeries()!=null && valueobj.getSeries().size()>0){
+		List<List<Object>> values=valueobj.getSeries().get(0).getValues();
+//		String consumption=(String)(values.get(0).get(1));
+		Double consumption=(Double)(values.get(0).get(1));
+		return Math.round(consumption*100D)/100D;	
+	}else{
+		return new Double(0.0);
+	}
+	
+}
 
 }

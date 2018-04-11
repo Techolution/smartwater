@@ -15,6 +15,74 @@ public class WaterSupplyData implements Serializable {
 	private String image;
 	private double pipesize;
 	private String pipesizeunit;
+	
+	private double projectedCurrentMonthConsumption;
+	private double projectedNextMonthConsumption;
+	private double lastMonthConsumption;
+	
+	private double projectedRevenueThisMonth;
+	private double projectedRevenueNextMonth;
+	private double revenueLastMonth;
+	
+	private double currentMonthConsumptionTillDate;
+	
+	
+
+	public double getProjectedCurrentMonthConsumption() {
+		return projectedCurrentMonthConsumption;
+	}
+
+	public void setProjectedCurrentMonthConsumption(double projectedCurrentMonthConsumption) {
+		this.projectedCurrentMonthConsumption = projectedCurrentMonthConsumption;
+	}
+
+	public double getProjectedNextMonthConsumption() {
+		return projectedNextMonthConsumption;
+	}
+
+	public void setProjectedNextMonthConsumption(double projectedNextMonthConsumption) {
+		this.projectedNextMonthConsumption = projectedNextMonthConsumption;
+	}
+
+	public double getLastMonthConsumption() {
+		return lastMonthConsumption;
+	}
+
+	public void setLastMonthConsumption(double lastMonthConsumption) {
+		this.lastMonthConsumption = lastMonthConsumption;
+	}
+
+	public double getProjectedRevenueThisMonth() {
+		return projectedRevenueThisMonth;
+	}
+
+	public void setProjectedRevenueThisMonth(double projectedRevenueThisMonth) {
+		this.projectedRevenueThisMonth = projectedRevenueThisMonth;
+	}
+
+	public double getProjectedRevenueNextMonth() {
+		return projectedRevenueNextMonth;
+	}
+
+	public void setProjectedRevenueNextMonth(double projectedRevenueNextMonth) {
+		this.projectedRevenueNextMonth = projectedRevenueNextMonth;
+	}
+
+	public double getRevenueLastMonth() {
+		return revenueLastMonth;
+	}
+
+	public void setRevenueLastMonth(double revenueLastMonth) {
+		this.revenueLastMonth = revenueLastMonth;
+	}
+
+	public double getCurrentMonthConsumptionTillDate() {
+		return currentMonthConsumptionTillDate;
+	}
+
+	public void setCurrentMonthConsumptionTillDate(double currentMonthConsumptionTillDate) {
+		this.currentMonthConsumptionTillDate = currentMonthConsumptionTillDate;
+	}
 
 	public String getImage() {
 		return image;
