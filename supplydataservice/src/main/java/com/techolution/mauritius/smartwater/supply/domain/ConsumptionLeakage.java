@@ -11,8 +11,31 @@ public class ConsumptionLeakage implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String meterId;
 	private Date date;
-	private double  leakage;
+	private double  leakageVolume;
+	private String location;
+	private String startTime;
+	private String endTime;
 	
+	
+	
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
+		this.location = location;
+	}
+	public String getStartTime() {
+		return startTime;
+	}
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+	public String getEndTime() {
+		return endTime;
+	}
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
 	public String getMeterId() {
 		return meterId;
 	}
@@ -25,11 +48,12 @@ public class ConsumptionLeakage implements Serializable {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-	public double getLeakage() {
-		return leakage;
+	public double getLeakageVolume() {
+		return leakageVolume;
 	}
-	public void setLeakage(double leakage) {
-		this.leakage = leakage;
+	public void setLeakageVolume(double leakageVolume) {
+		this.leakageVolume = leakageVolume;
 	}
+	
 
 }

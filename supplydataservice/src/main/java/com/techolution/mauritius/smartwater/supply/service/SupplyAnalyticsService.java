@@ -1,10 +1,13 @@
 package com.techolution.mauritius.smartwater.supply.service;
 
-import java.sql.Date;
+
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -23,6 +26,7 @@ import org.springframework.stereotype.Component;
 
 import com.techolution.mauritius.smartwater.supply.InfluxProperties;
 import com.techolution.mauritius.smartwater.supply.domain.ConsumptionLeakage;
+import com.techolution.mauritius.smartwater.supply.domain.DailyWaterSupplyData;
 import com.techolution.mauritius.smartwater.supply.domain.LeakageData;
 import com.techolution.mauritius.smartwater.supply.domain.MeterConnection;
 import com.techolution.mauritius.smartwater.supply.domain.MeterTrendData;
@@ -58,6 +62,8 @@ public class SupplyAnalyticsService {
 	
 	private static String SERIES_NAME_CONSUMERLEAKAGE="consumerleakage";
 	private static String SERIES_NAME_NETWORKLEAKAGE="networkleakage";
+	private static String SERIES_NAME_CONSUMERLEAKAGE_ON="consumerleakageontime";
+	private static String SERIES_NAME_CONSUMERLEAKAGE_OFF="consumerleakageofftime";
 	
 	
 	
@@ -103,6 +109,16 @@ public class SupplyAnalyticsService {
 			populatePreviousucketAndConnectionStatisticsInCurrent(retList, yestedayData);
 		
 		}
+		
+		Map <Long, MeterConnection> connMap=getConnectionsMap();
+		
+		retList.forEach(trendData -> {
+			
+			MeterConnection connection=connMap.get(new Long(trendData.getMeterId()));
+			if(connection!=null){
+				trendData.setLocation(connection.getHouse_namenum());
+			}
+		});
 		
 		
 		log.info("Existing SupplyAnalyticsService.getConnectionsAboveDailyBaseline");
@@ -170,6 +186,15 @@ public class SupplyAnalyticsService {
 		
 		}
 		
+		Map <Long, MeterConnection> connMap=getConnectionsMap();
+		
+		retList.forEach(trendData -> {
+			
+			MeterConnection connection=connMap.get(new Long(trendData.getMeterId()));
+			if(connection!=null){
+				trendData.setLocation(connection.getHouse_namenum());
+			}
+		});
 		
 		log.info("Existing SupplyAnalyticsService.getConnectionsBelowDailyBaseline");
 		return retList;
@@ -458,7 +483,7 @@ public Map <Long, MeterConnection> getConnectionsMap() {
 			 });
 		 }
 		  
-		  
+		 influxDB.close();
 		 log.info("Exiting SupplyAnalyticsService.getStats");
 		 return leakageData;
 	  
@@ -504,7 +529,7 @@ public Map <Long, MeterConnection> getConnectionsMap() {
 			 List<List<Object>> values=series.getValues();
 			 if(values !=null && values.size()>0){
 				 	List<Object> value=values.get(0);
-				 	leakage.setLeakage( (Double)value.get(1));
+				 	leakage.setLeakageVolume( (Double)value.get(1));
 					 
 					 String time=(String)value.get(0);
 					 Instant instant=Instant.parse(time);
@@ -516,10 +541,132 @@ public Map <Long, MeterConnection> getConnectionsMap() {
 			 
 		 });
 	 }
-	  
+	 influxDB.close();
 	  
 	 log.info("Exiting SupplyAnalyticsService.getCurrentDayConsumerLeakage");
 	 return resultList;
+  
+}
+  
+  public List<ConsumptionLeakage>  getCurrentDayConsumerLeakageDetails(){
+	  
+	  log.info("Entering SupplyAnalyticsService.getCurrentDayConsumerLeakageDetails");
+	  
+	 // SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+	  List<ConsumptionLeakage>  outputlist= new ArrayList<ConsumptionLeakage>();
+		
+	  //TODO Add date specific filtering again
+		/*String startTime=myFormat.format(data.getStartDate());
+		String endTime=myFormat.format(data.getEndDate());
+		Calendar currentCal=Calendar.getInstance();
+		Date currentTime=currentCal.getTime();
+		if(data.getEndDate().after(currentTime)){
+			
+			currentCal.add(Calendar.DATE, -1);
+			endTime=myFormat.format(currentCal.getTime());
+		}*/
+		
+	//	String query = "select time,value from "+SERIES_NAME_CONSUMERLEAKAGE_ON+" , "+SERIES_NAME_CONSUMERLEAKAGE_OFF+ " where meter_id='"+data.getMeterId()+"' and time >= '"+startTime+"' and time <='"+endTime+"' order by time asc";
+		String query = "select * from "+SERIES_NAME_CONSUMERLEAKAGE_ON+" , "+SERIES_NAME_CONSUMERLEAKAGE_OFF+" order by time asc";
+		
+		
+		SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		dateFormat.setTimeZone(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
+		InfluxDB influxDB = InfluxDBFactory.connect(influxProperties.getUrl(),influxProperties.getUsername(),influxProperties.getPassword());
+		long startStarttime=System.currentTimeMillis();
+		QueryResult queryResult = influxDB.query(new Query(query, influxProperties.getDbname()));
+		long endtime=System.currentTimeMillis();
+		log.debug("Time After getCurrentDayConsumerLeakageDetails query execution:"+endtime);
+		log.debug("Time Taken for getCurrentDayConsumerLeakageDetails query execution:"+(endtime-startStarttime));
+		log.debug("Query is:"+query);
+		
+		List<Result> resultlist=queryResult.getResults();
+		
+		Map<String,ConsumptionLeakage> outputmap=new HashMap<String,ConsumptionLeakage>();
+		if(resultlist != null && resultlist.size()>0){
+			
+			Result result=resultlist.get(0);
+			List<Series> serieslist=result.getSeries();
+			serieslist.forEach(series -> {
+				
+				String name=series.getName();
+				
+				List<List<Object>> valuelist=series.getValues();
+				valuelist.parallelStream().forEach( values -> {
+					
+					String timestamp=(String)values.get(0);
+					String meter_id=(String)values.get(1);
+					
+					Instant instant=Instant.parse(timestamp);
+					Date dt=Date.from(instant);
+					
+										
+					
+					ConsumptionLeakage leakageData=outputmap.get(meter_id);
+					if(leakageData == null){
+						leakageData =new ConsumptionLeakage();
+					}
+					leakageData.setMeterId(meter_id);
+					
+					if(SERIES_NAME_CONSUMERLEAKAGE_ON.equalsIgnoreCase(name)){
+						leakageData.setStartTime(dateFormat.format(dt));
+					}else{
+						leakageData.setEndTime(dateFormat.format(dt));
+					}
+					
+					outputmap.put(meter_id, leakageData);
+					
+					
+				});
+			});
+			
+		}
+		
+	
+		//TODO Add time base filter. It also assumes that data will be here whenever data is there in consumerleakageontime and consumerleakageofftime
+		String leakagevalquery="select sum(value) from consumerleakage group by meter_id ";
+		long leakagevalqueryresultStarttime=System.currentTimeMillis();
+		QueryResult leakagevalqueryresult = influxDB.query(new Query(leakagevalquery, influxProperties.getDbname()));
+		long leakagevalqueryresultendtime=System.currentTimeMillis();
+		log.debug("Time Taken for leakagevalquery query execution:"+(leakagevalqueryresultendtime-leakagevalqueryresultStarttime));
+		List<Result> leakageValResult=leakagevalqueryresult.getResults();
+		if(leakageValResult != null && leakageValResult.size()>0){
+			Result result=leakageValResult.get(0);
+			
+			List<Series> serieslist=result.getSeries();
+			
+			serieslist.forEach(series -> {
+				String meterId=series.getTags().get("meter_id");
+				
+				List<List<Object>> valuelist=series.getValues();
+				if(valuelist !=null && valuelist.size()>0){
+					List<Object> value=valuelist.get(0);
+					ConsumptionLeakage leakage=outputmap.get(meterId);
+					leakage.setLeakageVolume((Double)value.get(1));
+				}
+				
+			});
+		}
+		
+		
+		/*Collection<DailyWaterSupplyData> ouput=outputmap.values();
+		List<DailyWaterSupplyData> outputlist=new ArrayList<DailyWaterSupplyData>();
+		outputlist.addAll(ouput);*/
+	  
+		Map <Long, MeterConnection> connmap=getConnectionsMap();
+		Collection<ConsumptionLeakage> ouput=outputmap.values();
+		outputlist.addAll(ouput);
+		outputlist.forEach(consumptionleakage -> {
+			Long meterId=new Long(consumptionleakage.getMeterId());
+			MeterConnection meterconn= connmap.get(meterId);
+			if(meterconn!=null){
+				consumptionleakage.setLocation(meterconn.getHouse_namenum());
+			}
+		});
+		
+		influxDB.close();
+		log.info("Exiting SupplyAnalyticsService.getCurrentDayConsumerLeakageDetails");
+		return outputlist;
   
 }
 

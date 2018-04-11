@@ -38,7 +38,7 @@ public class LeakageDataController {
 	public @ResponseBody List<ConsumptionLeakage> getDailyConsumerLeakageStats()
 	{
 		log.info("Entering LeakageDataController.getDailyConsumerLeakageStats");
-		List<ConsumptionLeakage> resultList=analyticService.getCurrentDayConsumerLeakage();
+		List<ConsumptionLeakage> resultList=analyticService.getCurrentDayConsumerLeakageDetails();
 		log.info("Exiting LeakageDataController.getDailyConsumerLeakageStats");
 		return resultList;
 	}
