@@ -137,6 +137,9 @@ public class SupplyDataService {
 		waterSupplyData.setCustomerId(connection.getCustomer_id());
 		waterSupplyData.setMetertype(connection.getMetertype());
 		waterSupplyData.setCurrentstatus(STATUS);
+		waterSupplyData.setImage(connection.getImage());
+		waterSupplyData.setPipesize(connection.getPipesize());
+		waterSupplyData.setPipesizeunit(connection.getPipesizeunit());
 		
 		log.info("Exiting SupplyDataService.getLatestWaterSupplyData");
 		return waterSupplyData;

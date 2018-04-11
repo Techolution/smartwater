@@ -24,6 +24,28 @@ public class MeterConnection implements Serializable {
 	private String house_namenum;
 	private boolean isprivate;
 	private String metertype;
+	
+	private String image;
+	private double pipesize;
+	private String pipesizeunit;
+	public String getImage() {
+		return image;
+	}
+	public void setImage(String image) {
+		this.image = image;
+	}
+	public double getPipesize() {
+		return pipesize;
+	}
+	public void setPipesize(double pipesize) {
+		this.pipesize = pipesize;
+	}
+	public String getPipesizeunit() {
+		return pipesizeunit;
+	}
+	public void setPipesizeunit(String pipesizeunit) {
+		this.pipesizeunit = pipesizeunit;
+	}
 	public String getMetertype() {
 		return metertype;
 	}

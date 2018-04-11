@@ -100,14 +100,18 @@ public class ConnectionStatisticsService {
 		
 		String groupVal = getGroupVal(data);
 		
+		boolean useHours=false;
 		
+		if(data.getSample_Distance().equalsIgnoreCase("Hour")){
+			useHours=true;
+		}
 		int deviceId=data.getHouse_ID();
 		//int deviceId=123;
 		String query = "select sum(value)  from flowvalues where time >='"+startTime+"' and time<'"+endTime+"' and meter_id='"+deviceId+"' group by time("+groupVal+") fill(0)";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
 		log.debug("Query is:"+query);
 		
 		
-		List<Data> retlist = getDailyMetrics(deviceId, query);
+		List<Data> retlist = getDailyMetrics(deviceId, query,useHours);
 		return retlist;
 	}
 
@@ -155,7 +159,7 @@ public List<Data> getDailyFowRateData(RequestData data) throws ParseException{
 		log.debug("Query is:"+query);
 		
 		
-		List<Data> retlist = getDailyMetrics(deviceId, query);
+		List<Data> retlist = getDailyMetrics(deviceId, query,false);
 		return retlist;
 	}
 
@@ -187,7 +191,7 @@ public List<Data> getDailyFowRateData(RequestData data) throws ParseException{
 		return groupVal;
 	}
 
-	private List<Data> getDailyMetrics(int deviceId, String query) {
+	private List<Data> getDailyMetrics(int deviceId, String query,boolean useHours) {
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32770", "root", "root");
 		InfluxDB influxDB = InfluxDBFactory.connect(influxProperties.getUrl(),influxProperties.getUsername(),influxProperties.getPassword());
 		long startStarttime=System.currentTimeMillis();
@@ -201,7 +205,7 @@ public List<Data> getDailyFowRateData(RequestData data) throws ParseException{
 	//	int recordSize=0;
 		List<Data> retlist=new ArrayList<Data>();
 	//	SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
-		//SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-ddTHH:mm:ssZ");
+		SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		//dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 		//Date date1=new SimpleDateFormat("yyyy-MM-DDTHH:mm:ssz").parse(sDate1);
 		Data resultData=null;
@@ -223,7 +227,14 @@ public List<Data> getDailyFowRateData(RequestData data) throws ParseException{
 					
 					resultData=new Data();
 					resultData.setDevid(deviceId);
-					resultData.setName(endTimeReturned.split("T")[0]);	
+					if(useHours){
+						Instant instant=Instant.parse(endTimeReturned);
+						Date date = Date.from(instant);
+						resultData.setName(dateFormat.format(date));
+					}else{
+						resultData.setName(endTimeReturned.split("T")[0]);	
+					}
+						
 					resultData.setValue(Math.round(((Double)results.get(1)).doubleValue()*100D)/100D);
 					resultData.setSensor_locationname(locationName);
 					retlist.add(resultData);

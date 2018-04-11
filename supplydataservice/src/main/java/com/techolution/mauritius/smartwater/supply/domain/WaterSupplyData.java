@@ -11,6 +11,34 @@ public class WaterSupplyData implements Serializable {
 	private String metertype;
 	
 	private String currentstatus;
+	
+	private String image;
+	private double pipesize;
+	private String pipesizeunit;
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
+	public double getPipesize() {
+		return pipesize;
+	}
+
+	public void setPipesize(double pipesize) {
+		this.pipesize = pipesize;
+	}
+
+	public String getPipesizeunit() {
+		return pipesizeunit;
+	}
+
+	public void setPipesizeunit(String pipesizeunit) {
+		this.pipesizeunit = pipesizeunit;
+	}
 
 	public String getCurrentstatus() {
 		return currentstatus;

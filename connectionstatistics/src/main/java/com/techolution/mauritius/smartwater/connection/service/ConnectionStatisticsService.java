@@ -762,6 +762,10 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
     		returnVal="supplyondata";
     	}else if ("meteroff".equalsIgnoreCase(metrics)){
     		returnVal="supplyoffdata";
+    	}else if("consumerleakageontime".equalsIgnoreCase(metrics)){
+    		returnVal="consumerleakageontime";
+    	}else if("consumerleakageofftime".equalsIgnoreCase(metrics)){
+    		returnVal="consumerleakageofftime";
     	}
     	return returnVal;
     }
