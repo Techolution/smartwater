@@ -22,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 import com.techolution.mauritius.smartwater.reports.CustomProperties;
 import com.techolution.mauritius.smartwater.reports.domain.Data;
 import com.techolution.mauritius.smartwater.reports.domain.SupplyStatisticsRequestData;
+import com.techolution.mauritius.smartwater.reports.domain.TelemetryRequestData;
 import com.techolution.mauritius.smartwater.reports.domain.TelemetryResponseData;
 
 
@@ -130,11 +131,24 @@ public class GenerateReportsService {
 			json.put("metrics","readings");
 			//json.put("defaultValueForMissingData", "No");
 			
+			
 			String cloudpath=null;
+			
+			TelemetryRequestData  requestData=new TelemetryRequestData();
+			int defautlVal=123;
+			requestData.setBlockId(defautlVal);
+			requestData.setCustomerId(defautlVal);
+			requestData.setEndTime(myFormat.format(data.getEndDate()));
+			requestData.setHouseId(data.getMeterId());
+			requestData.setMetrics("readings");
+			requestData.setSampleDistance("Hour");
+			requestData.setSampleDistanceValue(1);
+			requestData.setStartTime(myFormat.format(data.getStartDate()));
+			requestData.setVendorId(defautlVal);
 			
 			log.debug("URL is:"+customProperties.getReadingserviceurl());
 			log.debug("JSON is:"+json.toString());
-			ResponseEntity<TelemetryResponseData[]> responseEntity = restTemplate().postForEntity(customProperties.getReadingserviceurl(),json.toString(),TelemetryResponseData[].class);
+			ResponseEntity<TelemetryResponseData[]> responseEntity = restTemplate().postForEntity(customProperties.getReadingserviceurl(),requestData,TelemetryResponseData[].class);
 			Calendar cal=Calendar.getInstance();
 			
 			TelemetryResponseData[] outputobjects =(TelemetryResponseData[])responseEntity.getBody();;
