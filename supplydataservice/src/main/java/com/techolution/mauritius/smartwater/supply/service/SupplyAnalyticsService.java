@@ -443,7 +443,9 @@ public Map <Long, MeterConnection> getConnectionsMap() {
 		  start.add(Calendar.DATE,1);
 		  String endTime=myFormat.format(start.getTime());
 		  
-		  String leakageval="select sum(value) from networkleakage,consumerleakage where time >='"+startTime+"' and time <'"+endTime+"' ";
+		//  String leakageval="select sum(value) from networkleakage,consumerleakage where time >='"+startTime+"' and time <'"+endTime+"' ";
+		  //TODO Have proper date specific logic once leakage is properly setup and developed
+		  String leakageval="select sum(value) from networkleakage,consumerleakage  ";
 		  
 		  
 		  InfluxDB influxDB = InfluxDBFactory.connect(influxProperties.getUrl(),influxProperties.getUsername(),influxProperties.getPassword());
