@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -281,10 +282,17 @@ public class SupplyDataService {
 	public TotalConsolidatedConsumption getConsumptionForThisMonth( int meterid) throws ClientProtocolException, IOException, JSONException{
 		
 		
+		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar calendar=Calendar.getInstance();
 		calendar.set(Calendar.DAY_OF_MONTH, 1);
 		
-		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar todaysDate=Calendar.getInstance(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
+		todaysDate.add(Calendar.DATE,1);
+		Date todaysDateVal=todaysDate.getTime();
+		String todaysDateStr=myFormat.format(todaysDateVal);
+		
+		
+		
 		String reformattedStr = null;
 		reformattedStr = myFormat.format(calendar.getTime());
 		
@@ -294,10 +302,12 @@ public class SupplyDataService {
 		String reformattedStrlastmonth = myFormat.format(calendarlastmonth.getTime());
 		
 		//String query=INFLUX_ENDPOINT+"select sum(value) from flow where time >='"+reformattedStr+"'";
-		String query="select sum(value) from flowvalues where time >='"+reformattedStr+"' and meter_id='"+meterid+"'";
+		String query="select sum(value) from flowvalues where time >='"+reformattedStr+"' and time <'"+todaysDateStr+"' and meter_id='"+meterid+"'";
+		
+		log.debug("Query is :"+query);
 		
 		String query_previousbucket="select sum(value) from flowvalues where time >='"+reformattedStrlastmonth+"' and time < '"+reformattedStr+"' and meter_id='"+meterid+"'" ;
-		
+		log.debug("Query for last month is :"+query_previousbucket);
 		
 		
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");

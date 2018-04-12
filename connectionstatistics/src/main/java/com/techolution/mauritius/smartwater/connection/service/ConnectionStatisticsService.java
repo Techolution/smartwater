@@ -376,7 +376,7 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 			String endTime=data.getEndTime();
 			endTime = getNextDay( endTime);
 			//int deviceId=123;
-			String query = "select last(value)  from "+ seriesname+" where time >='"+data.getStartTime()+"' and time< '"+endTime+"' and meter_id='"+deviceId+"' group by time("+groupVal+")";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
+			String query = "select first(value),last(value)  from "+ seriesname+" where time >='"+data.getStartTime()+"' and time< '"+endTime+"' and meter_id='"+deviceId+"' group by time("+groupVal+")";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
 			if(data.getDefaultValueForMissingData()!=null){
 				query = query+"fill("+data.getDefaultValueForMissingData()+")";
 			}
@@ -405,6 +405,8 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 				}
 				for(Series series:serieslist){
 					List<List<Object>> valuelist=series.getValues();
+					int index=0;
+					int size= valuelist.size();
 					for(List<Object> results:valuelist){
 						String endTimeReturned=(String)results.get(0);
 						
@@ -419,10 +421,15 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 							resultData.setName(endTimeReturned.split("T")[0]);	
 						}
 							
+						if(index == size-1){
+							resultData.setValue(Math.round(((Double)results.get(2)).doubleValue()*100D)/100D);
+						}else{
+							resultData.setValue(Math.round(((Double)results.get(1)).doubleValue()*100D)/100D);	
+						}
 						
-						resultData.setValue(Math.round(((Double)results.get(1)).doubleValue()*100D)/100D);
 						resultData.setSensor_locationname(locationName);
 						retlist.add(resultData);
+						index++;
 						}
 					}
 					
