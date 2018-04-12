@@ -144,7 +144,7 @@ public class SupplyDataService {
 		int daysPastInMonth=today.get(Calendar.DAY_OF_MONTH);
 		double estimatedCurrentMonthConsumption=currentMonthConsumption;
 		if(daysPastInMonth<30){
-			double averagePerDay=currentMonthConsumption/30;
+			double averagePerDay=currentMonthConsumption/daysPastInMonth;
 			
 			 estimatedCurrentMonthConsumption=currentMonthConsumption+(averagePerDay*(30-daysPastInMonth));
 	
