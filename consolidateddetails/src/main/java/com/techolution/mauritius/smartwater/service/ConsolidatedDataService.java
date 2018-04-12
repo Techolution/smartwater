@@ -87,20 +87,33 @@ public class ConsolidatedDataService {
 		Calendar calendar=Calendar.getInstance();
 		calendar.set(Calendar.DAY_OF_MONTH, 1);
 		
+		Calendar endDate=Calendar.getInstance();
+		endDate.add(Calendar.DATE, 1);
+		
+		
+		
 		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String reformattedStr = null;
 		reformattedStr = myFormat.format(calendar.getTime());
+		
+		String endDateStr=myFormat.format(endDate.getTime());
 		
 		Calendar calendarlastmonth=Calendar.getInstance();
 		calendarlastmonth.set(Calendar.DAY_OF_MONTH, 1);
 		calendarlastmonth.add(Calendar.MONTH, -1);
 		String reformattedStrlastmonth = myFormat.format(calendarlastmonth.getTime());
 		
+		endDate.add(Calendar.MONTH, -1);
+		
+		String endDateForLastMonth=myFormat.format(endDate.getTime());
+		
 		//String query=INFLUX_ENDPOINT+"select sum(value) from flow where time >='"+reformattedStr+"'";
-		String query="select sum(value) from flowvalues where time >='"+reformattedStr+"'";
+		String query="select sum(value) from flowvalues where time >='"+reformattedStr+"' and time < '"+endDateStr+"'";
 		
-		String query_previousbucket="select sum(value) from flowvalues where time >='"+reformattedStrlastmonth+"' and time < '"+reformattedStr+"'" ;
+		log.debug("Query for this month consumption of all meters:"+query);
 		
+		String query_previousbucket="select sum(value) from flowvalues where time >='"+reformattedStrlastmonth+"' and time < '"+endDateForLastMonth+"'" ;
+		log.debug("Query for last month consumption of all meters:"+query_previousbucket);
 		
 		
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
