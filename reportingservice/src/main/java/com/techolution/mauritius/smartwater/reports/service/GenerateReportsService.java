@@ -118,18 +118,7 @@ public class GenerateReportsService {
 		 	log.info("Entering GenerateReportsService.generateReport ");
 		 	SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
 		 	SimpleDateFormat fileNameFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-		 	JSONObject json = new JSONObject();
-			json.put("vendorId", 123);
-			json.put("customerId", 123);
-			json.put("blockId", 123);
-			json.put("houseId", data.getMeterId());
-			json.put("startTime", myFormat.format(data.getStartDate()));
-			json.put("endTime", myFormat.format(data.getEndDate()));
-			json.put("Location_Details", "Yes");
-			json.put("sampleDistance", "Hour");
-			json.put("sampleDistanceValue",1);
-			json.put("metrics","readings");
-			//json.put("defaultValueForMissingData", "No");
+		 	
 			
 			
 			String cloudpath=null;
@@ -146,8 +135,7 @@ public class GenerateReportsService {
 			requestData.setStartTime(myFormat.format(data.getStartDate()));
 			requestData.setVendorId(defautlVal);
 			
-			log.debug("URL is:"+customProperties.getReadingserviceurl());
-			log.debug("JSON is:"+json.toString());
+			
 			ResponseEntity<TelemetryResponseData[]> responseEntity = restTemplate().postForEntity(customProperties.getReadingserviceurl(),requestData,TelemetryResponseData[].class);
 			Calendar cal=Calendar.getInstance();
 			
