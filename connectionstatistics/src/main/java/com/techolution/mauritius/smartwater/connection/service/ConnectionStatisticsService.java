@@ -155,11 +155,12 @@ public List<Data> getDailyFowRateData(RequestData data) throws ParseException{
 		endTime = getNextDay( endTime);
 				
 		
-		String query ="select mean(hourlyval) from (select sum(value) as hourlyval from flowvalues where meter_id='"+deviceId+"' and time >='"+startTime+"' and time <'"+endTime+"' group by time(1h))  where time >='"+startTime+"' and time <= '"+endTime+"' group by time("+groupVal+") fill(0)";
+		String query ="select mean(hourlyval) from (select sum(value) as hourlyval from flowvalues where meter_id='"+deviceId+"' and time >='"+startTime+"' and time <'"+endTime+"' group by time(1h))  where time >='"+startTime+"' and time < '"+endTime+"' group by time("+groupVal+") fill(0)";
 		log.debug("Query is:"+query);
 		
 		
 		List<Data> retlist = getDailyMetrics(deviceId, query,false);
+	//	List<Data> retlist =getDailyMetricsFlowRate(deviceId, query,false);
 		return retlist;
 	}
 
@@ -206,6 +207,66 @@ public List<Data> getDailyFowRateData(RequestData data) throws ParseException{
 		List<Data> retlist=new ArrayList<Data>();
 	//	SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		dateFormat.setTimeZone(TimeZone.getTimeZone("Indian/Mauritius"));
+		//Date date1=new SimpleDateFormat("yyyy-MM-DDTHH:mm:ssz").parse(sDate1);
+		Data resultData=null;
+		//Instant  instant=null;
+		for(Result result:resultlist){
+			List<Series> serieslist=result.getSeries();
+			if(serieslist == null){
+				break;
+			}
+			for(Series series:serieslist){
+				List<List<Object>> valuelist=series.getValues();
+				for(List<Object> results:valuelist){
+					String endTimeReturned=(String)results.get(0);
+					log.debug("endTimeReturned:"+endTimeReturned);
+					/*log.debug("Date is:"+(endTimeReturned.split("T"))[0]);
+					log.debug("Date2 is:"+(endTimeReturned.split("T"))[1]);*/
+			//		instant= Instant.parse( endTimeReturned); 
+					//Date date=java.util.Date.from(instant);
+					//Date date=dateFormat.parse(endTimeReturned.split("T")[0]);
+					
+					resultData=new Data();
+					resultData.setDevid(deviceId);
+					if(useHours){
+						Instant instant=Instant.parse(endTimeReturned);
+						Date date = Date.from(instant);
+						
+						resultData.setName(dateFormat.format(date));
+					}else{
+						resultData.setName(endTimeReturned.split("T")[0]);	
+					}
+						
+					resultData.setValue(Math.round(((Double)results.get(1)).doubleValue()*100D)/100D);
+					resultData.setSensor_locationname(locationName);
+					retlist.add(resultData);
+				}
+				
+				
+			}
+			
+		}
+		influxDB.close();
+		return retlist;
+	}
+	
+	
+	private List<Data> getDailyMetricsFlowRate(int deviceId, String query,boolean useHours) {
+		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32770", "root", "root");
+		InfluxDB influxDB = InfluxDBFactory.connect(influxProperties.getUrl(),influxProperties.getUsername(),influxProperties.getPassword());
+		long startStarttime=System.currentTimeMillis();
+		QueryResult queryResult = influxDB.query(new Query(query, influxProperties.getDbname()));
+		long endtime=System.currentTimeMillis();
+		log.debug("Time After getDailyMetrics query execution:"+endtime);
+		log.debug("Time Taken for query execution:"+(endtime-startStarttime));
+		String locationName= "TEST";
+		
+		List<Result> resultlist=queryResult.getResults();
+	//	int recordSize=0;
+		List<Data> retlist=new ArrayList<Data>();
+	//	SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		//dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 		//Date date1=new SimpleDateFormat("yyyy-MM-DDTHH:mm:ssz").parse(sDate1);
 		Data resultData=null;
@@ -232,7 +293,13 @@ public List<Data> getDailyFowRateData(RequestData data) throws ParseException{
 						Date date = Date.from(instant);
 						resultData.setName(dateFormat.format(date));
 					}else{
-						resultData.setName(endTimeReturned.split("T")[0]);	
+						//resultData.setName(endTimeReturned.split("T")[0]);
+						Instant instant=Instant.parse(endTimeReturned);
+						Date date = Date.from(instant);
+						Calendar cal=Calendar.getInstance();
+						cal.setTime(date);
+						resultData.setName(cal.get(Calendar.DAY_OF_MONTH));
+						resultData.setDate((String)endTimeReturned.split("T")[0]);
 					}
 						
 					resultData.setValue(Math.round(((Double)results.get(1)).doubleValue()*100D)/100D);

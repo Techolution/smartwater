@@ -34,6 +34,18 @@ public class Data implements Serializable {
 	public void setValue(double value) {
 		this.value = value;
 	}
+	
+	private String date;
+
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
+	}
+	public void setName(Object name) {
+		this.name = name;
+	}
 
 	private int devid;
 	private String sensor_locationname;
