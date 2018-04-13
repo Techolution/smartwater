@@ -25,8 +25,17 @@ public class WaterSupplyData implements Serializable {
 	private double revenueLastMonth;
 	
 	private double currentMonthConsumptionTillDate;
+	private double currentMonthRevenueTillDate;
 	
 	
+
+	public double getCurrentMonthRevenueTillDate() {
+		return currentMonthRevenueTillDate;
+	}
+
+	public void setCurrentMonthRevenueTillDate(double currentMonthRevenueTillDate) {
+		this.currentMonthRevenueTillDate = currentMonthRevenueTillDate;
+	}
 
 	public double getProjectedCurrentMonthConsumption() {
 		return projectedCurrentMonthConsumption;

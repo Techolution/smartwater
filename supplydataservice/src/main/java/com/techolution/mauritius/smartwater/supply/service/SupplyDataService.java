@@ -164,7 +164,7 @@ public class SupplyDataService {
 		double revenueLastMonth=Math.round((lastMonthConsumption*UNIT_RATE)*100D)/100D;
 		double expectedRevenueThisMonth=Math.round((estimatedCurrentMonthConsumption*UNIT_RATE)*100D)/100D;
 		double projectedRevenueNextMonth=Math.round((estimatedConsumptionForNextMonth*UNIT_RATE)*100D)/100D;
-		
+		double revenueTillDate=Math.round((currentMonthConsumption*UNIT_RATE)*100D)/100D;
 		
 		System.out.println(connectionmap);
 		MeterConnection connection=connectionmap.get(new Long(meterId));
@@ -179,7 +179,7 @@ public class SupplyDataService {
 		waterSupplyData.setImage(connection.getImage());
 		waterSupplyData.setPipesize(connection.getPipesize());
 		waterSupplyData.setPipesizeunit(connection.getPipesizeunit());
-		
+		waterSupplyData.setCurrentMonthRevenueTillDate(revenueTillDate);
 		waterSupplyData.setCurrentMonthConsumptionTillDate(Math.round(currentMonthConsumption*100D)/100D);
 		waterSupplyData.setLastMonthConsumption(Math.round(lastMonthConsumption*100D)/100D);
 		waterSupplyData.setProjectedCurrentMonthConsumption(Math.round(estimatedCurrentMonthConsumption*100D)/100D);
