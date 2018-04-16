@@ -26,13 +26,15 @@ spring:
       max-active: 5
     hikari:
       maximum-pool-size: 5
+  application:
+    name: consolidateddetailsservice
       
 influx:
     url: http://52.170.92.62:8086
     username: root
     password: root
     dbname: mauritius_smartwater_uat
-    datatimezone: MUT 
+    datatimezone: Indian/Mauritius 
 
 
   

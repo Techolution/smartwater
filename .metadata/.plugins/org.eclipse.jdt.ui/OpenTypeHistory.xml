@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <typeInfoHistroy>
-<typeInfo handle="=mapdataservice/src\/main\/java&lt;com.techolution.mauritius.smartwater.domain{MeterConnection.java[MeterConnection" modifiers="1" timestamp="1520858192990"/>
+<typeInfo handle="=mapdataservice/src\/main\/java&lt;com.techolution.mauritius.smartwater.domain{MeterConnection.java[MeterConnection" modifiers="1" timestamp="1523460978386"/>
 <typeInfo handle="=DataSimulator/src&lt;com.techolution.mauritius.data.simulator.service{IStubData.java[IStubData" modifiers="513" timestamp="1521545535030"/>
 <typeInfo handle="=connectionstatistics/C:\/Users\/Lenovo\/.m2\/repository\/com\/vaadin\/external\/google\/android-json\/0.0.20131108.vaadin1\/android-json-0.0.20131108.vaadin1.jar&lt;org.json(JSONObject.class[JSONObject" modifiers="33" timestamp="1491209172835"/>
 <typeInfo handle="=DataSimulator/C:\/Program Files\/Java\/jdk1.8.0_121\/jre\/lib\/rt.jar&lt;java.time.format(DateTimeFormatter.class[DateTimeFormatter" modifiers="49" timestamp="1485242307596"/>
 <typeInfo handle="=connectionstatistics/src\/main\/java&lt;com.techolution.mauritius.smartwater.connection.domain{TelemetryRequestData.java[TelemetryRequestData" modifiers="1" timestamp="1521971286801"/>
 <typeInfo handle="=connectionstatistics/src\/main\/java&lt;com.techolution.mauritius.smartwater.connection.domain{Data.java[Data" modifiers="1" timestamp="1521945805230"/>
-<typeInfo handle="=connectionstatistics/src\/main\/java&lt;com.techolution.mauritius.smartwater.connection.service{ConnectionStatisticsService.java[ConnectionStatisticsService" modifiers="1" timestamp="1522685142865"/>
-<typeInfo handle="=consolidateddetails/src\/main\/java&lt;com.techolution.mauritius.smartwater.domain{MeterConnection.java[MeterConnection" modifiers="1" timestamp="1521797929921"/>
+<typeInfo handle="=connectionstatistics/src\/main\/java&lt;com.techolution.mauritius.smartwater.connection.service{ConnectionStatisticsService.java[ConnectionStatisticsService" modifiers="1" timestamp="1523518859741"/>
+<typeInfo handle="=connectionstatistics/src\/main\/java&lt;com.techolution.mauritius.smartwater.connection.controller{ConnectionStatisticsController.java[ConnectionStatisticsController" modifiers="1" timestamp="1522720839618"/>
 <typeInfo handle="=consolidateddetails/C:\/Program Files\/Java\/jdk1.8.0_121\/jre\/lib\/rt.jar&lt;java.io(Serializable.class[Serializable" modifiers="1537" timestamp="1485242307596"/>
+<typeInfo handle="=reportingservice/src\/main\/java&lt;com.techolution.mauritius.smartwater.reports{CustomProperties.java[CustomProperties" modifiers="1" timestamp="1523254717129"/>
+<typeInfo handle="=consolidateddetails/src\/main\/java&lt;com.techolution.mauritius.smartwater.domain{MeterConnection.java[MeterConnection" modifiers="1" timestamp="1523460934532"/>
+<typeInfo handle="=consolidateddetails/src\/main\/java&lt;com.techolution.mauritius.smartwater.domain{TotalConsolidatedConsumption.java[TotalConsolidatedConsumption" modifiers="1" timestamp="1522836077876"/>
+<typeInfo handle="=consolidateddetails/src\/main\/java&lt;com.techolution.mauritius.smartwater.controller{ConsolidatedDataController.java[ConsolidatedDataController" modifiers="1" timestamp="1522795506802"/>
+<typeInfo handle="=supplydataservice/src\/main\/java&lt;com.techolution.mauritius.smartwater.supply.controller{SupplyDataController.java[SupplyDataController" modifiers="1" timestamp="1522986667975"/>
 </typeInfoHistroy>

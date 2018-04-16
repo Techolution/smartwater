@@ -26,6 +26,8 @@ spring:
       max-active: 5
     hikari:
       maximum-pool-size: 5
+  application:
+    name: notificationservice
 
 
   

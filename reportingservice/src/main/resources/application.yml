@@ -1,6 +1,5 @@
 server:
-  port: 8090
-
+  port: 8091
 
 
 logging:
@@ -26,6 +25,8 @@ spring:
       max-active: 1
     hikari:
       maximum-pool-size: 1
+  application:
+    name: reportingservice
     
 
     

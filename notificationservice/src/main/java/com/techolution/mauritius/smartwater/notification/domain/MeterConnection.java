@@ -142,7 +142,13 @@ public class MeterConnection implements Serializable {
 		this.currentstatus = currentstatus;
 	}
 	
-/*	@OneToMany(mappedBy="house_id")
+	public Set<NotificationDetails> getNotifications() {
+		return notifications;
+	}
+	public void setNotifications(Set<NotificationDetails> notifications) {
+		this.notifications = notifications;
+	}
+	@OneToMany(mappedBy="meter_id")
 	Set<NotificationDetails> notifications;
-*/
+
 }

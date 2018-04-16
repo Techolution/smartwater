@@ -93,6 +93,14 @@ public class NotificationDetails implements Serializable {
 		this.information = information;
 	}
 
+	public MeterConnection getConnection() {
+		return connection;
+	}
+
+	public void setConnection(MeterConnection connection) {
+		this.connection = connection;
+	}
+
 	@Id
 	private long id;
 	private int meter_id;
@@ -111,8 +119,9 @@ public class NotificationDetails implements Serializable {
 	private String information;
 	
 	
-	/*@ManyToOne(fetch = FetchType.EAGER)
-	@JoinTable(name="connection_details",joinColumns= @JoinColumn(name="meter_id", referencedColumnName = "house_id"))
-	private MeterConnection connection ;*/
+	@ManyToOne(fetch = FetchType.EAGER)
+	//@JoinTable(name="connection_details",joinColumns= @JoinColumn(name="meter_id", referencedColumnName = "id"),inverseJoinColumns= @JoinColumn(name="meter_id", referencedColumnName = "id"))
+	@JoinTable(name="connection_details",joinColumns= @JoinColumn(name="meter_id", referencedColumnName = "id"))
+	private MeterConnection connection ;
 
 }

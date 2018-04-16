@@ -37,13 +37,13 @@ public class BatteryDataSimiulator implements IStubData {
 		System.out.println("sleepTime:"+sleepTime);
 		System.out.println("incrementtime:"+incrementtime);
 		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		myFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+		myFormat.setTimeZone(TimeZone.getTimeZone("Indian/Mauritius"));
 		
 	
 		Date startDate=null;
 		Date endDate=null;
 		if(startTime.length() <= 2){
-			startDate=Calendar.getInstance(TimeZone.getTimeZone("MUT")).getTime();
+			startDate=Calendar.getInstance(TimeZone.getTimeZone("Indian/Mauritius")).getTime();
 			
 		}else{
 			try {
@@ -55,7 +55,7 @@ public class BatteryDataSimiulator implements IStubData {
 		}
 		
 		if(endTime.length()<=2){
-			Calendar enddateCal=Calendar.getInstance(TimeZone.getTimeZone("MUT"));
+			Calendar enddateCal=Calendar.getInstance(TimeZone.getTimeZone("Indian/Mauritius"));
 			enddateCal.add(Calendar.DATE,1);
 			endDate=enddateCal.getTime();
 			

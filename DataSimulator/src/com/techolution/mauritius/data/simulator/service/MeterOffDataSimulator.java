@@ -39,13 +39,13 @@ public class MeterOffDataSimulator extends InsertSeriesData implements IStubData
 		System.out.println("sleepTime:"+sleepTime);
 		System.out.println("incrementtime:"+incrementtime);
 		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		myFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+		myFormat.setTimeZone(TimeZone.getTimeZone("Indian/Mauritius"));
 		
 	
 		Date startDate=null;
 		Date endDate=null;
 		if(startTime.length() <= 2){
-			startDate=Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime();
+			startDate=Calendar.getInstance(TimeZone.getTimeZone("Indian/Mauritius")).getTime();
 			
 		}else{
 			try {
@@ -57,7 +57,7 @@ public class MeterOffDataSimulator extends InsertSeriesData implements IStubData
 		}
 		
 		if(endTime.length()<=2){
-			Calendar enddateCal=Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+			Calendar enddateCal=Calendar.getInstance(TimeZone.getTimeZone("Indian/Mauritius"));
 			enddateCal.add(Calendar.DATE,1);
 			endDate=enddateCal.getTime();
 			
@@ -100,7 +100,7 @@ public class MeterOffDataSimulator extends InsertSeriesData implements IStubData
 				if(sleepTime > 100){
 					Thread.sleep(sleepTime);
 				}
-				Calendar calendar=Calendar.getInstance(TimeZone.getTimeZone("MUT"));
+				Calendar calendar=Calendar.getInstance(TimeZone.getTimeZone("Indian/Mauritius"));
 				calendar.setTime(startDate);
 				int rand=new Long(ThreadLocalRandom.current().nextLong(-90000, 900000)).intValue();
 				calendar.add(Calendar.MILLISECOND,(incrementtime+rand));
