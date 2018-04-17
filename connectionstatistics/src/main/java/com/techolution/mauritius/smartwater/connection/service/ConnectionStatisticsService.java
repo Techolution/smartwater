@@ -89,13 +89,25 @@ public class ConnectionStatisticsService {
 		
 		/*String startTime = myFormat.format(data.getStart_Time().getTime());
 		String endTime = myFormat.format(data.getEnd_Time().getTime());*/
-		String startTime = data.getStart_Time();
+		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+		myFormat.setTimeZone(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
+		
+		SimpleDateFormat myFormat2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		myFormat2.setTimeZone(TimeZone.getTimeZone("UTC"));
+		Date startDate=myFormat.parse(data.getStart_Time());
+		//String startTime = data.getStart_Time();
 		//String startTime = "2018-03-01";
+		String startTime=myFormat2.format(startDate);
 		
-		String endTime = data.getEnd_Time();
+		log.debug("Start time:"+startTime);
 		
-		endTime = getNextDay( endTime);
 		
+		String endTime2 = data.getEnd_Time();
+		
+		
+		endTime2 = getNextDay( endTime2);
+		Date endDate=myFormat.parse(endTime2);
+		String endTime = myFormat2.format(endDate);
 		//String endTime = "2018-03-15";
 		
 		String groupVal = getGroupVal(data);
@@ -133,19 +145,24 @@ public class ConnectionStatisticsService {
 	
 public List<Data> getDailyFowRateData(RequestData data) throws ParseException{
 		
-		
-		//SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-		
-		
-		/*String startTime = myFormat.format(data.getStart_Time().getTime());
-		String endTime = myFormat.format(data.getEnd_Time().getTime());*/
-		String startTime = data.getStart_Time();
-		//String startTime = "2018-03-01";
-		
-		String endTime = data.getEnd_Time();
-		//String endTime = "2018-03-15";
-		
-		
+	SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+	myFormat.setTimeZone(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
+	SimpleDateFormat myFormat2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	myFormat2.setTimeZone(TimeZone.getTimeZone("UTC"));
+	Date startDate=myFormat.parse(data.getStart_Time());
+	//String startTime = data.getStart_Time();
+	//String startTime = "2018-03-01";
+	String startTime=myFormat2.format(startDate);
+	
+	log.debug("Start time:"+startTime);
+	
+	
+	String endTime2 = data.getEnd_Time();
+	
+	
+	endTime2 = getNextDay( endTime2);
+	Date endDate=myFormat.parse(endTime2);
+	String endTime = myFormat2.format(endDate);
 		
 		String groupVal = getGroupVal(data);
 		
@@ -208,6 +225,8 @@ public List<Data> getDailyFowRateData(RequestData data) throws ParseException{
 	//	SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		dateFormat.setTimeZone(TimeZone.getTimeZone("Indian/Mauritius"));
+		SimpleDateFormat dateFormatForDay=new SimpleDateFormat("yyyy-MM-dd");
+		dateFormatForDay.setTimeZone(TimeZone.getTimeZone("Indian/Mauritius"));
 		//Date date1=new SimpleDateFormat("yyyy-MM-DDTHH:mm:ssz").parse(sDate1);
 		Data resultData=null;
 		//Instant  instant=null;
@@ -235,7 +254,9 @@ public List<Data> getDailyFowRateData(RequestData data) throws ParseException{
 						
 						resultData.setName(dateFormat.format(date));
 					}else{
-						resultData.setName(endTimeReturned.split("T")[0]);	
+						Instant instant=Instant.parse(endTimeReturned);
+						Date date = Date.from(instant);
+						resultData.setName(dateFormatForDay.format(date));	
 					}
 						
 					resultData.setValue(Math.round(((Double)results.get(1)).doubleValue()*100D)/100D);
@@ -319,16 +340,24 @@ public List<Data> getDailyFowRateData(RequestData data) throws ParseException{
 		
 	  log.debug("Entering ConnectionStatisticsService.geBatterytData");
 		
-	//	SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-		
-		
-		/*String startTime = myFormat.format(data.getStart_Time().getTime());
-		String endTime = myFormat.format(data.getEnd_Time().getTime());*/
-		String startTime = data.getStart_Time();
+		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+		myFormat.setTimeZone(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
+		SimpleDateFormat myFormat2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		myFormat2.setTimeZone(TimeZone.getTimeZone("UTC"));
+		Date startDate=myFormat.parse(data.getStart_Time());
+		//String startTime = data.getStart_Time();
 		//String startTime = "2018-03-01";
+		String startTime=myFormat2.format(startDate);
 		
-		String endTime = data.getEnd_Time();
-		//String endTime = "2018-03-15";
+		log.debug("Start time:"+startTime);
+		
+		
+		String endTime2 = data.getEnd_Time();
+		
+		
+		endTime2 = getNextDay( endTime2);
+		Date endDate=myFormat.parse(endTime2);
+		String endTime = myFormat2.format(endDate);
 		
 		endTime = getNextDay( endTime);
 		String groupVal = getGroupVal(data);
@@ -440,10 +469,30 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 			int deviceId=data.getHouseId();
 			String seriesname=getSeriesForMetrics(data.getMetrics());
 			
-			String endTime=data.getEndTime();
-			endTime = getNextDay( endTime);
+			SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+			myFormat.setTimeZone(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
+			SimpleDateFormat myFormat2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			myFormat2.setTimeZone(TimeZone.getTimeZone("UTC"));
+			
+			SimpleDateFormat myFormat3 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			myFormat3.setTimeZone(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
+			
+			Date startDate=myFormat.parse(data.getStartTime());
+			//String startTime = data.getStart_Time();
+			//String startTime = "2018-03-01";
+			String startTime=myFormat2.format(startDate);
+			
+			log.debug("Start time:"+startTime);
+			
+			
+			String endTime2 = data.getEndTime();
+			
+			
+			endTime2 = getNextDay( endTime2);
+			Date endDate=myFormat.parse(endTime2);
+			String endTime = myFormat2.format(endDate);
 			//int deviceId=123;
-			String query = "select first(value),last(value)  from "+ seriesname+" where time >='"+data.getStartTime()+"' and time< '"+endTime+"' and meter_id='"+deviceId+"' group by time("+groupVal+")";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
+			String query = "select first(value),last(value)  from "+ seriesname+" where time >='"+startTime+"' and time< '"+endTime+"' and meter_id='"+deviceId+"' group by time("+groupVal+")";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
 			if(data.getDefaultValueForMissingData()!=null){
 				query = query+"fill("+data.getDefaultValueForMissingData()+")";
 			}
@@ -483,9 +532,13 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 						resultData=new Data();
 						resultData.setDevid(deviceId);
 						if(giveTimeStamp){
-							resultData.setName(endTimeReturned);
+							Instant instant=Instant.parse(endTimeReturned);
+							Date date=Date.from(instant);
+							resultData.setName(myFormat3.format(date));
 						}else{
-							resultData.setName(endTimeReturned.split("T")[0]);	
+							Instant instant=Instant.parse(endTimeReturned);
+							Date date=Date.from(instant);
+							resultData.setName(myFormat.format(date));	
 						}
 							
 						if(index == size-1){
@@ -512,9 +565,10 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 	/**
 	 * 
 	 * @param telemetry
+	 * @throws ParseException 
 	 */
 	@Async
-	public void insertData(Telemetry telemetry){
+	public void insertData(Telemetry telemetry) throws ParseException{
 		
 		log.info("Entering ConnectionStatisticsService.insertData");
 		log.debug(" TimeZone is:"+influxProperties.getDatatimezone());
@@ -728,13 +782,13 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
     	log.info("Entering ConnectionStatisticsService.getAllMetricsForConnectionForDay");
     	SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
     	
-    	Calendar dayStart=Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+    	Calendar dayStart=Calendar.getInstance(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
     	dayStart.set(Calendar.HOUR_OF_DAY, 0);
     	dayStart.set(Calendar.MINUTE, 0);
     	dayStart.set(Calendar.SECOND, 0);
     	
     	
-    	Calendar dayend=Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+    	Calendar dayend=Calendar.getInstance(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
     	dayend.set(Calendar.HOUR_OF_DAY, 0);
     	dayend.set(Calendar.MINUTE, 59);
     	dayend.set(Calendar.SECOND, 59);
@@ -851,10 +905,17 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
     	return returnVal;
     }
 
-    private double getLastMeterReading(String startTime,int meterId){
+    private double getLastMeterReading(String startTime2,int meterId) throws ParseException{
     	
     	
     	double baseReadingValue =0;
+    	
+    	SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+		myFormat.setTimeZone(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
+		SimpleDateFormat myFormat2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		myFormat2.setTimeZone(TimeZone.getTimeZone("UTC"));
+		Date startDate=myFormat.parse(startTime2);
+		String startTime=myFormat2.format(startDate);
     	
     	String query = "select last(value)  from meterreadingvalues where time <='"+startTime+"' and meter_id='"+meterId+"'";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
 		log.info("Query is:"+query);
@@ -888,11 +949,11 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
     	
     	log.info("Entering ConnectionStatisticsService.getAverageMonthlyForOneYear");
     	
-    	Calendar endTimeCal=Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+    	Calendar endTimeCal=Calendar.getInstance(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
     	endTimeCal.set(Calendar.DAY_OF_MONTH, 1);
     	//endTimeCal.add(Calendar.DATE, -1);
     	
-    	Calendar startTimeCal=Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+    	Calendar startTimeCal=Calendar.getInstance(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
     	startTimeCal.set(Calendar.DAY_OF_MONTH, 1);
     	startTimeCal.add(Calendar.YEAR, -1);
     	
@@ -900,12 +961,22 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
     	
     	SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
     	
-    	String startTime=myFormat.format(startTimeCal.getTime());
+    	
+    	myFormat.setTimeZone(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
+		SimpleDateFormat myFormat2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		myFormat2.setTimeZone(TimeZone.getTimeZone("UTC"));
+		
+		Date startDate=startTimeCal.getTime();
     	
     	
-    	String endTime=myFormat.format(endTimeCal.getTime());
+    	String startTime=myFormat2.format(startDate);
+    	//Date endDate2=endTimeCal.getTime();
     	
-    	endTime = getNextDay( endTime);
+    	String endTime2=myFormat.format(endTimeCal.getTime());
+    	
+    	endTime2 = getNextDay( endTime2);
+    	Date endDate=myFormat.parse(endTime2);
+		String endTime = myFormat2.format(endDate);
     	String query = "select mean(monthlyconsumption) from (select sum(value) as monthlyconsumption from flowvalues where time >='"+startTime+"' and time<'"+endTime+"' and meter_id='"+meterId+"' group by time(30d))";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
 		log.info("Query is:"+query);
 		
