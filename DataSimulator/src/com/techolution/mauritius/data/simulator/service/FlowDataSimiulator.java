@@ -41,7 +41,7 @@ public class FlowDataSimiulator implements IStubData {
 		System.out.println("sleepTime:"+sleepTime);
 		System.out.println("incrementtime:"+incrementtime);
 		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		myFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+		myFormat.setTimeZone(TimeZone.getTimeZone("Indian/Mauritius"));
 		
 		double baseReadingValue = 20000;
 		Date startDate=null;
@@ -130,6 +130,7 @@ public class FlowDataSimiulator implements IStubData {
 	private void sendRequest(Telemetry telemetry,Date date){
 		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 		String dateVal=myFormat.format(date);
+		log.info("Dateval to inout is:"+dateVal);
 		JSONObject json = new JSONObject();
 		json.put("flow", telemetry.getFlow());    
 		json.put("reading", telemetry.getReading());

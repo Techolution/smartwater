@@ -523,13 +523,20 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 			log.info("Date is null.Setting defaule date.");
 			Calendar date=Calendar.getInstance(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
 			telemetry.setDate(date.getTime());
-		}else{
-			
+		}else{ 
+			/*ASSUMPTION THAT SENDER WILL SEND WITH CORRECT time zone. Influx by default converts that to UTC*/
+			/*//Instant
+			log.info("Time at starting  is:"+telemetry.getDate().getTime());
 			Calendar date=Calendar.getInstance(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
 			
+			//Instant instant=telemetry.getDate().toInstant();
+			//instant.
 			//Date inputDate=telemetry.getDate();
+			//telemetry.getDate().
 			Calendar inputCal=Calendar.getInstance(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
-			inputCal.setTime(telemetry.getDate());
+			log.debug("Inout cal time is:"+inputCal.getTimeInMillis()+":hour:"+inputCal.get(Calendar.HOUR_OF_DAY));
+			//inputCal.setTime(telemetry.getDate());
+			log.debug("Inout cal time2 is:"+inputCal.getTimeInMillis()+":hour:"+inputCal.get(Calendar.HOUR_OF_DAY));
 			date.set(Calendar.YEAR,inputCal.get(Calendar.YEAR));
 			date.set(Calendar.MONTH,inputCal.get(Calendar.MONTH));
 			date.set(Calendar.DAY_OF_MONTH, inputCal.get(Calendar.DAY_OF_MONTH));
@@ -538,7 +545,7 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 			date.set(Calendar.SECOND,inputCal.get(Calendar.SECOND));
 			date.set(Calendar.MILLISECOND,inputCal.get(Calendar.MILLISECOND));
 			telemetry.setDate(date.getTime());
-			log.info("Time to set is:"+telemetry.getDate().getTime());
+			log.info("Time to set is:"+telemetry.getDate().getTime());*/
 		}
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32770", "root", "root");
 		InfluxDB influxDB =InfluxDBFactory.connect(influxProperties.getUrl(),influxProperties.getUsername(),influxProperties.getPassword());
@@ -974,10 +981,10 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 			Calendar cal=Calendar.getInstance(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
 			timeStamp=cal.getTime();
 		}else{
-			
+			//NOT DOING ANTHING. kEEPING THE DEFAULT TIME SENT AS IT IS.
 			
 				
-				Calendar date=Calendar.getInstance(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
+				/*Calendar date=Calendar.getInstance(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
 				//Date inputDate=telemetry.getDate();
 				Calendar inputCal=Calendar.getInstance(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
 				inputCal.setTime(pointData.getTimestamp());
@@ -988,7 +995,7 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 				date.set(Calendar.MINUTE,inputCal.get(Calendar.MINUTE));
 				date.set(Calendar.SECOND,inputCal.get(Calendar.SECOND));
 				date.set(Calendar.MILLISECOND,inputCal.get(Calendar.MILLISECOND));
-				pointData.setTimestamp(date.getTime());
+				pointData.setTimestamp(date.getTime());*/
 				
 			}
 		

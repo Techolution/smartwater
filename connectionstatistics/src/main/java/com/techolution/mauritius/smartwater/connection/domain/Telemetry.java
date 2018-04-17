@@ -22,6 +22,8 @@ public class Telemetry implements Serializable {
 	private Long flowrate;
 	private Double reading;
 	private Date date;
+	
+	
 	public int getMeter_id() {
 		return meter_id;
 	}

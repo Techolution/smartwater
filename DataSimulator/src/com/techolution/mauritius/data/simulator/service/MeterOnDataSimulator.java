@@ -100,7 +100,7 @@ public class MeterOnDataSimulator extends InsertSeriesData implements IStubData 
 				if(sleepTime > 100){
 					Thread.sleep(sleepTime);
 				}
-				Calendar calendar=Calendar.getInstance(TimeZone.getTimeZone("MUT"));
+				Calendar calendar=Calendar.getInstance(TimeZone.getTimeZone("Indian/Mauritius"));
 				calendar.setTime(startDate);
 				int rand=new Long(ThreadLocalRandom.current().nextLong(-90000, 900000)).intValue();
 				calendar.add(Calendar.MILLISECOND,(incrementtime+rand));
