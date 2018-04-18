@@ -650,7 +650,8 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 			
 			if(telemetry.getReading() == null){
 				SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				
+				myFormat.setTimeZone(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
+				log.debug("Date format is:"+myFormat.format(telemetry.getDate()));
 				double meterReading=getLastMeterReading(myFormat.format(telemetry.getDate()), telemetry.getMeter_id());
 				log.debug("last flow value:"+meterReading);
 				double newmeterreading= meterReading+telemetry.getFlow();
@@ -943,7 +944,7 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 		Date startDate=myFormat.parse(startTime2);
 		String startTime=myFormat2.format(startDate);
     	
-    	String query = "select last(value)  from meterreadingvalues where time <='"+startTime+"' and meter_id='"+meterId+"' ";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
+    	String query = "select last(value)  from meterreadingvalues where time <='"+startTime2+"' and meter_id='"+meterId+"' TZ('"+influxProperties.getDatatimezone()+"')";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
 		log.info("Query is:"+query);
 		
 		
