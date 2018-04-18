@@ -1,6 +1,10 @@
 package com.techolution.mauritius.smartwater.connection.service;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -21,12 +25,13 @@ public class InfluxQueryCallBack {
 	private Log log = LogFactory.getLog(InfluxQueryCallBack.class);
 
 	
-	public void processBatteryAPIResult(int deviceId, String locationName, List<Result> resultlist, List<Data> retlist) {
+	public void processBatteryAPIResult(int deviceId, String locationName, List<Result> resultlist, List<Data> retlist) throws ParseException {
 		//		SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
 			//dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 			//Date date1=new SimpleDateFormat("yyyy-MM-DDTHH:mm:ssz").parse(sDate1);
 			BatteryData resultData=null;
-			
+			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+			SimpleDateFormat dateFormatForDay=new SimpleDateFormat("yyyy-MM-dd");
 		//	Instant  instant=null;
 			for(Result result:resultlist){
 				List<Series> serieslist=result.getSeries();
@@ -45,8 +50,9 @@ public class InfluxQueryCallBack {
 							
 					//	Date date=dateFormat.parse(endTimeReturned.split("T")[0]);
 						resultData=new BatteryData();
+						Date date = formatter.parse(endTimeReturned.split("\\+")[0]);
 						resultData.setDevid(deviceId);
-						resultData.setName(endTimeReturned.split("T")[0]);	
+						resultData.setName(dateFormatForDay.format(date));	
 						double currentPower=((Double)results.get(1)).doubleValue();
 						double currentPercent=(currentPower/ConnectionStatisticsService.TOTALPOWER)*100;
 						

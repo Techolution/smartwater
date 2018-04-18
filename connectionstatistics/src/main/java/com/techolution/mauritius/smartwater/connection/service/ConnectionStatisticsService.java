@@ -2,6 +2,7 @@ package com.techolution.mauritius.smartwater.connection.service;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -94,22 +95,22 @@ public class ConnectionStatisticsService {
 		
 		SimpleDateFormat myFormat2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		myFormat2.setTimeZone(TimeZone.getTimeZone("UTC"));
-		Date startDate=myFormat.parse(data.getStart_Time());
-		//String startTime = data.getStart_Time();
+		//Date startDate=myFormat.parse(data.getStart_Time());
+		String startTime = data.getStart_Time();
 		//String startTime = "2018-03-01";
-		String startTime=myFormat2.format(startDate);
+		//String startTime=myFormat2.format(startDate);
 		
 		log.debug("Start time:"+startTime);
 		
 		
-		String endTime2 = data.getEnd_Time();
+		String endTime = data.getEnd_Time();
 		
 		
-		endTime2 = getNextDay( endTime2);
-		Date endDate=myFormat.parse(endTime2);
+		endTime = getNextDay( endTime);
+		/*Date endDate=myFormat.parse(endTime2);
 		String endTime = myFormat2.format(endDate);
 		//String endTime = "2018-03-15";
-		
+*/		
 		String groupVal = getGroupVal(data);
 		
 		boolean useHours=false;
@@ -119,7 +120,7 @@ public class ConnectionStatisticsService {
 		}
 		int deviceId=data.getHouse_ID();
 		//int deviceId=123;
-		String query = "select sum(value)  from flowvalues where time >='"+startTime+"' and time<'"+endTime+"' and meter_id='"+deviceId+"' group by time("+groupVal+") fill(0)";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
+		String query = "select sum(value)  from flowvalues where time >='"+startTime+"' and time<'"+endTime+"' and meter_id='"+deviceId+"' group by time("+groupVal+") fill(0) TZ('"+influxProperties.getDatatimezone()+"')";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
 		log.debug("Query is:"+query);
 		
 		
@@ -149,30 +150,30 @@ public List<Data> getDailyFowRateData(RequestData data) throws ParseException{
 	myFormat.setTimeZone(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
 	SimpleDateFormat myFormat2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	myFormat2.setTimeZone(TimeZone.getTimeZone("UTC"));
-	Date startDate=myFormat.parse(data.getStart_Time());
-	//String startTime = data.getStart_Time();
+	//Date startDate=myFormat.parse(data.getStart_Time());
+	String startTime = data.getStart_Time();
 	//String startTime = "2018-03-01";
-	String startTime=myFormat2.format(startDate);
+	//String startTime=myFormat2.format(startDate);
 	
 	log.debug("Start time:"+startTime);
 	
 	
-	String endTime2 = data.getEnd_Time();
+	String endTime = data.getEnd_Time();
 	
 	
-	endTime2 = getNextDay( endTime2);
-	Date endDate=myFormat.parse(endTime2);
-	String endTime = myFormat2.format(endDate);
+	endTime = getNextDay( endTime);
+	//Date endDate=myFormat.parse(endTime2);
+	//String endTime = myFormat2.format(endDate);
 		
 		String groupVal = getGroupVal(data);
 		
 		
 		int deviceId=data.getHouse_ID();
 		//int deviceId=123;
-		endTime = getNextDay( endTime);
+		//endTime = getNextDay( endTime);
 				
 		
-		String query ="select mean(hourlyval) from (select sum(value) as hourlyval from flowvalues where meter_id='"+deviceId+"' and time >='"+startTime+"' and time <'"+endTime+"' group by time(1h))  where time >='"+startTime+"' and time < '"+endTime+"' group by time("+groupVal+") fill(0)";
+		String query ="select mean(hourlyval) from (select sum(value) as hourlyval from flowvalues where meter_id='"+deviceId+"' and time >='"+startTime+"' and time <'"+endTime+"' group by time(1h) TZ('"+influxProperties.getDatatimezone()+"')"+")  where time >='"+startTime+"' and time < '"+endTime+"' group by time("+groupVal+") fill(0)";
 		log.debug("Query is:"+query);
 		
 		
@@ -193,6 +194,7 @@ public List<Data> getDailyFowRateData(RequestData data) throws ParseException{
 		//String groupVal="1d";
 		if(data.getSample_Distance().equalsIgnoreCase("Day")){
 			code="d";
+		
 			groupVal=disVal+code;
 		}
 		else if(data.getSample_Distance().equalsIgnoreCase("Hour")){
@@ -209,7 +211,7 @@ public List<Data> getDailyFowRateData(RequestData data) throws ParseException{
 		return groupVal;
 	}
 
-	private List<Data> getDailyMetrics(int deviceId, String query,boolean useHours) {
+	private List<Data> getDailyMetrics(int deviceId, String query,boolean useHours) throws ParseException {
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32770", "root", "root");
 		InfluxDB influxDB = InfluxDBFactory.connect(influxProperties.getUrl(),influxProperties.getUsername(),influxProperties.getPassword());
 		long startStarttime=System.currentTimeMillis();
@@ -224,9 +226,13 @@ public List<Data> getDailyFowRateData(RequestData data) throws ParseException{
 		List<Data> retlist=new ArrayList<Data>();
 	//	SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		dateFormat.setTimeZone(TimeZone.getTimeZone("Indian/Mauritius"));
+	//	dateFormat.setTimeZone(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
 		SimpleDateFormat dateFormatForDay=new SimpleDateFormat("yyyy-MM-dd");
-		dateFormatForDay.setTimeZone(TimeZone.getTimeZone("Indian/Mauritius"));
+		//dateFormatForDay.setTimeZone(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
+		
+		
+		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+
 		//Date date1=new SimpleDateFormat("yyyy-MM-DDTHH:mm:ssz").parse(sDate1);
 		Data resultData=null;
 		//Instant  instant=null;
@@ -239,7 +245,7 @@ public List<Data> getDailyFowRateData(RequestData data) throws ParseException{
 				List<List<Object>> valuelist=series.getValues();
 				for(List<Object> results:valuelist){
 					String endTimeReturned=(String)results.get(0);
-					log.debug("endTimeReturned:"+endTimeReturned);
+				//	log.debug("endTimeReturned:"+endTimeReturned);
 					/*log.debug("Date is:"+(endTimeReturned.split("T"))[0]);
 					log.debug("Date2 is:"+(endTimeReturned.split("T"))[1]);*/
 			//		instant= Instant.parse( endTimeReturned); 
@@ -249,13 +255,22 @@ public List<Data> getDailyFowRateData(RequestData data) throws ParseException{
 					resultData=new Data();
 					resultData.setDevid(deviceId);
 					if(useHours){
-						Instant instant=Instant.parse(endTimeReturned);
-						Date date = Date.from(instant);
+				//		log.debug("Original value:"+endTimeReturned+":Split value:"+endTimeReturned.split("\\+")[0]);
+						/*Instant instant=Instant.parse(endTimeReturned.split("\\+")[0]);
+						Date date = Date.from(instant);*/
 						
+						//Date date = formatter.parse(endTimeReturned);
+						Date date = formatter.parse(endTimeReturned.split("\\+")[0]);
+				//		log.debug("Date:"+date.getTime());
 						resultData.setName(dateFormat.format(date));
 					}else{
-						Instant instant=Instant.parse(endTimeReturned);
-						Date date = Date.from(instant);
+					//	log.debug("Original value:"+endTimeReturned+":Split value:"+endTimeReturned.split("\\+")[0]);
+						//Instant instant=Instant.parse(endTimeReturned.split("\\+")[0]);
+						Date date = formatter.parse(endTimeReturned.split("\\+")[0]);
+						//Date date = Date.from(instant);
+						
+						//Date date = formatter.parse(endTimeReturned);
+						//log.debug("Date:"+date.getTime());
 						resultData.setName(dateFormatForDay.format(date));	
 					}
 						
@@ -365,7 +380,7 @@ public List<Data> getDailyFowRateData(RequestData data) throws ParseException{
 		
 		int deviceId=data.getHouse_ID();
 		//int deviceId=123;
-		String query = "select last(value)  from batterylevelvalues where time >='"+startTime+"' and time<'"+endTime+"' and meter_id='"+deviceId+"' group by time("+groupVal+")";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
+		String query = "select last(value)  from batterylevelvalues where time >='"+startTime+"' and time<'"+endTime+"' and meter_id='"+deviceId+"' group by time("+groupVal+") TZ('"+influxProperties.getDatatimezone()+"')";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
 		log.debug("Query is:"+query);
 		
 		
@@ -408,7 +423,7 @@ private List<Data> getBatteryDataUsingNativeHttp(int deviceId, String query, lon
 }
 
 
-private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, String locationName) {
+private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, String locationName) throws ParseException {
 	//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32770", "root", "root");
 	InfluxDB influxDB = InfluxDBFactory.connect(influxProperties.getUrl(),influxProperties.getUsername(),influxProperties.getPassword());
 	long startStarttime=System.currentTimeMillis();
@@ -477,22 +492,22 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 			SimpleDateFormat myFormat3 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			myFormat3.setTimeZone(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
 			
-			Date startDate=myFormat.parse(data.getStartTime());
-			//String startTime = data.getStart_Time();
+			//Date startDate=myFormat.parse(data.getStartTime());
+			String startTime = data.getStartTime();
 			//String startTime = "2018-03-01";
-			String startTime=myFormat2.format(startDate);
+			//String startTime=myFormat2.format(startDate);
 			
 			log.debug("Start time:"+startTime);
 			
 			
-			String endTime2 = data.getEndTime();
+			String endTime = data.getEndTime();
 			
 			
-			endTime2 = getNextDay( endTime2);
-			Date endDate=myFormat.parse(endTime2);
-			String endTime = myFormat2.format(endDate);
+			endTime = getNextDay( endTime);
+			/*Date endDate=myFormat.parse(endTime2);
+			String endTime = myFormat2.format(endDate);*/
 			//int deviceId=123;
-			String query = "select first(value),last(value)  from "+ seriesname+" where time >='"+startTime+"' and time< '"+endTime+"' and meter_id='"+deviceId+"' group by time("+groupVal+")";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
+			String query = "select first(value),last(value)  from "+ seriesname+" where time >='"+startTime+"' and time< '"+endTime+"' and meter_id='"+deviceId+"' group by time("+groupVal+") TZ('"+influxProperties.getDatatimezone()+"')";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
 			if(data.getDefaultValueForMissingData()!=null){
 				query = query+"fill("+data.getDefaultValueForMissingData()+")";
 			}
@@ -513,6 +528,14 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 			List<Data> retlist=new ArrayList<Data>();
 			Data resultData=null;
 			
+			SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			//	dateFormat.setTimeZone(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
+			SimpleDateFormat dateFormatForDay=new SimpleDateFormat("yyyy-MM-dd");
+			//dateFormatForDay.setTimeZone(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
+				
+				
+			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+			
 		//	Instant  instant=null;
 			for(Result result:resultlist){
 				List<Series> serieslist=result.getSeries();
@@ -532,13 +555,16 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 						resultData=new Data();
 						resultData.setDevid(deviceId);
 						if(giveTimeStamp){
-							Instant instant=Instant.parse(endTimeReturned);
-							Date date=Date.from(instant);
-							resultData.setName(myFormat3.format(date));
+							/*Instant instant=Instant.parse(endTimeReturned);
+							Date date=Date.from(instant);*/
+							
+							Date date = formatter.parse(endTimeReturned.split("\\+")[0]);
+							resultData.setName(dateFormat.format(date));
 						}else{
-							Instant instant=Instant.parse(endTimeReturned);
-							Date date=Date.from(instant);
-							resultData.setName(myFormat.format(date));	
+							/*Instant instant=Instant.parse(endTimeReturned);
+							Date date=Date.from(instant);*/
+							Date date = formatter.parse(endTimeReturned.split("\\+")[0]);
+							resultData.setName(dateFormatForDay.format(date));	
 						}
 							
 						if(index == size-1){
@@ -917,7 +943,7 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 		Date startDate=myFormat.parse(startTime2);
 		String startTime=myFormat2.format(startDate);
     	
-    	String query = "select last(value)  from meterreadingvalues where time <='"+startTime+"' and meter_id='"+meterId+"'";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
+    	String query = "select last(value)  from meterreadingvalues where time <='"+startTime+"' and meter_id='"+meterId+"' ";// now() - 10d and meter_id = '124' group by time(1d) fill(0)
 		log.info("Query is:"+query);
 		
 		
