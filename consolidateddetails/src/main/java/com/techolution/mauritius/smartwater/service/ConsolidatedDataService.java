@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -84,31 +85,45 @@ public class ConsolidatedDataService {
 	public TotalConsolidatedConsumption getConsumptionForThisMonth() throws ClientProtocolException, IOException, JSONException{
 		
 		
-		Calendar calendar=Calendar.getInstance();
+		Calendar calendar=Calendar.getInstance(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
 		calendar.set(Calendar.DAY_OF_MONTH, 1);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
 		
-		Calendar endDate=Calendar.getInstance();
-		endDate.add(Calendar.DATE, 1);
+		Calendar endDate=Calendar.getInstance(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
+		/*endDate.add(Calendar.DATE, 1);
+		endDate.set(Calendar.HOUR_OF_DAY, 0);
+		endDate.set(Calendar.MINUTE, 0);
+		endDate.set(Calendar.SECOND, 1);*/
 		
 		
 		
-		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		myFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 		String reformattedStr = null;
 		reformattedStr = myFormat.format(calendar.getTime());
 		
 		String endDateStr=myFormat.format(endDate.getTime());
 		
-		Calendar calendarlastmonth=Calendar.getInstance();
+		Calendar calendarlastmonth=Calendar.getInstance(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
 		calendarlastmonth.set(Calendar.DAY_OF_MONTH, 1);
 		calendarlastmonth.add(Calendar.MONTH, -1);
+		calendarlastmonth.set(Calendar.HOUR_OF_DAY, 0);
+		calendarlastmonth.set(Calendar.MINUTE, 0);
+		calendarlastmonth.set(Calendar.SECOND, 1);
 		String reformattedStrlastmonth = myFormat.format(calendarlastmonth.getTime());
 		
-		endDate.add(Calendar.MONTH, -1);
+		/*endDate.add(Calendar.MONTH, -1);
+		endDate.set(Calendar.DATE, 1);
+		endDate.set(Calendar.HOUR_OF_DAY, 0);
+		endDate.set(Calendar.MINUTE, 0);
+		endDate.set(Calendar.SECOND, 1);*/
 		
-		String endDateForLastMonth=myFormat.format(endDate.getTime());
+		String endDateForLastMonth=myFormat.format(calendar.getTime());
 		
 		//String query=INFLUX_ENDPOINT+"select sum(value) from flow where time >='"+reformattedStr+"'";
-		String query="select sum(value) from flowvalues where time >='"+reformattedStr+"' and time < '"+endDateStr+"'";
+		String query="select sum(value) from flowvalues where time >='"+reformattedStr+"' and time <= '"+endDateStr+"'";
 		
 		log.debug("Query for this month consumption of all meters:"+query);
 		
@@ -135,22 +150,31 @@ public class ConsolidatedDataService {
 public TotalConsolidatedConsumption getConsumptionForToday() throws ClientProtocolException, IOException, JSONException{
 		
 		
-		Calendar calendar=Calendar.getInstance();
+		Calendar calendar=Calendar.getInstance(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND,0);
 		//calendar.set(Calendar.DAY_OF_MONTH, 1);
 		
-		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		myFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+		
 		String reformattedStr = null;
 		reformattedStr = myFormat.format(calendar.getTime());
 		
-		Calendar calendarlastmonth=Calendar.getInstance();
+		Calendar calendarlastmonth=Calendar.getInstance(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
+		calendarlastmonth.set(Calendar.HOUR_OF_DAY, 0);
+		calendarlastmonth.set(Calendar.MINUTE, 0);
+		calendarlastmonth.set(Calendar.SECOND,0);
 		calendarlastmonth.add(Calendar.DAY_OF_MONTH, -1);
 		String reformattedStrlastmonth = myFormat.format(calendarlastmonth.getTime());
 		
 		//String query=INFLUX_ENDPOINT+"select sum(value) from flow where time >='"+reformattedStr+"'";
 		String query="select sum(value) from flowvalues where time >='"+reformattedStr+"'";
+		log.debug("Query for todays consumption  is:"+query);
 		
 		String query_previousbucket="select sum(value) from flowvalues where time >='"+reformattedStrlastmonth+"' and time < '"+reformattedStr+"'" ;
-		
+		log.debug("Query for yesterdays consumption  is:"+query_previousbucket);
 		
 		
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
@@ -174,25 +198,51 @@ public TotalConsolidatedConsumption getConsumptionForToday() throws ClientProtoc
 	public TotalConsolidatedDeviceStatus getDeviceStatusForThisMonth() throws ClientProtocolException, IOException, JSONException{
 		
 		
-		Calendar calendar=Calendar.getInstance();
+		Calendar calendar=Calendar.getInstance(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
 		calendar.set(Calendar.DAY_OF_MONTH, 1);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
 		
-		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar endDate=Calendar.getInstance(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
+		/*endDate.add(Calendar.DATE, 1);
+		endDate.set(Calendar.HOUR_OF_DAY, 0);
+		endDate.set(Calendar.MINUTE, 0);
+		endDate.set(Calendar.SECOND, 1);*/
+		
+		
+		
+		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		myFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 		String reformattedStr = null;
 		reformattedStr = myFormat.format(calendar.getTime());
 		
-		Calendar calendarlastmonth=Calendar.getInstance();
+		
+		
+		Calendar calendarlastmonth=Calendar.getInstance(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
 		calendarlastmonth.set(Calendar.DAY_OF_MONTH, 1);
 		calendarlastmonth.add(Calendar.MONTH, -1);
+		calendarlastmonth.set(Calendar.HOUR_OF_DAY, 0);
+		calendarlastmonth.set(Calendar.MINUTE, 0);
+		calendarlastmonth.set(Calendar.SECOND, 1);
 		String reformattedStrlastmonth = myFormat.format(calendarlastmonth.getTime());
+		
+		/*endDate.add(Calendar.MONTH, -1);
+		endDate.set(Calendar.DATE, 1);
+		endDate.set(Calendar.HOUR_OF_DAY, 0);
+		endDate.set(Calendar.MINUTE, 0);
+		endDate.set(Calendar.SECOND, 1);*/
+		
+		
 		
 		//String query=INFLUX_ENDPOINT+"select sum(value) from flow where time >='"+reformattedStr+"'";
 		String query="select last(value) from devicestatus where time >='"+reformattedStr+"' group by meter_id";
 		
+		
 		String query_previousbucket="select last(value) from devicestatus where time >='"+reformattedStrlastmonth+"' and time < '"+reformattedStr+"'  group by meter_id" ;
 		
-		
-		
+		log.debug("Query for this month device status:"+query);
+		log.debug("Query for last month device status:"+query_previousbucket);
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
 		InfluxDB influxDB = InfluxDBFactory.connect(influxProperties.getUrl(), influxProperties.getUsername(),influxProperties.getPassword());
 		
@@ -256,14 +306,22 @@ public TotalConsolidatedConsumption getConsumptionForToday() throws ClientProtoc
   public TotalConsolidatedDeviceStatus getDeviceStatusForToday() throws ClientProtocolException, IOException, JSONException{
 		
 		
-		Calendar calendar=Calendar.getInstance();
+	  Calendar calendar=Calendar.getInstance(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND,0);
+		//calendar.set(Calendar.DAY_OF_MONTH, 1);
 		
+		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		myFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 		
-		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String reformattedStr = null;
 		reformattedStr = myFormat.format(calendar.getTime());
 		
-		Calendar calendarlastmonth=Calendar.getInstance();
+		Calendar calendarlastmonth=Calendar.getInstance(TimeZone.getTimeZone(influxProperties.getDatatimezone()));
+		calendarlastmonth.set(Calendar.HOUR_OF_DAY, 0);
+		calendarlastmonth.set(Calendar.MINUTE, 0);
+		calendarlastmonth.set(Calendar.SECOND,0);
 		calendarlastmonth.add(Calendar.DAY_OF_MONTH, -1);
 		String reformattedStrlastmonth = myFormat.format(calendarlastmonth.getTime());
 		
@@ -271,7 +329,8 @@ public TotalConsolidatedConsumption getConsumptionForToday() throws ClientProtoc
 		String query="select last(value) from devicestatus where time >='"+reformattedStr+"' group by meter_id";
 		
 		String query_previousbucket="select last(value) from devicestatus where time >='"+reformattedStrlastmonth+"' and time < '"+reformattedStr+"'  group by meter_id" ;
-		
+		log.debug("Query for this todays device status:"+query);
+		log.debug("Query for last yesterdays device status:"+query_previousbucket);
 		
 		
 		//InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:32768", "root", "root");
