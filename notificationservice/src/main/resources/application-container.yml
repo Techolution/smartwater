@@ -1,5 +1,5 @@
 server:
-  port: 8085
+  port: 8090
 
 
 
@@ -27,17 +27,10 @@ spring:
     hikari:
       maximum-pool-size: 5
   application:
-    name: connectionstatisticsservice
+    name: notificationservice
 
 
-
-  
-influx:
-    url: http://localhost:8086
-    username: root
-    password: root
-    dbname: mauritius_smartwater_uat
-    datatimezone: Indian/Mauritius
-     
-
- 
+eureka:
+  instance:
+    prefer-ip-address: true
+    ip-address: 127.0.0.1

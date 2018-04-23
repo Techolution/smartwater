@@ -1,5 +1,5 @@
 server:
-  port: 8085
+  port: 8082
 
 
 
@@ -26,18 +26,20 @@ spring:
       max-active: 5
     hikari:
       maximum-pool-size: 5
-  application:
-    name: connectionstatisticsservice
-
-
-
-  
+    application:
+      name: consolidateddetailsservice
+      
+eureka:
+  instance:
+    prefer-ip-address: true
+    ip-address: 127.0.0.1       
+      
 influx:
-    url: http://localhost:8086
+    url: http://52.170.92.62:8086
     username: root
     password: root
     dbname: mauritius_smartwater_uat
-    datatimezone: Indian/Mauritius
-     
+    datatimezone: Indian/Mauritius 
 
- 
+
+  

@@ -4,6 +4,8 @@
 <aop-project name="notificationservice"/>
 <aop-project name="mapdataservice"/>
 <aop-project name="consolidateddetails"/>
+<aop-project name="eurekaservice"/>
 <aop-project name="supplydataservice"/>
 <aop-project name="connectionstatistics"/>
+<aop-project name="zuulgateway"/>
 </aop-reference-model>

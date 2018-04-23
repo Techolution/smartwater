@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="java.util.stream.Collector"/>
 <fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.supply.domain.MeterTrendData"/>
 <fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.connection.service.InfluxQueryCallBack"/>
 <fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.connection.service.ConnectionStatisticsService"/>
@@ -35,7 +34,6 @@
 <fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.notification.repository.ConnectionDetailsRepository"/>
 <fullyQualifiedTypeName name="java.lang.System"/>
 <fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.reports.domain.SupplyStatisticsRequestData"/>
-<fullyQualifiedTypeName name="java.time.Instant"/>
 <fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.reports.domain.Data"/>
 <fullyQualifiedTypeName name="org.apache.commons.logging.LogFactory"/>
 <fullyQualifiedTypeName name="org.apache.commons.logging.Log"/>
@@ -51,13 +49,15 @@
 <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.ResponseBody"/>
 <fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.reports.domain.ReportData"/>
 <fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.reports.domain.TelemetryResponseData"/>
-<fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="java.util.Date"/>
 <fullyQualifiedTypeName name="java.text.SimpleDateFormat"/>
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="org.influxdb.dto.QueryResult.Series"/>
 <fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.supply.domain.ConsumptionLeakage"/>
-<fullyQualifiedTypeName name="java.util.TimeZone"/>
 <fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.reports.domain.TelemetryRequestData"/>
+<fullyQualifiedTypeName name="org.springframework.cloud.client.discovery.DiscoveryClient"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="java.time.Instant"/>
+<fullyQualifiedTypeName name="java.util.TimeZone"/>
 <fullyQualifiedTypeName name="java.util.Calendar"/>
 </qualifiedTypeNameHistroy>

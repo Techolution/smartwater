@@ -29,11 +29,14 @@ spring:
   application:
     name: connectionstatisticsservice
 
-
+eureka:
+  instance:
+    prefer-ip-address: true
+    ip-address: 127.0.0.1
 
   
 influx:
-    url: http://localhost:8086
+    url: http://52.170.92.62:8086
     username: root
     password: root
     dbname: mauritius_smartwater_uat
