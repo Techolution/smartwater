@@ -41,6 +41,7 @@ influx:
     password: root
     dbname: mauritius_smartwater_uat
     datatimezone: Indian/Mauritius
+    retentionpolicy: aRetentionPolicy2
    # datatimezone: UTC
      
 

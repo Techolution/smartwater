@@ -1,15 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.supply.domain.MeterTrendData"/>
-<fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.connection.service.InfluxQueryCallBack"/>
-<fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.connection.service.ConnectionStatisticsService"/>
-<fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.connection.domain.SeriesPointData"/>
-<fullyQualifiedTypeName name="java.lang.Object"/>
-<fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.connection.domain.KeyValue"/>
-<fullyQualifiedTypeName name="org.json.JSONObject"/>
-<fullyQualifiedTypeName name="org.json.JSONArray"/>
-<fullyQualifiedTypeName name="com.techolution.mauritus.data.KeyValue"/>
-<fullyQualifiedTypeName name="com.techolution.mauritius.data.simulator.service.MeterOnDataSimulator"/>
 <fullyQualifiedTypeName name="com.techolution.mauritius.data.simulator.service.MeterOffDataSimulator"/>
 <fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.supply.domain.SupplyStatisticsRequestData"/>
 <fullyQualifiedTypeName name="org.influxdb.dto.QueryResult.Result"/>
@@ -44,7 +34,6 @@
 <fullyQualifiedTypeName name="java.nio.file.Files"/>
 <fullyQualifiedTypeName name="com.microsoft.azure.storage.file.CloudFileShare"/>
 <fullyQualifiedTypeName name="java.net.URI"/>
-<fullyQualifiedTypeName name="org.springframework.beans.factory.annotation.Autowired"/>
 <fullyQualifiedTypeName name="com.microsoft.azure.storage.blob.CloudBlobContainer"/>
 <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.ResponseBody"/>
 <fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.reports.domain.ReportData"/>
@@ -60,4 +49,15 @@
 <fullyQualifiedTypeName name="java.time.Instant"/>
 <fullyQualifiedTypeName name="java.util.TimeZone"/>
 <fullyQualifiedTypeName name="java.util.Calendar"/>
+<fullyQualifiedTypeName name="java.util.logging.Logger"/>
+<fullyQualifiedTypeName name="org.slf4j.Logger"/>
+<fullyQualifiedTypeName name="com.techolution.smartoffice.kafka.consumer.data.KeyValue"/>
+<fullyQualifiedTypeName name="com.techolution.smartoffice.kafka.consumer.data.SeriesPointData"/>
+<fullyQualifiedTypeName name="com.techolution.smartoffice.kafka.consumer.CustomProperties"/>
+<fullyQualifiedTypeName name="java.lang.Override"/>
+<fullyQualifiedTypeName name="org.springframework.stereotype.Component"/>
+<fullyQualifiedTypeName name="com.techolution.smartoffice.adapter.CustomProperties"/>
+<fullyQualifiedTypeName name="org.springframework.beans.factory.annotation.Autowired"/>
+<fullyQualifiedTypeName name="com.techolution.smartoffice.adapter.callback.SmartOfficeMqttCallBack"/>
+<fullyQualifiedTypeName name="org.eclipse.paho.client.mqttv3.IMqttToken"/>
 </qualifiedTypeNameHistroy>

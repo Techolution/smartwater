@@ -929,6 +929,9 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
     	}else if("consumerleakageofftime".equalsIgnoreCase(metrics)){
     		returnVal="consumerleakageofftime";
     	}
+    	else if("roomambience".equalsIgnoreCase(metrics)){
+    		returnVal="roomweather";
+    	}
     	return returnVal;
     }
 
@@ -1045,7 +1048,7 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
 
 		influxDB.setDatabase(influxProperties.getDbname());
 		influxDB.enableBatch(BatchOptions.DEFAULTS);
-		String rpName = "aRetentionPolicy2";
+		String rpName = influxProperties.getRetentionpolicy();
 	//	influxDB.createRetentionPolicy(rpName, influxProperties.getDbname(), "365d", "30m", 2, true);
 		influxDB.setRetentionPolicy("aRetentionPolicy");
 		

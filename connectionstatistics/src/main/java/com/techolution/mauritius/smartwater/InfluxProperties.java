@@ -8,10 +8,19 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "influx")
 public class InfluxProperties {
 	
+	public String getRetentionpolicy() {
+		return retentionpolicy;
+	}
+
+	public void setRetentionpolicy(String retentionpolicy) {
+		this.retentionpolicy = retentionpolicy;
+	}
+
 	private String url;
 	private String username;
 	private String password;
 	private String datatimezone;
+	private String retentionpolicy;
 	
 	
 

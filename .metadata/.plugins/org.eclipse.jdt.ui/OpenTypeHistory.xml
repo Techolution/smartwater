@@ -13,5 +13,6 @@
 <typeInfo handle="=consolidateddetails/src\/main\/java&lt;com.techolution.mauritius.smartwater.domain{TotalConsolidatedConsumption.java[TotalConsolidatedConsumption" modifiers="1" timestamp="1522836077876"/>
 <typeInfo handle="=consolidateddetails/src\/main\/java&lt;com.techolution.mauritius.smartwater.controller{ConsolidatedDataController.java[ConsolidatedDataController" modifiers="1" timestamp="1522795506802"/>
 <typeInfo handle="=supplydataservice/src\/main\/java&lt;com.techolution.mauritius.smartwater.supply.controller{SupplyDataController.java[SupplyDataController" modifiers="1" timestamp="1522986667975"/>
-<typeInfo handle="=connectionstatistics/src\/main\/java&lt;com.techolution.mauritius.smartwater.connection.service{ConnectionStatisticsService.java[ConnectionStatisticsService" modifiers="1" timestamp="1524065703152"/>
+<typeInfo handle="=mqttkafkaadapter/C:\/Users\/Lenovo\/.m2\/repository\/org\/eclipse\/paho\/mqtt-client\/0.4.0\/mqtt-client-0.4.0.jar&lt;org.eclipse.paho.client.mqttv3(MqttCallback.class[MqttCallback" modifiers="1537" timestamp="1524739276009"/>
+<typeInfo handle="=connectionstatistics/src\/main\/java&lt;com.techolution.mauritius.smartwater.connection.service{ConnectionStatisticsService.java[ConnectionStatisticsService" modifiers="1" timestamp="1524738187444"/>
 </typeInfoHistroy>

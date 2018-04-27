@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <aop-reference-model>
 <aop-project name="reportingservice"/>
+<aop-project name="platformkafkabroker"/>
 <aop-project name="notificationservice"/>
 <aop-project name="mapdataservice"/>
 <aop-project name="consolidateddetails"/>
 <aop-project name="eurekaservice"/>
 <aop-project name="supplydataservice"/>
 <aop-project name="connectionstatistics"/>
+<aop-project name="mqttkafkaadapter"/>
 <aop-project name="zuulgateway"/>
 </aop-reference-model>
