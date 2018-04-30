@@ -1,5 +1,6 @@
 package com.techolution.mauritius.smartwater.controller;
 
+import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.util.List;
 
@@ -41,12 +42,13 @@ public class ConnectionMetaDataController {
 	 *  
 	 * @param data
 	 * @return
+	 * @throws UnknownHostException 
 	 * @throws ParseException
 	 * @throws JSONException 
 	 */
 	
 	@PostMapping("/r/HList")
-	public @ResponseBody ResponseData getAllConnections(@RequestBody String jsonRequest)
+	public @ResponseBody ResponseData getAllConnections(@RequestBody String jsonRequest) throws UnknownHostException
 	{
 		log.info("Entering ConsolidatedDataController.getAllConnections");
 		List<MeterConnection> resultList=consolidatedDataService.getAllConnections();

@@ -29,6 +29,16 @@ spring:
     application:
       name: consolidateddetailsservice
       
+  data:
+    redis:
+      repositories:
+        enabled: true
+  redis:
+    host: localhost
+    port: 32768
+    timeout:
+      seconds: 3600
+      
 eureka:
   instance:
     prefer-ip-address: true

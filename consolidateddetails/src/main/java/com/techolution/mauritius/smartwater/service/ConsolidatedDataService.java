@@ -1,12 +1,14 @@
 package com.techolution.mauritius.smartwater.service;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -19,6 +21,11 @@ import org.influxdb.dto.QueryResult.Result;
 import org.influxdb.dto.QueryResult.Series;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import com.techolution.mauritius.smartwater.InfluxProperties;
@@ -46,19 +53,52 @@ public class ConsolidatedDataService {
 	@Autowired
     InfluxProperties influxProperties;
 	//TODO CHANGE TO PROPER CACHING
-	private static List<MeterConnection> connections=null;
+	//private static List<MeterConnection> connections=null;
 	//private 
 	
-	public List<MeterConnection> getAllConnections(){
+	@Autowired
+	RedisProperties redisProperties;
+	
+	@Autowired
+    private RedisAutoConfiguration redisAutoConfiguration;
+	
+	@Bean
+	 JedisConnectionFactory jedisConnectionFactory() {
+		JedisConnectionFactory connectionFactory=new JedisConnectionFactory();
+		connectionFactory.setHostName(redisProperties.getHost());
+		connectionFactory.setPort(redisProperties.getPort());
+	  return connectionFactory;
+	 }
+	
+	public List<MeterConnection> getAllConnections() throws UnknownHostException{
 		
 		log.info("Entering ConsolidatedDataService.getAllConnections ");
-		if(connections == null){
+		List< MeterConnection> connections = null;
+		
+		RedisTemplate<Object,Object> template=redisAutoConfiguration.redisTemplate(jedisConnectionFactory());
+		
+		if(template ==null || template.opsForValue().get("ALL_CONNECTIONS_LIST")==null){
+		
+			log.info("Data not present in redis. Populating it");
 			connections= (List<MeterConnection>)connectionDetailsRepository.findAll();
+			log.info("Exiting ConsolidatedDataService.getAllConnections ");
+			if(connections == null) {
+				log.debug("returnList size is null");
+			}else{
+				log.debug("List size is:"+connections.size());	
+			}
 			
+			
+			 template.opsForValue().set("ALL_CONNECTIONS_LIST", connections);
+			
+			
+			
+		}else{
+			
+			log.info("Data IS present in redis for all connections");
+			connections=(List < MeterConnection>)template.opsForValue().get("ALL_CONNECTIONS_LIST");
 		}
-		else{
-			return connections;
-		}
+		
 		List<MeterConnection> returnList= connections;
 		log.info("Exiting ConsolidatedDataService.getAllConnections ");
 		if(returnList == null) {

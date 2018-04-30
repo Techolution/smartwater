@@ -29,6 +29,16 @@ spring:
     application:
       name: consolidateddetailsservice 
       
+  data:
+    redis:
+      repositories:
+        enabled: true
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    
+    
+    
 influx:
     url: http://localhost:8086
     username: root

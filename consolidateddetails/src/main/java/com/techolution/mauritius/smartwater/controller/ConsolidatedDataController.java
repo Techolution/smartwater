@@ -1,6 +1,7 @@
 package com.techolution.mauritius.smartwater.controller;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -31,7 +32,7 @@ public class ConsolidatedDataController {
 	private ConsolidatedDataService consolidatedDataService;
 	
 	@RequestMapping(method=RequestMethod.GET,value="/connections")
-	public @ResponseBody List<MeterConnection> getAllConnections()
+	public @ResponseBody List<MeterConnection> getAllConnections() throws UnknownHostException
 	{
 		log.info("Entering ConsolidatedDataController.getAllConnections");
 		List<MeterConnection> resultList=consolidatedDataService.getAllConnections();

@@ -28,6 +28,16 @@ spring:
       maximum-pool-size: 5
   application:
     name: consolidateddetailsservice
+    
+  data:
+    redis:
+      repositories:
+        enabled: true
+  redis:
+    host: localhost
+    port: 32768
+    timeout:
+      seconds: 3600
       
 influx:
     url: http://52.170.92.62:8086
