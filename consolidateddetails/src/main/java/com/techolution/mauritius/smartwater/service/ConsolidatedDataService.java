@@ -75,6 +75,33 @@ public class ConsolidatedDataService {
 		log.info("Entering ConsolidatedDataService.getAllConnections ");
 		List< MeterConnection> connections = null;
 		
+		connections = getFromRedis();
+		
+		List<MeterConnection> returnList= connections;
+		log.info("Exiting ConsolidatedDataService.getAllConnections ");
+		if(returnList == null) {
+			log.debug("returnList size is null");
+		}else{
+			log.debug("List size is:"+returnList.size());	
+		}
+		try {
+			Map<String,String> currentStatusList=getLatestDeviceStatusForAllDevices();
+			if (currentStatusList !=null){
+				returnList.parallelStream().forEach(meterconnection -> meterconnection.setCurrentstatus(currentStatusList.getOrDefault(Long.toString(meterconnection.getHouse_id())
+						,WORKING))
+							);
+				
+				}
+		} catch (IOException | JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return returnList;
+	}
+
+	private List<MeterConnection> getFromRedis() throws UnknownHostException {
+		List<MeterConnection> connections;
 		RedisTemplate<Object,Object> template=redisAutoConfiguration.redisTemplate(jedisConnectionFactory());
 		
 		if(template ==null || template.opsForValue().get("ALL_CONNECTIONS_LIST")==null){
@@ -98,28 +125,7 @@ public class ConsolidatedDataService {
 			log.info("Data IS present in redis for all connections");
 			connections=(List < MeterConnection>)template.opsForValue().get("ALL_CONNECTIONS_LIST");
 		}
-		
-		List<MeterConnection> returnList= connections;
-		log.info("Exiting ConsolidatedDataService.getAllConnections ");
-		if(returnList == null) {
-			log.debug("returnList size is null");
-		}else{
-			log.debug("List size is:"+returnList.size());	
-		}
-		try {
-			Map<String,String> currentStatusList=getLatestDeviceStatusForAllDevices();
-			if (currentStatusList !=null){
-				returnList.parallelStream().forEach(meterconnection -> meterconnection.setCurrentstatus(currentStatusList.getOrDefault(Long.toString(meterconnection.getHouse_id())
-						,WORKING))
-							);
-				
-				}
-		} catch (IOException | JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return returnList;
+		return connections;
 	}
 	
 	public TotalConsolidatedConsumption getConsumptionForThisMonth() throws ClientProtocolException, IOException, JSONException{
