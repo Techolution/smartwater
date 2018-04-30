@@ -1,5 +1,6 @@
 package com.techolution.mauritius.smartwater.supply.controller;
 
+import java.net.UnknownHostException;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -35,7 +36,7 @@ public class LeakageDataController {
 		return resultdata;
 	}
 	@RequestMapping(method=RequestMethod.GET,value="/daily/consumerleakage")
-	public @ResponseBody List<ConsumptionLeakage> getDailyConsumerLeakageStats()
+	public @ResponseBody List<ConsumptionLeakage> getDailyConsumerLeakageStats() throws UnknownHostException
 	{
 		log.info("Entering LeakageDataController.getDailyConsumerLeakageStats");
 		List<ConsumptionLeakage> resultList=analyticService.getCurrentDayConsumerLeakageDetails();

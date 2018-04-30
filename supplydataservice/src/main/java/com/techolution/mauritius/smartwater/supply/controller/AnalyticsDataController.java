@@ -1,5 +1,6 @@
 package com.techolution.mauritius.smartwater.supply.controller;
 
+import java.net.UnknownHostException;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -27,7 +28,7 @@ public class AnalyticsDataController {
 	SupplyAnalyticsService analyticService;
 	
 	@RequestMapping(method=RequestMethod.GET,value="/daily/baseline/analysis/increase")
-	public @ResponseBody List<MeterTrendData> getConnectionsAboveDailyBaseline()
+	public @ResponseBody List<MeterTrendData> getConnectionsAboveDailyBaseline() throws UnknownHostException
 	{
 		log.info("Entering ConsolidatedDataController.getConnectionsAboveDailyBaseline");
 		List<MeterTrendData> resultList=analyticService.getConnectionsAboveDailyBaseline();
@@ -36,7 +37,7 @@ public class AnalyticsDataController {
 	}
 	
 	@RequestMapping(method=RequestMethod.GET,value="/daily/baseline/analysis/decrease")
-	public @ResponseBody List<MeterTrendData> getConnectionsbelowDailyBaseline()
+	public @ResponseBody List<MeterTrendData> getConnectionsbelowDailyBaseline() throws UnknownHostException
 	{
 		log.info("Entering ConsolidatedDataController.getConnectionsAboveDailyBaseline");
 		List<MeterTrendData> resultList=analyticService.getConnectionsBelowDailyBaseline();
@@ -46,7 +47,7 @@ public class AnalyticsDataController {
 	
 	
 	@RequestMapping(method=RequestMethod.GET,value="/stats")
-	public @ResponseBody WaterSupplyDailyConnectionStats getStats()
+	public @ResponseBody WaterSupplyDailyConnectionStats getStats() throws UnknownHostException
 	{
 		log.info("Entering ConsolidatedDataController.getStats");
 		WaterSupplyDailyConnectionStats output=analyticService.getStats();

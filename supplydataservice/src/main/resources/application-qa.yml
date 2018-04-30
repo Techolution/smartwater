@@ -28,6 +28,16 @@ spring:
       maximum-pool-size: 5
   application:
     name: supplydataservice
+    
+  data:
+    redis:
+      repositories:
+        enabled: true
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    timeout:
+      seconds: 3600
 
 influx:
     url: http://localhost:8086

@@ -1,6 +1,7 @@
 package com.techolution.mauritius.smartwater.supply.service;
 
 
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -22,11 +23,15 @@ import org.influxdb.dto.QueryResult;
 import org.influxdb.dto.QueryResult.Result;
 import org.influxdb.dto.QueryResult.Series;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import com.techolution.mauritius.smartwater.supply.InfluxProperties;
 import com.techolution.mauritius.smartwater.supply.domain.ConsumptionLeakage;
-import com.techolution.mauritius.smartwater.supply.domain.DailyWaterSupplyData;
 import com.techolution.mauritius.smartwater.supply.domain.LeakageData;
 import com.techolution.mauritius.smartwater.supply.domain.MeterConnection;
 import com.techolution.mauritius.smartwater.supply.domain.MeterTrendData;
@@ -69,9 +74,14 @@ public class SupplyAnalyticsService {
 	
 	private Log log = LogFactory.getLog(SupplyAnalyticsService.class);
 	
-	private static Map <Long, MeterConnection> connectionmap=null;
 	
-	public List<MeterTrendData> getConnectionsAboveDailyBaseline(){
+	@Autowired
+	RedisProperties redisProperties;
+	
+	@Autowired
+    private RedisAutoConfiguration redisAutoConfiguration;
+
+	public List<MeterTrendData> getConnectionsAboveDailyBaseline() throws UnknownHostException{
 		
 		log.info("Entering SupplyAnalyticsService.getConnectionsAboveDailyBaseline");
 		
@@ -148,7 +158,7 @@ public class SupplyAnalyticsService {
 	}
 	
 	
-  public List<MeterTrendData> getConnectionsBelowDailyBaseline(){
+  public List<MeterTrendData> getConnectionsBelowDailyBaseline() throws UnknownHostException{
 		
 		log.info("Entering SupplyAnalyticsService.getConnectionsBelowDailyBaseline");
 		
@@ -203,11 +213,9 @@ public class SupplyAnalyticsService {
 	}
 
 
-public Map <Long, MeterConnection> getConnectionsMap() {
-	if(SupplyAnalyticsService.connectionmap == null){
-		SupplyAnalyticsService.connectionmap=getAllConnections();
-	}
-	return SupplyAnalyticsService.connectionmap;
+public Map <Long, MeterConnection> getConnectionsMap() throws UnknownHostException {
+	
+	return getAllConnections();
 }
 
 	private void populatePreviousucketAndConnectionStatisticsInCurrent(List<MeterTrendData> retList,
@@ -230,7 +238,13 @@ public Map <Long, MeterConnection> getConnectionsMap() {
 			}
 			
 			
-			MeterConnection connection=connectionmap.get(meterdata.getMeterId());
+			MeterConnection connection =null;
+			try {
+				connection = getAllConnections().get(meterdata.getMeterId());
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			if(connection!=null){
 				meterdata.setLocation(connection.getHouse_namenum());
@@ -302,30 +316,55 @@ public Map <Long, MeterConnection> getConnectionsMap() {
 	}
 	
 	
-  public Map <Long, MeterConnection> getAllConnections(){
+	@Bean
+	 JedisConnectionFactory jedisConnectionFactory() {
+		JedisConnectionFactory connectionFactory=new JedisConnectionFactory();
+		connectionFactory.setHostName(redisProperties.getHost());
+		connectionFactory.setPort(redisProperties.getPort());
+	  return connectionFactory;
+	 }
+	
+  public Map <Long, MeterConnection> getAllConnections() throws UnknownHostException{
 		
 		log.info("Entering ConsolidatedDataService.getAllConnections ");
-		List<MeterConnection> returnList= (List<MeterConnection>)connectionDetailsRepository.findAll();
-		log.info("Exiting ConsolidatedDataService.getAllConnections ");
-		if(returnList == null) {
-			log.debug("returnList size is null");
+		Map <Long, MeterConnection> map = null;
+		
+		RedisTemplate<Object,Object> template=redisAutoConfiguration.redisTemplate(jedisConnectionFactory());
+		
+		if(template ==null || template.opsForValue().get("ALL_CONNECTIONS")==null){
+		
+			log.info("Data not present in redis. Populating it");
+			List<MeterConnection> returnList= (List<MeterConnection>)connectionDetailsRepository.findAll();
+			log.info("Exiting ConsolidatedDataService.getAllConnections ");
+			if(returnList == null) {
+				log.debug("returnList size is null");
+			}else{
+				log.debug("List size is:"+returnList.size());	
+			}
+			
+			 map = returnList.stream().collect(Collectors.toMap(conn -> conn.getHouse_id(),conn -> conn));	
+			 template.opsForValue().set("ALL_CONNECTIONS", map);
+			
+			
+			
 		}else{
-			log.debug("List size is:"+returnList.size());	
+			
+			log.info("Data IS present in redis for all connections");
+			map=(Map <Long, MeterConnection>)template.opsForValue().get("ALL_CONNECTIONS");
 		}
 		
-		Map <Long, MeterConnection> map = returnList.stream().collect(Collectors.toMap(conn -> conn.getHouse_id(),conn -> conn));
 		
 		return map;
 	}
   
   
-  public WaterSupplyDailyConnectionStats getStats(){
+  public WaterSupplyDailyConnectionStats getStats() throws UnknownHostException{
 		
 		log.info("Entering SupplyAnalyticsService.getStats");
 		
 		WaterSupplyDailyConnectionStats connectionStats=new WaterSupplyDailyConnectionStats();
-		getConnectionsMap();
-		int totalMeters=SupplyAnalyticsService.connectionmap.size();
+		//getConnectionsMap();
+		int totalMeters=this.getAllConnections().size();
 		connectionStats.setTotalMeters(totalMeters);
 		
 		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -550,7 +589,7 @@ public Map <Long, MeterConnection> getConnectionsMap() {
   
 }
   
-  public List<ConsumptionLeakage>  getCurrentDayConsumerLeakageDetails(){
+  public List<ConsumptionLeakage>  getCurrentDayConsumerLeakageDetails() throws UnknownHostException{
 	  
 	  log.info("Entering SupplyAnalyticsService.getCurrentDayConsumerLeakageDetails");
 	  
