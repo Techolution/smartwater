@@ -1,5 +1,6 @@
 package com.techolution.mauritius.smartwater.notification.controller;
 
+import java.net.UnknownHostException;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -38,7 +39,7 @@ private Log log = LogFactory.getLog(NotificationController.class);
 	}
 	
 	@RequestMapping(method=RequestMethod.GET,value="/priroity/count")
-	public @ResponseBody NotificationStatusStatistics getCountByPriority()
+	public @ResponseBody NotificationStatusStatistics getCountByPriority() throws UnknownHostException
 	{
 		log.info("Entering NotificationController.getCountByPriority");
 		NotificationStatusStatistics stats=notificationService.getCountBasedOnStatus();

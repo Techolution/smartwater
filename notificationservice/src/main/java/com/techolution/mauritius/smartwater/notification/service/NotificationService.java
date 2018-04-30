@@ -1,5 +1,6 @@
 package com.techolution.mauritius.smartwater.notification.service;
 
+import java.net.UnknownHostException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,6 +10,11 @@ import javax.persistence.PersistenceContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import com.techolution.mauritius.smartwater.notification.domain.MeterConnection;
@@ -39,6 +45,20 @@ public class NotificationService {
 	
 	private static String ISSUE_STATUS_OPEN="OPEN";
 	
+	@Autowired
+	RedisProperties redisProperties;
+	
+	@Autowired
+    private RedisAutoConfiguration redisAutoConfiguration;
+	
+	@Bean
+	 JedisConnectionFactory jedisConnectionFactory() {
+		JedisConnectionFactory connectionFactory=new JedisConnectionFactory();
+		connectionFactory.setHostName(redisProperties.getHost());
+		connectionFactory.setPort(redisProperties.getPort());
+	  return connectionFactory;
+	 }
+	
 	public List<NotificationDetails> getAllOpenNotifcations(){
 		
 		log.info("Entering NotificationService.getAllOpenNotifcations");
@@ -56,7 +76,7 @@ public class NotificationService {
 		return results;
 	}
 	
-  public NotificationStatusStatistics getCountBasedOnStatus(){
+  public NotificationStatusStatistics getCountBasedOnStatus() throws UnknownHostException{
 		
 		log.info("Entering NotificationService.getAllOpenNotifcations");
 		
@@ -71,7 +91,7 @@ public class NotificationService {
 		List<NotificationDetails> medium=listOpenIssues.parallelStream().filter( notification -> notification.getPriority().equalsIgnoreCase(MEDIUM)).collect(Collectors.toList());
 		List<NotificationDetails> low=listOpenIssues.parallelStream().filter( notification -> notification.getPriority().equalsIgnoreCase(LOW)).collect(Collectors.toList());
 		
-		List<MeterConnection> connections=(List<MeterConnection>)connectionDetailsRepository.findAll();
+		List<MeterConnection> connections=getFromRedis();
 		int numMeter=0;
 		if(connections !=null){
 			numMeter=connections.size();
@@ -135,6 +155,34 @@ public class NotificationService {
 		log.info("Exiting NotificationService.getAllOpenNotifcations");
 		
 		return result;
+	}
+  
+  private List<MeterConnection> getFromRedis() throws UnknownHostException {
+		List<MeterConnection> connections;
+		RedisTemplate<Object,Object> template=redisAutoConfiguration.redisTemplate(jedisConnectionFactory());
+		
+		if(template ==null || template.opsForValue().get("ALL_CONNECTIONS_LIST_NOTIFICATION")==null){
+		
+			log.info("Data not present in redis. Populating it");
+			connections= (List<MeterConnection>)connectionDetailsRepository.findAll();
+			log.info("Exiting ConsolidatedDataService.getAllConnections ");
+			if(connections == null) {
+				log.debug("returnList size is null");
+			}else{
+				log.debug("List size is:"+connections.size());	
+			}
+			
+			
+			 template.opsForValue().set("ALL_CONNECTIONS_LIST_NOTIFICATION", connections);
+			
+			
+			
+		}else{
+			
+			log.info("Data IS present in redis for all connections");
+			connections=(List < MeterConnection>)template.opsForValue().get("ALL_CONNECTIONS_LIST_NOTIFICATION");
+		}
+		return connections;
 	}
 
 }
