@@ -164,7 +164,7 @@ public class SupplyAnalyticsService {
 		
 		List<MeterTrendData> retList=new ArrayList<MeterTrendData>();
 		
-		getConnectionsMap();
+		//getConnectionsMap();
 		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar startDate=Calendar.getInstance();
 		
@@ -219,8 +219,10 @@ public Map <Long, MeterConnection> getConnectionsMap() throws UnknownHostExcepti
 }
 
 	private void populatePreviousucketAndConnectionStatisticsInCurrent(List<MeterTrendData> retList,
-			List<MeterTrendData> yestedayData) {
+			List<MeterTrendData> yestedayData) throws UnknownHostException {
 		Map <Integer, MeterTrendData> previousbucketmap = yestedayData.stream().collect(Collectors.toMap(conn -> conn.getMeterId(),conn -> conn));
+		
+		final Map<Long, MeterConnection> connectionMap =  getAllConnections();
 		
 		retList.forEach(meterdata -> {
 			
@@ -239,12 +241,9 @@ public Map <Long, MeterConnection> getConnectionsMap() throws UnknownHostExcepti
 			
 			
 			MeterConnection connection =null;
-			try {
-				connection = getAllConnections().get(meterdata.getMeterId());
-			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
+			connection = connectionMap.get(meterdata.getMeterId());
+			
 			
 			if(connection!=null){
 				meterdata.setLocation(connection.getHouse_namenum());
@@ -326,7 +325,7 @@ public Map <Long, MeterConnection> getConnectionsMap() throws UnknownHostExcepti
 	
   public Map <Long, MeterConnection> getAllConnections() throws UnknownHostException{
 		
-		log.info("Entering ConsolidatedDataService.getAllConnections ");
+		log.info("Entering SupplyAnalyticsService.getAllConnections ");
 		Map <Long, MeterConnection> map = null;
 		
 		RedisTemplate<Object,Object> template=redisAutoConfiguration.redisTemplate(jedisConnectionFactory());
