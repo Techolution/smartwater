@@ -12,7 +12,7 @@ spec:
       # unlike pod-nginx.yaml, the name is not included in the meta data as a unique name is
       # generated from the deployment name
       labels:
-        app: eureka
+        app: eurekaservice
     spec:
       containers:
       - name: eureka
