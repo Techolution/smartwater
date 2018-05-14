@@ -18,7 +18,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5Dialect
   datasource:
-    url: jdbc:mysql://52.170.92.62:3306/mauritius_smartwater
+    url: jdbc:mysql://192.168.216.1:3306/mauritius_smartwater
     username: admin
     password: admin123
     driver-class-name: com.mysql.jdbc.Driver
@@ -34,15 +34,15 @@ spring:
       repositories:
         enabled: true
   redis:
-    host: localhost
-    port: 32768
+    host: 192.168.216.1
+    port: 6379 
     timeout:
       seconds: 3600
       
 eureka:
   instance:
     prefer-ip-address: true
-    ip-address: 127.0.0.1       
+    ip-address: 192.168.214.134      
       
 influx:
     url: http://52.170.92.62:8086
