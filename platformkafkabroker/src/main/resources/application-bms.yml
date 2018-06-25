@@ -18,6 +18,6 @@ spring:
       - localhost:9092
 
 custom:
-  serviceurl: http://52.170.92.62:8099/telemetry/insert/data
+  serviceurl: http://localhost:8099/telemetry/insert/data
 
   
