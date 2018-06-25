@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="connect" key="selection"/>
-		<item value="false" key="casesensitive"/>
+		<item value="" key="selection"/>
+		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
-		<item value="true" key="wrap"/>
-		<item value="false" key="wholeword"/>
+		<item value="false" key="wrap"/>
+		<item value="true" key="wholeword"/>
 		<list key="findhistory">
-			<item value="connect"/>
-			<item value="TZ"/>
-			<item value="HH"/>
-			<item value="dateFormat"/>
-			<item value="getConsumptionForThisMonth"/>
+			<item value="brave"/>
+			<item value="zipkin"/>
+			<item value="spring-cloud-starter-sleuth"/>
+			<item value="connectionDetailsRepository"/>
+			<item value="MeterConnection"/>
+			<item value="UnknownHostException"/>
+			<item value="redisAutoConfiguration"/>
 			<item value="getAllConnections"/>
-			<item value="DateForm"/>
-			<item value="readingserviceurl"/>
 		</list>
 		<list key="replacehistory">
 			<item value="influxProperties.getDbname()"/>

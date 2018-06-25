@@ -932,6 +932,9 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
     	else if("roomambience".equalsIgnoreCase(metrics)){
     		returnVal="roomweather";
     	}
+    	else if("batteryhealth".equalsIgnoreCase(metrics)){
+    		returnVal="battery_health";
+    	}
     	return returnVal;
     }
 
