@@ -1,0 +1,23 @@
+#server:
+#  port: 8090
+
+
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    log4j.logger.org.hibernate.SQL: DEBUG
+    com.techolution: DEBUG
+    
+spring:
+  kafka:
+    consumer:
+      group-id: consumer1
+      auto-offset-reset: earliest
+      bootstrap-servers:
+      - localhost:9092
+
+custom:
+  serviceurl: http://52.170.92.62:8099/telemetry/insert/data
+
+  

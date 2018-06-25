@@ -80,6 +80,47 @@ public class PlatformkafkabrokerApplication implements CommandLineRunner  {
 	       // latch.countDown();
 	    }
 	 
+	 @KafkaListener(topics = "bmstest")
+	    public void listenBMS(ConsumerRecord<?, ?> cr) throws Exception {
+	        //logger.info(cr.toString());
+	        String msgvalue=(String)cr.value();
+	        logger.info("Value is:"+msgvalue);
+	        
+	        JSONObject object=new JSONObject(msgvalue);
+	        
+	        SeriesPointData seriesPointData=new SeriesPointData();
+	        seriesPointData.setName("batteryhealth");
+			
+			KeyValue tag=new KeyValue();
+			tag.setKey("battery_id");
+			tag.setValue((String)object.get("battery_id"));
+			
+			List<KeyValue> tagList=new ArrayList<KeyValue>();
+			tagList.add(tag);
+			
+			
+			KeyValue temperature=new KeyValue();
+			temperature.setKey("voltage");
+		//	BigDecimal temp = new BigDecimal(object.getDouble("Temperature"));
+			//Float tempval=new Float(object.getDouble("Temperature"));
+			temperature.setValue(object.getDouble("voltage"));
+			
+			KeyValue humidity=new KeyValue();
+			humidity.setKey("current");
+			//BigDecimal humid = new BigDecimal(object.getDouble("humidity"));
+		//	Float humidval=new Float(Math.ceobject.getDouble("humidity"));
+		//	humidval.
+			humidity.setValue(object.getDouble("current"));
+			
+			
+			List<KeyValue> valuelist=new ArrayList<KeyValue>();
+			valuelist.add(temperature);
+			valuelist.add(humidity);
+			
+			sendData("batteryhealth", tagList, valuelist);
+	       // latch.countDown();
+	    }
+	 
 	 
 	 protected void sendData(String name,List<KeyValue> tags,List<KeyValue> values) throws JSONException{
 			
