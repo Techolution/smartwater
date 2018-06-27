@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.env.Environment;
 
 import com.techolution.smartoffice.adapter.callback.BMSMqttCallBack;
+import com.techolution.smartoffice.adapter.callback.DefaultMqttCallBack;
 import com.techolution.smartoffice.adapter.callback.SmartOfficeMqttCallBack;
 
 
@@ -29,6 +30,9 @@ public class MqttkafkaadapterApplication implements CommandLineRunner{
 	 BMSMqttCallBack bmsMqttCallBack;
 	 
 	 @Autowired
+	 DefaultMqttCallBack cescMqttCallBack;
+	 
+	 @Autowired
 	 private Environment environment;
 
 	public static void main(String[] args) {
@@ -45,7 +49,11 @@ public class MqttkafkaadapterApplication implements CommandLineRunner{
 		if((environment.getActiveProfiles())[0].contains("bms")){
 			bmsMqttCallBack.connect();	
 			logger.debug("Registed BMS callback");
-		}else{
+		} else if((environment.getActiveProfiles())[0].contains("cesc")){
+			cescMqttCallBack.connect();
+			logger.debug("Registed cescMqttCallBack callback");
+		}
+		else{
 			smartOfficeMqttCallBack.connect();	
 			logger.debug("Registed smartoffice callback");
 		}

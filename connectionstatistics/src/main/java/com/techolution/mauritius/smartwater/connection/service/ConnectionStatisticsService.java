@@ -934,6 +934,8 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
     	}
     	else if("batteryhealth".equalsIgnoreCase(metrics)){
     		returnVal="battery_health";
+    	}else if ("transformer".equalsIgnoreCase(metrics)){
+    		returnVal="transformer_telemetry";
     	}
     	return returnVal;
     }
