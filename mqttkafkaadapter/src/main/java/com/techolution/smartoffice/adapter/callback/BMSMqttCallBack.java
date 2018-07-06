@@ -70,8 +70,8 @@ public class BMSMqttCallBack implements MqttCallback {
 		String battery_id=object.getString("battery_id");
 		Double voltage=object.getDouble("voltage");
 		Double current=object.getDouble("current");
-		object2.put("voltage", voltage.doubleValue()+0.001);
-		object2.put("current", current.doubleValue()+0.001);
+		object2.put("voltage", voltage.doubleValue());
+		object2.put("current", current.doubleValue());
 		object2.put("battery_id", battery_id);
 	//	object.put("humidity", messageReceived);
 		log.debug("Before sending message:"+object2.toString());

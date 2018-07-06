@@ -26,8 +26,11 @@ public class MqttkafkaadapterApplication implements CommandLineRunner{
 	 @Autowired
 	 SmartOfficeMqttCallBack smartOfficeMqttCallBack;
 	 
+	/* @Autowired
+	 BMSMqttCallBack bmsMqttCallBack;*/
+	 
 	 @Autowired
-	 BMSMqttCallBack bmsMqttCallBack;
+	 DefaultMqttCallBack bmsMqttCallBack;
 	 
 	 @Autowired
 	 DefaultMqttCallBack cescMqttCallBack;
