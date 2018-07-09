@@ -68,7 +68,7 @@ public abstract class AbstractMqttCallBack implements MqttCallback {
 	
 	
 	public void connect() throws MqttException {
-		log.debug("Broker is"+customProperties.getMqttbroker());
+		//log.debug("Broker is"+customProperties.getMqttbroker());
 		if(customProperties!=null){
 			mqtt = new MqttAsyncClient(customProperties.getMqttbroker(),customProperties.getMqttclientid());
 			mqtt.setCallback(this);	
