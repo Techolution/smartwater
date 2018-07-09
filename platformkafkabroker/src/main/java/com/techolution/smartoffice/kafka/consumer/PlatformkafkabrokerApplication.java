@@ -119,6 +119,7 @@ public class PlatformkafkabrokerApplication implements CommandLineRunner  {
 			tagList.add(tag);
 			
 			
+			List<KeyValue> valuelist=new ArrayList<KeyValue>();
 			KeyValue temperature=new KeyValue();
 			temperature.setKey("voltage");
 		//	BigDecimal temp = new BigDecimal(object.getDouble("Temperature"));
@@ -130,10 +131,25 @@ public class PlatformkafkabrokerApplication implements CommandLineRunner  {
 			//BigDecimal humid = new BigDecimal(object.getDouble("humidity"));
 		//	Float humidval=new Float(Math.ceobject.getDouble("humidity"));
 		//	humidval.
-			humidity.setValue(object.getDouble("current")+0.0000001);
+			humidity.setValue(object.getDouble("current")+0.00000000000000000001);
 			
+			if(object.has("SOC")){
+				
 			
-			List<KeyValue> valuelist=new ArrayList<KeyValue>();
+				KeyValue soc=new KeyValue();
+				soc.setKey("SOC");
+				soc.setValue(object.getDouble("SOC")+0.000000001);
+				valuelist.add(soc);
+			}
+			
+			if(object.has("SOH")){
+				KeyValue soh=new KeyValue();
+				soh.setKey("SOH");
+				soh.setValue(object.getDouble("SOH")+0.000000001);
+				valuelist.add(soh);
+				
+			}
+			
 			valuelist.add(temperature);
 			valuelist.add(humidity);
 			
