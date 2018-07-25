@@ -154,7 +154,7 @@ public class PlatformkafkabrokerApplication implements CommandLineRunner  {
 			if(object.has("power")){
 				KeyValue power=new KeyValue();
 				power.setKey("power");
-				power.setValue(object.getDouble("power")+0.000000001);
+				power.setValue(object.getDouble("power"));
 				valuelist.add(power);
 				
 			}
