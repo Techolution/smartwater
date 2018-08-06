@@ -6,13 +6,10 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.stereotype.Component;
-
 
 import com.techolution.smartoffice.adapter.CustomProperties;
 
@@ -71,8 +68,15 @@ public abstract class AbstractMqttCallBack implements MqttCallback {
 		//log.debug("Broker is"+customProperties.getMqttbroker());
 		if(customProperties!=null){
 			mqtt = new MqttAsyncClient(customProperties.getMqttbroker(),customProperties.getMqttclientid());
+			
+			MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
+			
+			if(customProperties.getUserid()!=null){
+				mqttConnectOptions.setUserName(customProperties.getUserid());
+			}
+
 			mqtt.setCallback(this);	
-			IMqttToken token=mqtt.connect();
+			IMqttToken token=mqtt.connect(mqttConnectOptions);
 			//log.debug("Connection to "+customProperties.getMqttbroker()+" completed successfully");
 			mqtt.setCallback(this);
 			while(!token.isComplete()){
