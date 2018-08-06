@@ -22,9 +22,9 @@ custom:
   #mqttbroker: tcp://localhost:1883
   mqttbroker: tcp://52.170.92.62:1883
  # mqtttopic: techo/smartoffice/1
-  mqtttopic: bmstest 
+  mqtttopic: bmstest2 
   roomid: room2
   kafkatopic: bmstest
-  mqttclientid: client1
+  mqttclientid: clientlocal
 
   
