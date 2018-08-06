@@ -8,6 +8,7 @@ logging:
     org.springframework.security: DEBUG
     log4j.logger.org.hibernate.SQL: DEBUG
     com.techolution: DEBUG
+    org.apache.kafka: ERROR
     
 spring:
   kafka:
