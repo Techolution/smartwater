@@ -433,8 +433,8 @@ public class PlatformkafkabrokerApplication implements CommandLineRunner  {
 			
 			
 			List<KeyValue> valuelist=new ArrayList<KeyValue>();
-			valuelist.add(latitidue);
-			valuelist.add(longitude);
+			tagList.add(latitidue);
+			tagList.add(longitude);
 			valuelist.add(distancemoved);
 			
 			sendData("aaassetslocation", tagList, valuelist,dateVal);
