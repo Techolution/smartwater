@@ -7,6 +7,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -95,6 +96,9 @@ public class PlatformkafkabrokerApplication implements CommandLineRunner  {
 	       // latch.countDown();
 	    }
 	 
+	 
+	 
+	 
 	 @KafkaListener(topics = "bmstest")
 	    public void listenBMS(ConsumerRecord<?, ?> cr) throws Exception {
 	        //logger.info(cr.toString());
@@ -168,9 +172,9 @@ public class PlatformkafkabrokerApplication implements CommandLineRunner  {
 	 
 	 
 	 
-	 @KafkaListener(topics = "transmon")
+	// @KafkaListener(topics = "transmon")
 	    public void listenCESC(ConsumerRecord<?, ?> cr) throws Exception {
-	        //logger.info(cr.toString());
+	        logger.info(cr.toString());
 		 String[] profiles=environment.getActiveProfiles();
 		  
 		  if(!profiles[0].contains("cesc")){
@@ -379,6 +383,63 @@ public class PlatformkafkabrokerApplication implements CommandLineRunner  {
 			}
 			
 		}
+	 
+	 @KafkaListener(topics = "aademo" )
+	    public void listenAssetLocation(ConsumerRecord<?, ?> cr) throws Exception {
+	        //logger.info(cr.toString());
+		 
+		  String[] profiles=environment.getActiveProfiles();
+		  
+		 
+		  SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+			String dateVal=myFormat.format(Calendar.getInstance().getTime());
+			logger.info("dateVal is:"+dateVal);
+			
+	        String msgvalue=(String)cr.value();
+	        logger.info("Value is:"+msgvalue);
+	        
+	        JSONObject object=new JSONObject(msgvalue);
+	        
+	        SeriesPointData seriesPointData=new SeriesPointData();
+	        seriesPointData.setName("aaassetslocation");
+			
+			KeyValue tag=new KeyValue();
+			tag.setKey("assetId");
+			tag.setValue((String)object.get("assetid"));
+			
+			List<KeyValue> tagList=new ArrayList<KeyValue>();
+			tagList.add(tag);
+			
+			
+			KeyValue latitidue=new KeyValue();
+			latitidue.setKey("latitude");
+		//	BigDecimal temp = new BigDecimal(object.getDouble("Temperature"));
+			//Float tempval=new Float(object.getDouble("Temperature"));
+			latitidue.setValue(object.getDouble("latitude"));
+			
+			KeyValue longitude=new KeyValue();
+			longitude.setKey("longitude");
+			//BigDecimal humid = new BigDecimal(object.getDouble("humidity"));
+		//	Float humidval=new Float(Math.ceobject.getDouble("humidity"));
+		//	humidval.
+			longitude.setValue(object.getDouble("longitude"));
+			
+			KeyValue distancemoved=new KeyValue();
+			distancemoved.setKey("distancemoved");
+			//BigDecimal humid = new BigDecimal(object.getDouble("humidity"));
+		//	Float humidval=new Float(Math.ceobject.getDouble("humidity"));
+		//	humidval.
+			distancemoved.setValue(object.getDouble("distancemoved"));
+			
+			
+			List<KeyValue> valuelist=new ArrayList<KeyValue>();
+			valuelist.add(latitidue);
+			valuelist.add(longitude);
+			valuelist.add(distancemoved);
+			
+			sendData("aaassetslocation", tagList, valuelist,dateVal);
+	       // latch.countDown();
+	    }
 
 	@Override
 	public void run(String... args) throws Exception {
