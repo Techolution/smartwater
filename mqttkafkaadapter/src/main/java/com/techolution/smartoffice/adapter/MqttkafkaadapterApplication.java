@@ -35,6 +35,10 @@ public class MqttkafkaadapterApplication implements CommandLineRunner{
 	 @Autowired
 	 DefaultMqttCallBack cescMqttCallBack;
 	 
+	 
+	 @Autowired
+	 DefaultMqttCallBack aaMqttCallBack;
+	 
 	 @Autowired
 	 private Environment environment;
 
@@ -54,6 +58,10 @@ public class MqttkafkaadapterApplication implements CommandLineRunner{
 			logger.debug("Registed BMS callback");
 		} else if((environment.getActiveProfiles())[0].contains("cesc")){
 			cescMqttCallBack.connect();
+			logger.debug("Registed cescMqttCallBack callback");
+		}
+		else if((environment.getActiveProfiles())[0].contains("aa")){
+			aaMqttCallBack.connect();
 			logger.debug("Registed cescMqttCallBack callback");
 		}
 		else{
