@@ -10,6 +10,7 @@ logging:
     com.techolution: DEBUG
     org.apache.kafka: ERROR
     
+    
 spring:
   kafka:
     

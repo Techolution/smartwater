@@ -22,13 +22,9 @@ custom:
   #mqttbroker: tcp://localhost:1883
   mqttbroker: tcp://52.170.92.62:1883
  # mqtttopic: techo/smartoffice/1
-  mqtttopic: transmon
-  ##USE THE BELOW TWO FOR PwC endpoint testing form desktop
-  ##mqttbroker: tcp://35.154.236.25:1883
-  ##mqtttopic: v1/devices/me/attributes
-  roomid: room2
-  kafkatopic: transmon
-  mqttclientid: client2
- # userid: abcde123
+  mqtttopic: aademo 
+  #roomid: room2
+  kafkatopic: aademo
+  mqttclientid: clientlocalaa
 
   
