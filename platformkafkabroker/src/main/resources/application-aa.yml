@@ -8,7 +8,6 @@ logging:
     org.springframework.security: DEBUG
     log4j.logger.org.hibernate.SQL: DEBUG
     com.techolution: DEBUG
-    org.apache: ERROR
     
 spring:
   kafka:
@@ -19,6 +18,6 @@ spring:
       - localhost:9092
 
 custom:
-  serviceurl: http://localhost:8100/telemetry/insert/data
+  serviceurl: http://localhost:8099/telemetry/insert/data
 
   
