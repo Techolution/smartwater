@@ -937,6 +937,9 @@ private List<Data> getBatteryResultUsingInfluxAPI(int deviceId, String query, St
     	}else if ("transformer".equalsIgnoreCase(metrics)){
     		returnVal="trans_telemetry_data";
     	}
+    	else if ("aaassetslocation".equalsIgnoreCase(metrics)){
+    		returnVal="asset_location_data";
+    	}
     	return returnVal;
     }
 
