@@ -413,23 +413,18 @@ public class PlatformkafkabrokerApplication implements CommandLineRunner  {
 			
 			tagList.add(tag);
 			
-			if(object.has("latitdue")){
-			KeyValue latitidue=new KeyValue();
-			latitidue.setKey("latitude");
-		//	BigDecimal temp = new BigDecimal(object.getDouble("Temperature"));
-			//Float tempval=new Float(object.getDouble("Temperature"));
-			latitidue.setValue(object.getDouble("latitude"));
-			tagList.add(latitidue);
+			if(object.has("latitude")){
+				KeyValue latitidue=new KeyValue();
+				latitidue.setKey("latitude");
+				latitidue.setValue(object.getDouble("latitude"));
+				tagList.add(latitidue);
 			}
 			if(object.has("longitude")){
 			
-			KeyValue longitude=new KeyValue();
-			longitude.setKey("longitude");
-			//BigDecimal humid = new BigDecimal(object.getDouble("humidity"));
-		//	Float humidval=new Float(Math.ceobject.getDouble("humidity"));
-		//	humidval.
-			longitude.setValue(object.getDouble("longitude"));
-			tagList.add(longitude);
+				KeyValue longitude=new KeyValue();
+				longitude.setKey("longitude");
+				longitude.setValue(object.getDouble("longitude"));
+				tagList.add(longitude);
 			}
 			
 			List<KeyValue> valuelist=new ArrayList<KeyValue>();
