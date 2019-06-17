@@ -404,7 +404,7 @@ public class PlatformkafkabrokerApplication implements CommandLineRunner  {
 	        seriesPointData.setName("aaassetslocation");
 			
 	        List<KeyValue> tagList=new ArrayList<KeyValue>();
-	        
+	        List<KeyValue> valuelist=new ArrayList<KeyValue>();
 	        
 	        KeyValue tag=new KeyValue();
 			tag.setKey("assetId");
@@ -417,17 +417,17 @@ public class PlatformkafkabrokerApplication implements CommandLineRunner  {
 				KeyValue latitidue=new KeyValue();
 				latitidue.setKey("latitude");
 				latitidue.setValue(object.getDouble("latitude"));
-				tagList.add(latitidue);
+				valuelist.add(latitidue);
 			}
 			if(object.has("longitude")){
 			
 				KeyValue longitude=new KeyValue();
 				longitude.setKey("longitude");
 				longitude.setValue(object.getDouble("longitude"));
-				tagList.add(longitude);
+				valuelist.add(longitude);
 			}
 			
-			List<KeyValue> valuelist=new ArrayList<KeyValue>();
+			
 			if(object.has("distancemoved")){
 			KeyValue distancemoved=new KeyValue();
 			distancemoved.setKey("distancemoved");
