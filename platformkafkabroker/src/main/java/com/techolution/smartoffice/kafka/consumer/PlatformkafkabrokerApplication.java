@@ -403,19 +403,25 @@ public class PlatformkafkabrokerApplication implements CommandLineRunner  {
 	        SeriesPointData seriesPointData=new SeriesPointData();
 	        seriesPointData.setName("aaassetslocation");
 			
-			KeyValue tag=new KeyValue();
+	        List<KeyValue> tagList=new ArrayList<KeyValue>();
+	        
+	        
+	        KeyValue tag=new KeyValue();
 			tag.setKey("assetId");
 			tag.setValue((String)object.get("assetid"));
 			
-			List<KeyValue> tagList=new ArrayList<KeyValue>();
+			
 			tagList.add(tag);
 			
-			
+			if(object.has("latitdue")){
 			KeyValue latitidue=new KeyValue();
 			latitidue.setKey("latitude");
 		//	BigDecimal temp = new BigDecimal(object.getDouble("Temperature"));
 			//Float tempval=new Float(object.getDouble("Temperature"));
 			latitidue.setValue(object.getDouble("latitude"));
+			tagList.add(latitidue);
+			}
+			if(object.has("longitude")){
 			
 			KeyValue longitude=new KeyValue();
 			longitude.setKey("longitude");
@@ -423,7 +429,11 @@ public class PlatformkafkabrokerApplication implements CommandLineRunner  {
 		//	Float humidval=new Float(Math.ceobject.getDouble("humidity"));
 		//	humidval.
 			longitude.setValue(object.getDouble("longitude"));
+			tagList.add(longitude);
+			}
 			
+			List<KeyValue> valuelist=new ArrayList<KeyValue>();
+			if(object.has("distancemoved")){
 			KeyValue distancemoved=new KeyValue();
 			distancemoved.setKey("distancemoved");
 			//BigDecimal humid = new BigDecimal(object.getDouble("humidity"));
@@ -431,11 +441,19 @@ public class PlatformkafkabrokerApplication implements CommandLineRunner  {
 		//	humidval.
 			distancemoved.setValue(object.getDouble("distancemoved"));
 			
-			
-			List<KeyValue> valuelist=new ArrayList<KeyValue>();
-			tagList.add(latitidue);
-			tagList.add(longitude);
 			valuelist.add(distancemoved);
+			}
+			
+			if(object.has("status")){
+				KeyValue status=new KeyValue();
+				status.setKey("status");
+				//BigDecimal humid = new BigDecimal(object.getDouble("humidity"));
+			//	Float humidval=new Float(Math.ceobject.getDouble("humidity"));
+			//	humidval.
+				status.setValue(object.getString("distancemoved"));
+				
+				valuelist.add(status);
+				}
 			
 			sendData("aaassetslocation", tagList, valuelist,dateVal);
 	       // latch.countDown();
