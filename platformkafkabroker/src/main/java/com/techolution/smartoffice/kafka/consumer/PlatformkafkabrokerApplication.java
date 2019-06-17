@@ -450,7 +450,7 @@ public class PlatformkafkabrokerApplication implements CommandLineRunner  {
 				//BigDecimal humid = new BigDecimal(object.getDouble("humidity"));
 			//	Float humidval=new Float(Math.ceobject.getDouble("humidity"));
 			//	humidval.
-				status.setValue(object.getString("distancemoved"));
+				status.setValue(object.getString("status"));
 				
 				valuelist.add(status);
 				}
