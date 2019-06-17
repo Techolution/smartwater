@@ -408,22 +408,22 @@ public class PlatformkafkabrokerApplication implements CommandLineRunner  {
 	        
 	        KeyValue tag=new KeyValue();
 			tag.setKey("assetId");
-			tag.setValue((String)object.get("assetid"));
+			tag.setValue((String)object.get("aaid"));
 			
 			
 			tagList.add(tag);
 			
-			if(object.has("latitude")){
+			if(object.has("lat")){
 				KeyValue latitidue=new KeyValue();
 				latitidue.setKey("latitude");
-				latitidue.setValue(object.getDouble("latitude"));
+				latitidue.setValue(object.getDouble("lat"));
 				valuelist.add(latitidue);
 			}
-			if(object.has("longitude")){
+			if(object.has("long")){
 			
 				KeyValue longitude=new KeyValue();
 				longitude.setKey("longitude");
-				longitude.setValue(object.getDouble("longitude"));
+				longitude.setValue(object.getDouble("long"));
 				valuelist.add(longitude);
 			}
 			
