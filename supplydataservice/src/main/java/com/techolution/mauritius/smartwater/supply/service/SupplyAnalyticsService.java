@@ -224,6 +224,7 @@ public Map <Long, MeterConnection> getConnectionsMap() throws UnknownHostExcepti
 		
 		final Map<Long, MeterConnection> connectionMap =  getAllConnections();
 		
+		
 		retList.forEach(meterdata -> {
 			
 			MeterTrendData previousBucketData=previousbucketmap.get(meterdata.getMeterId());

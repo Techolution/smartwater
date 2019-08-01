@@ -1,0 +1,33 @@
+#server:
+#  port: 8090
+
+
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    log4j.logger.org.hibernate.SQL: DEBUG
+    com.techolution: DEBUG
+    org.apache.kafka: ERROR
+    
+    
+spring:
+  kafka:
+    
+    producer:
+      bootstrap-servers:
+      -   localhost:9093
+      
+
+custom:
+ # mqttbroker: tcp://192.168.2.81:1883
+  #mqttbroker: tcp://localhost:1883
+  mqttbroker: tcp://35.154.236.25:1883
+ # mqtttopic: techo/smartoffice/1
+  mqtttopic: v1/devices/me/attributes
+  roomid: room2
+  kafkatopic: transmon
+  mqttclientid: techoclient
+  userid: abcde123
+
+  

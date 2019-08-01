@@ -8,6 +8,12 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "custom")
 public class CustomProperties {
 	
+	public String getUserid() {
+		return userid;
+	}
+	public void setUserid(String userid) {
+		this.userid = userid;
+	}
 	public String getMqttbroker() {
 		return mqttbroker;
 	}
@@ -31,6 +37,8 @@ public class CustomProperties {
 	private String roomid;
 	private String kafkatopic;
 	private String mqttclientid;
+	private String userid;
+	
 	public String getMqttclientid() {
 		return mqttclientid;
 	}

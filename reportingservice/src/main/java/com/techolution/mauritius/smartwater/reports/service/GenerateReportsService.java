@@ -6,8 +6,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -46,11 +48,12 @@ public class GenerateReportsService {
 		}
 	 
 	 
-	 public String generateReport(SupplyStatisticsRequestData data) throws JSONException, IOException{
+	 public String generateReport(SupplyStatisticsRequestData data) throws JSONException, IOException, ParseException{
 		 
 		 	log.info("Entering GenerateReportsService.generateReport ");
 		 	SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
 		 	SimpleDateFormat fileNameFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+		 	log.info("End date is:"+fileNameFormat.format(data.getEndDate()));
 		 	JSONObject json = new JSONObject();
 			json.put("Vendor_ID", 123);
 			json.put("Customer_ID", 123);
@@ -83,7 +86,8 @@ public class GenerateReportsService {
 			StringBuffer filePath=new StringBuffer(customProperties.getCsvpath());
 			filePath.append(fileName);
 			File file=new File(filePath.toString());
-			
+			SimpleDateFormat endFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date cutoffdate=data.getEndDate();
 			
 			Path path = Paths.get(filePath.toString());
 			 
@@ -97,10 +101,17 @@ public class GenerateReportsService {
 			writer.write("Consumption in (m^3))");
 			writer.write(GenerateReportsService.NL);
 			for(Data dataobj:returnedobjects){
-				writer.write((String)dataobj.getName());
-				writer.write(GenerateReportsService.COMMA);
-				writer.write(new Double(dataobj.getValue()).toString());
-				writer.write(GenerateReportsService.NL);
+				String timeReturned=(String)dataobj.getName();
+				//log.debug("Time returned:"+timeReturned);
+				Date returnedDate=endFormat.parse(timeReturned);
+				if(!returnedDate.after(cutoffdate)){
+					writer.write((String)dataobj.getName());
+					writer.write(GenerateReportsService.COMMA);
+					writer.write(new Double(dataobj.getValue()).toString());
+					writer.write(GenerateReportsService.NL);	
+				}
+				///NOT PUTTING END or terminate condition as I do not want to assume that result will be sorted
+				
 			}
 			writer.flush();
 			 writer.close();
@@ -113,7 +124,7 @@ public class GenerateReportsService {
 	 
 	 
 	 
-	 public String generateConsumptionReport(SupplyStatisticsRequestData data) throws JSONException, IOException{
+	 public String generateConsumptionReport(SupplyStatisticsRequestData data) throws JSONException, IOException, ParseException{
 		 
 		 	log.info("Entering GenerateReportsService.generateReport ");
 		 	SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -157,6 +168,8 @@ public class GenerateReportsService {
 				filePath.append(fileName);
 				File file=new File(filePath.toString());
 				
+				SimpleDateFormat endFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				Date cutoffdate=data.getEndDate();
 				
 				Path path = Paths.get(filePath.toString());
 				 
@@ -170,10 +183,14 @@ public class GenerateReportsService {
 				writer.write("Meter Reading");
 				writer.write(GenerateReportsService.NL);
 				for(Data dataobj:returnedobjects){
-					writer.write((String)dataobj.getName());
-					writer.write(GenerateReportsService.COMMA);
-					writer.write(new Double(dataobj.getValue()).toString());
-					writer.write(GenerateReportsService.NL);
+					String timeReturned=(String)dataobj.getName();
+					Date returnedDate=endFormat.parse(timeReturned);
+					if(!returnedDate.after(cutoffdate)){
+						writer.write((String)dataobj.getName());
+						writer.write(GenerateReportsService.COMMA);
+						writer.write(new Double(dataobj.getValue()).toString());
+						writer.write(GenerateReportsService.NL);
+					}
 				}
 				writer.flush();
 				 writer.close();
