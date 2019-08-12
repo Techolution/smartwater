@@ -1,0 +1,55 @@
+server:
+  port: 8091
+
+
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    log4j.logger.org.hibernate.SQL: DEBUG
+    com.techolution: DEBUG
+    
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+  datasource:
+    url: jdbc:mysql://52.170.92.62:3306/mauritius_smartwater
+    username: admin
+    password: admin123
+    driver-class-name: com.mysql.jdbc.Driver
+    tomcat:
+      max-active: 5
+    hikari:
+      maximum-pool-size: 5
+  application:
+    name: reportingservice
+
+    
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+  endpoint:
+    beans:
+      cache:
+        time-to-live: 3600s
+     
+eureka:
+  instance:
+    prefer-ip-address: true
+    ip-address: 52.170.92.62
+
+custom:
+    dataserviceurl: http://techoapigateway.azure-api.net/read/r/GetData
+    readingserviceurl: http://techoapigateway.azure-api.net/instance/data
+    csvpath: /usr/local  
+    storageconnectionstring: DefaultEndpointsProtocol=https;AccountName=techotiotplatformstorage;AccountKey=XmoKg/Col+yWznyXGG/xkSpIOd+bnqbqgsUE/rdDOuerM1jzakXA6FoOuMGdlHfZICq1jXGPMd/ihepmcJlHwQ==
+    filesharename: mauritiussmartwtaer
+    containername: smartwater
