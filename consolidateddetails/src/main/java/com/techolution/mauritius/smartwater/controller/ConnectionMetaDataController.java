@@ -22,7 +22,7 @@ import com.techolution.mauritius.smartwater.service.ConsolidatedDataService;
 
 @CrossOrigin(origins = {"*"})
 @RestController
-@RequestMapping(value="/read")
+@RequestMapping(value="/readconsolidated")
 
 public class ConnectionMetaDataController {
 	
