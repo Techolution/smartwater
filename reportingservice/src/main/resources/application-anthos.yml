@@ -41,10 +41,10 @@ management:
       cache:
         time-to-live: 3600s
      
-eureka:
-  instance:
-    prefer-ip-address: true
-    ip-address: 52.170.92.62
+#eureka:
+ # instance:
+ #   prefer-ip-address: true
+ #   ip-address: 52.170.92.62
 
 custom:
     dataserviceurl: http://techoapigateway.azure-api.net/read/r/GetData
