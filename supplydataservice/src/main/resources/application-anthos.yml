@@ -34,15 +34,15 @@ spring:
       repositories:
         enabled: true
   redis:
-    host: localhost
-    port: 32768
+    host: 52.170.92.62
+    port: 6379
     timeout:
       seconds: 3600
 
-eureka:
-  instance:
-    prefer-ip-address: true
-    ip-address: 52.170.92.62
+#eureka:
+#  instance:
+#    prefer-ip-address: true
+#    ip-address: 52.170.92.62
 
 influx:
     url: http://52.170.92.62:8086

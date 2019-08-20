@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.techolution.mauritius.smartwater.supply.domain.MeterConnection;
 
-@EnableDiscoveryClient
+//@EnableDiscoveryClient
 @SpringBootApplication
 public class SupplydataserviceApplication {
 
