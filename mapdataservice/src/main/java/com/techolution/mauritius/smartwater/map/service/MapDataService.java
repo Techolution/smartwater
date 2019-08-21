@@ -51,7 +51,7 @@ public class MapDataService {
 		log.info("Entering MapDataService.getDataForAllConnections ");
 		
 		
-		ResponseEntity<MeterConnection[]> responseEntity = restTemplate().getForEntity("http://localhost:8082/consolidateddata/connections",MeterConnection[].class);
+		ResponseEntity<MeterConnection[]> responseEntity = restTemplate().getForEntity("http://smartwatergke.techolution.com/consolidateddata/connections",MeterConnection[].class);
 //		List<MeterConnection> availableConnections=restTemplate().getForObject("http://localhost:8082/consolidateddata/connections", ArrayList.class);
 
 		MeterConnection[] returnedobjects = (MeterConnection[])responseEntity.getBody();
