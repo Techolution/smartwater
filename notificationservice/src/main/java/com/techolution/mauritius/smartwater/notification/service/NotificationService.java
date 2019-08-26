@@ -56,6 +56,7 @@ public class NotificationService {
 		JedisConnectionFactory connectionFactory=new JedisConnectionFactory();
 		connectionFactory.setHostName(redisProperties.getHost());
 		connectionFactory.setPort(redisProperties.getPort());
+		connectionFactory.setPassword(redisProperties.getPassword());
 	  return connectionFactory;
 	 }
 	

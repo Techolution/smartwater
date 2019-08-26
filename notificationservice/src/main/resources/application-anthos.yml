@@ -33,8 +33,9 @@ spring:
       repositories:
         enabled: true
   redis:
-    host: 52.170.92.62
+    host: redis
     port: 6379
+    password: redispass
     timeout:
       seconds: 3600
 
