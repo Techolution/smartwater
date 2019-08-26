@@ -1,0 +1,57 @@
+apiVersion: apps/v1beta2
+kind: StatefulSet
+metadata:
+  name: redis
+spec:
+  selector:
+    matchLabels:
+      app: redis  # has to match .spec.template.metadata.labels
+  serviceName: redis
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: redis  # has to match .spec.selector.matchLabels
+    spec:
+      containers:
+        - name: redis
+          image: redis:3.2-alpine
+          imagePullPolicy: Always
+          #args: ["--requirepass", "$(REDIS_PASS)"]
+          args: ["--requirepass", "redispass"]
+          ports:
+            - containerPort: 6379
+              name: redis
+          env:
+          - name: REDIS_PASS
+            valueFrom:
+              secretKeyRef:
+                name: redis-keyvault
+                key: REDIS_PASS
+          volumeMounts:
+            - name: redis-volume
+              mountPath: /data                      
+  volumeClaimTemplates:
+  - metadata:
+      name: redis-volume
+      labels:
+        name: redis
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 200Mi                
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+spec:
+  selector:
+    app: redis
+  ports:
+    - name: redis
+      protocol: TCP
+      port: 6379
+      targetPort: 6379            
+  type: NodePort        

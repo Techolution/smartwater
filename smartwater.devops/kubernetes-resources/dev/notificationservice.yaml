@@ -1,0 +1,37 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+ name: notificationservice
+ labels:
+   run: notificationservice
+spec:
+ replicas: 1
+ strategy:
+  type: RollingUpdate
+  rollingUpdate:
+   maxUnavailable: 0
+   maxSurge: 100%
+ template:
+   metadata:
+     labels:
+       run: notificationservice
+   spec:
+     containers:
+     - name: notificationservice
+       image: gcr.io/synthetic-eon-241312/smartwater/notificationservice:1
+       imagePullPolicy: Always
+           
+---
+kind: Service
+apiVersion: v1
+metadata:
+ name: notificationservice
+spec:
+ selector:
+   run: notificationservice
+ ports:
+   - name: port1
+     protocol: TCP
+     port: 5004
+     targetPort: 8090
+ type: NodePort
