@@ -75,11 +75,11 @@ public class SupplyAnalyticsService {
 	private Log log = LogFactory.getLog(SupplyAnalyticsService.class);
 	
 	
-	@Autowired
+	/*@Autowired
 	RedisProperties redisProperties;
 	
 	@Autowired
-    private RedisAutoConfiguration redisAutoConfiguration;
+    private RedisAutoConfiguration redisAutoConfiguration;*/
 
 	public List<MeterTrendData> getConnectionsAboveDailyBaseline() throws UnknownHostException{
 		
@@ -316,20 +316,21 @@ public Map <Long, MeterConnection> getConnectionsMap() throws UnknownHostExcepti
 	}
 	
 	
-	@Bean
+	/*@Bean
 	 JedisConnectionFactory jedisConnectionFactory() {
 		JedisConnectionFactory connectionFactory=new JedisConnectionFactory();
 		connectionFactory.setHostName(redisProperties.getHost());
 		connectionFactory.setPort(redisProperties.getPort());
 	  return connectionFactory;
-	 }
+	 }*/
 	
   public Map <Long, MeterConnection> getAllConnections() throws UnknownHostException{
 		
 		log.info("Entering SupplyAnalyticsService.getAllConnections ");
 		Map <Long, MeterConnection> map = null;
 		
-		RedisTemplate<Object,Object> template=redisAutoConfiguration.redisTemplate(jedisConnectionFactory());
+		//RedisTemplate<Object,Object> template=redisAutoConfiguration.redisTemplate(jedisConnectionFactory());
+		RedisTemplate<Object,Object> template= null;
 		
 		if(template ==null || template.opsForValue().get("ALL_CONNECTIONS")==null){
 		
@@ -343,7 +344,7 @@ public Map <Long, MeterConnection> getConnectionsMap() throws UnknownHostExcepti
 			}
 			
 			 map = returnList.stream().collect(Collectors.toMap(conn -> conn.getHouse_id(),conn -> conn));	
-			 template.opsForValue().set("ALL_CONNECTIONS", map);
+			 //template.opsForValue().set("ALL_CONNECTIONS", map);
 			
 			
 			
