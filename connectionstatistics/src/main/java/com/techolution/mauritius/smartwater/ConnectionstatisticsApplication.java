@@ -20,7 +20,7 @@ public class ConnectionstatisticsApplication {
 		SpringApplication.run(ConnectionstatisticsApplication.class, args);
 	}
 	
-	@RestController
+	/*@RestController
 	class ServiceInstanceRestController {
 
 	    @Autowired
@@ -31,5 +31,5 @@ public class ConnectionstatisticsApplication {
 	            @PathVariable String applicationName) {
 	        return this.discoveryClient.getInstances(applicationName);
 	    }
-	}
+	}*/
 }
