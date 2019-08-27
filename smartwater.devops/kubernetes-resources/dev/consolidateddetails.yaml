@@ -1,0 +1,37 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+ name: consolidateddetails
+ labels:
+   run: consolidateddetails
+spec:
+ replicas: 1
+ strategy:
+  type: RollingUpdate
+  rollingUpdate:
+   maxUnavailable: 0
+   maxSurge: 100%
+ template:
+   metadata:
+     labels:
+       run: consolidateddetails
+   spec:
+     containers:
+     - name: consolidateddetails
+       image: gcr.io/synthetic-eon-241312/smartwater/consolidateddetails:2
+       imagePullPolicy: Always
+           
+---
+kind: Service
+apiVersion: v1
+metadata:
+ name: consolidateddetails
+spec:
+ selector:
+   run: consolidateddetails
+ ports:
+   - name: port1
+     protocol: TCP
+     port: 5002
+     targetPort: 8082
+ type: NodePort

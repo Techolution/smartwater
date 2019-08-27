@@ -1,0 +1,57 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-resource-dev
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  
+  rules:
+  - host: smartwatergke.techolution.com
+    http:
+      paths:
+      - path: /read
+        backend:
+          serviceName: connectionstatistics
+          servicePort: 5001
+      - path: /insert
+        backend:
+          serviceName: connectionstatistics
+          servicePort: 5001    
+      - path: /telemetry
+        backend:
+          serviceName: connectionstatistics
+          servicePort: 5001              
+      - path: /readconsolidated
+        backend:
+          serviceName: consolidateddetails
+          servicePort: 5002          
+      - path: /consolidateddata
+        backend:
+          serviceName: consolidateddetails
+          servicePort: 5002          
+      - path: /map
+        backend:
+          serviceName: mapdataservice
+          servicePort: 5003
+      - path: /notifications
+        backend:
+          serviceName: notificationservice
+          servicePort: 5004
+      - path: /report
+        backend:
+          serviceName: reportingservice
+          servicePort: 5005      
+      - path: /supply
+        backend:
+          serviceName: supplydataservice
+          servicePort: 5006                
+      - path: /leakage
+        backend:
+          serviceName: supplydataservice
+          servicePort: 5006                          
+      - path: /
+        backend:
+          serviceName: ui
+          servicePort: 4200
