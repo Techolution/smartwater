@@ -51,14 +51,14 @@ public class NotificationService {
 	@Autowired
     private RedisAutoConfiguration redisAutoConfiguration;
 	
-	@Bean
+	/*@Bean
 	 JedisConnectionFactory jedisConnectionFactory() {
 		JedisConnectionFactory connectionFactory=new JedisConnectionFactory();
 		connectionFactory.setHostName(redisProperties.getHost());
 		connectionFactory.setPort(redisProperties.getPort());
 		connectionFactory.setPassword(redisProperties.getPassword());
 	  return connectionFactory;
-	 }
+	 }*/
 	
 	public List<NotificationDetails> getAllOpenNotifcations(){
 		
@@ -160,7 +160,8 @@ public class NotificationService {
   
   private List<MeterConnection> getFromRedis() throws UnknownHostException {
 		List<MeterConnection> connections;
-		RedisTemplate<Object,Object> template=redisAutoConfiguration.redisTemplate(jedisConnectionFactory());
+		//RedisTemplate<Object,Object> template=redisAutoConfiguration.redisTemplate(jedisConnectionFactory());
+		RedisTemplate<Object,Object> template=null;
 		
 		if(template ==null || template.opsForValue().get("ALL_CONNECTIONS_LIST_NOTIFICATION")==null){
 		
