@@ -13,16 +13,16 @@ docker run -it gcr.io/synthetic-eon-241312/smartwater/consolidateddetails:3
 kubectl -n dev set image deployment consolidateddetails consolidateddetails=gcr.io/synthetic-eon-241312/smartwater/consolidateddetails:3
 
 ## docker command for mapdataservice micro-service
-docker build --file Dockerfile --tag gcr.io/synthetic-eon-241312/smartwater/mapdataservice:2 .
-docker push gcr.io/synthetic-eon-241312/smartwater/mapdataservice:2
-docker run -it gcr.io/synthetic-eon-241312/smartwater/mapdataservice:2
-kubectl -n dev set image deployment mapdataservice mapdataservice=gcr.io/synthetic-eon-241312/smartwater/mapdataservice:2
+docker build --file Dockerfile --tag gcr.io/synthetic-eon-241312/smartwater/mapdataservice:3 .
+docker push gcr.io/synthetic-eon-241312/smartwater/mapdataservice:3
+docker run -it gcr.io/synthetic-eon-241312/smartwater/mapdataservice:3
+kubectl -n dev set image deployment mapdataservice mapdataservice=gcr.io/synthetic-eon-241312/smartwater/mapdataservice:3
 
 ## docker command for notificationservice micro-service
-docker build --file Dockerfile --tag gcr.io/synthetic-eon-241312/smartwater/notificationservice:2 .
-docker push gcr.io/synthetic-eon-241312/smartwater/notificationservice:2
-docker run -it gcr.io/synthetic-eon-241312/smartwater/notificationservice:2
-kubectl -n dev set image deployment notificationservice notificationservice=gcr.io/synthetic-eon-241312/smartwater/notificationservice:2
+docker build --file Dockerfile --tag gcr.io/synthetic-eon-241312/smartwater/notificationservice:3 .
+docker push gcr.io/synthetic-eon-241312/smartwater/notificationservice:3
+docker run -it gcr.io/synthetic-eon-241312/smartwater/notificationservice:3
+kubectl -n dev set image deployment notificationservice notificationservice=gcr.io/synthetic-eon-241312/smartwater/notificationservice:3
 
 ## docker command for reportingservice micro-service
 docker build --file Dockerfile --tag gcr.io/synthetic-eon-241312/smartwater/reportingservice:1 .
