@@ -23,7 +23,7 @@ public class ConsolidateddetailsApplication {
 	}
 	
 	
-	@RestController
+	/*@RestController
 	class ServiceInstanceRestController {
 
 	    @Autowired
@@ -34,5 +34,5 @@ public class ConsolidateddetailsApplication {
 	            @PathVariable String applicationName) {
 	        return this.discoveryClient.getInstances(applicationName);
 	    }
-	}
+	}*/
 }

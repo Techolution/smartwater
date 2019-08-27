@@ -56,19 +56,19 @@ public class ConsolidatedDataService {
 	//private static List<MeterConnection> connections=null;
 	//private 
 	
-	@Autowired
-	RedisProperties redisProperties;
+	/*@Autowired
+	RedisProperties redisProperties;*/
 	
-	@Autowired
-    private RedisAutoConfiguration redisAutoConfiguration;
+	/*@Autowired
+    private RedisAutoConfiguration redisAutoConfiguration;*/
 	
-	@Bean
+	/*@Bean
 	 JedisConnectionFactory jedisConnectionFactory() {
 		JedisConnectionFactory connectionFactory=new JedisConnectionFactory();
 		connectionFactory.setHostName(redisProperties.getHost());
 		connectionFactory.setPort(redisProperties.getPort());
 	  return connectionFactory;
-	 }
+	 }*/
 	
 	public List<MeterConnection> getAllConnections() throws UnknownHostException{
 		
@@ -102,7 +102,8 @@ public class ConsolidatedDataService {
 
 	private List<MeterConnection> getFromRedis() throws UnknownHostException {
 		List<MeterConnection> connections;
-		RedisTemplate<Object,Object> template=redisAutoConfiguration.redisTemplate(jedisConnectionFactory());
+		//RedisTemplate<Object,Object> template=redisAutoConfiguration.redisTemplate(jedisConnectionFactory());
+		RedisTemplate<Object,Object> template=null;
 		
 		if(template ==null || template.opsForValue().get("ALL_CONNECTIONS_LIST")==null){
 		
@@ -116,7 +117,7 @@ public class ConsolidatedDataService {
 			}
 			
 			
-			 template.opsForValue().set("ALL_CONNECTIONS_LIST", connections);
+			 //template.opsForValue().set("ALL_CONNECTIONS_LIST", connections);
 			
 			
 			
