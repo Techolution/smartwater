@@ -26,4 +26,4 @@ target/
 
 test/*
 
-service-accounts/*
+smartwater.devops/service-accounts/*
