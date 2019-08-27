@@ -48,6 +48,7 @@ public class NotificationService {
 	@Autowired
 	RedisProperties redisProperties;
 	
+	
 	@Autowired
     private RedisAutoConfiguration redisAutoConfiguration;
 	
