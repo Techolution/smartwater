@@ -176,7 +176,7 @@ public class NotificationService {
 			}
 			
 			
-			 template.opsForValue().set("ALL_CONNECTIONS_LIST_NOTIFICATION", connections);
+			 //template.opsForValue().set("ALL_CONNECTIONS_LIST_NOTIFICATION", connections);
 			
 			
 			

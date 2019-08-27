@@ -39,7 +39,3 @@ spring:
     timeout:
       seconds: 3600
 
-#eureka:
-#  instance:
-#    prefer-ip-address: true
-#    ip-address: 52.170.92.62
