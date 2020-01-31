@@ -27,3 +27,5 @@ target/
 test/*
 
 smartwater.devops/service-accounts/*
+
+.DS_Store
