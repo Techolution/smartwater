@@ -23,7 +23,7 @@ public class InfluxDBUtils {
 	@Autowired
     InfluxProperties influxProperties;
 	
-	//private static String INFLUX_CONNECTION_STRING="http://52.170.92.62:8086";
+	//private static String INFLUX_CONNECTION_STRING="http://34.66.131.198:8086";
 	/*private static String INFLUX_USERNAME="root";
 	private static String INFLUX_PWD="root";*/
 	

@@ -38,7 +38,7 @@ import com.techolution.mauritius.smartwater.repository.ConnectionDetailsReposito
 public class ConsolidatedDataService {
 	private Log log = LogFactory.getLog(ConsolidatedDataService.class);
 	
-	/*private static String influxProperties.getUrl()="http://52.170.92.62:8086";
+	/*private static String influxProperties.getUrl()="http://34.66.131.198:8086";
 	private static String influxProperties.getUsername()="root";
 	private static StringinfluxProperties.getPassword()="root"; 
 	

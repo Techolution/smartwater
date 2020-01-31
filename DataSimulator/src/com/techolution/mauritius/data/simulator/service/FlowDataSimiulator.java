@@ -27,7 +27,7 @@ import com.techolution.mauritus.data.Telemetry;
 public class FlowDataSimiulator implements IStubData {
 
 	
-	private static String INFLUX_CONNECTION_STRING="http://52.170.92.62:8086";
+	private static String INFLUX_CONNECTION_STRING="http://34.66.131.198:8086";
 	private static String INFLUX_USERNAME="root";
 	private static String INFLUX_PWD="root"; 
 	Logger log=Logger.getLogger(FlowDataSimiulator.class.getName());
@@ -140,7 +140,7 @@ public class FlowDataSimiulator implements IStubData {
 		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 
 		try {
-		    HttpPost request = new HttpPost("http://localhost:8085/insert/telemetry/data/"+telemetry.getMeter_id());
+		    HttpPost request = new HttpPost("http://smartwatergke.techolution.com/insert/telemetry/data/"+telemetry.getMeter_id());
 		    StringEntity params = new StringEntity(json.toString());
 		    request.addHeader("content-type", "application/json");
 		    request.setEntity(params);
