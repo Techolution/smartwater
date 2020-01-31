@@ -29,3 +29,4 @@ test/*
 smartwater.devops/service-accounts/*
 
 .DS_Store
+smartwater.anthos.devops/*
