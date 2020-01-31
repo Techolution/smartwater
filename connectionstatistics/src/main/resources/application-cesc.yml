@@ -33,7 +33,7 @@ spring:
 
   
 influx:
-    url: http://52.170.92.62:8086
+    url: http://34.66.131.198:8086
     username: root
     password: root
     dbname: cesc_qa

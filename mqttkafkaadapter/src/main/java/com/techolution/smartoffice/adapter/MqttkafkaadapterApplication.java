@@ -65,7 +65,7 @@ public class MqttkafkaadapterApplication implements CommandLineRunner{
 			logger.debug("Registed cescMqttCallBack callback");
 		}
 		else{
-			smartOfficeMqttCallBack.connect();	
+			bmsMqttCallBack.connect();	
 			logger.debug("Registed smartoffice callback");
 		}
 		

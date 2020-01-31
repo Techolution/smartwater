@@ -18,7 +18,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5Dialect
   datasource:
-    url: jdbc:mysql://52.170.92.62:3306/mauritius_smartwater
+    url: jdbc:mysql://34.69.181.108:3306/mauritius_smartwater
     username: admin
     password: admin123
     driver-class-name: com.mysql.jdbc.Driver
@@ -45,7 +45,7 @@ spring:
 #    ip-address: 52.170.92.62      
       
 influx:
-    url: http://52.170.92.62:8086
+    url: http://34.66.131.198:8086
     username: root
     password: root
     dbname: mauritius_smartwater_uat

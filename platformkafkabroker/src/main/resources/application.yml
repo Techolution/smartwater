@@ -17,7 +17,8 @@ spring:
       bootstrap-servers:
       - localhost:9092
 
-custom:
-  serviceurl: http://localhost:8095/telemetry/insert/data
+
+   
+  
 
   
