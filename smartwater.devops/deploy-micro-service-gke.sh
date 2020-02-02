@@ -6,7 +6,7 @@ notificationserviceDirectoryPath=$directoryBasePath/notificationservice
 reportingserviceDirectoryPath=$directoryBasePath/reportingservice
 supplydataserviceDirectoryPath=$directoryBasePath/supplydataservice
 
-imageTagVersion=9
+imageTagVersion=11
 
 cd $connectionstatisticsDirectoryPath
 mvn clean
