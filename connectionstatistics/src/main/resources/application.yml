@@ -30,10 +30,7 @@ spring:
   application:
     name: connectionstatisticsservice
 
-eureka:
-  instance:
-    prefer-ip-address: true
-    ip-address: 0.0.0.0    
+  
     
 influx:
     url: http://34.66.131.198:8086

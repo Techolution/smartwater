@@ -3,7 +3,6 @@ package com.techolution.mauritius.smartwater.reports;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-//@EnableDiscoveryClient
 @SpringBootApplication
 public class ReportingserviceApplication {
 
