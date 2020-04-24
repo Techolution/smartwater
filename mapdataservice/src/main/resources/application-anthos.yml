@@ -19,8 +19,8 @@ spring:
         dialect: org.hibernate.dialect.MySQL5Dialect
   datasource:
     url: jdbc:mysql://10.26.0.3:3306/mauritius_smartwater
-    username: admin
-    password: admin123
+    username: root
+    password: vw4KKihsxx5llowj
     driver-class-name: com.mysql.jdbc.Driver
     tomcat:
       max-active: 5
