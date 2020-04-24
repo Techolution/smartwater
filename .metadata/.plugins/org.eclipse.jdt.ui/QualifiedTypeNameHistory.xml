@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="com.techolution.mauritius.data.simulator.service.MeterOffDataSimulator"/>
-<fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.supply.domain.SupplyStatisticsRequestData"/>
-<fullyQualifiedTypeName name="org.influxdb.dto.QueryResult.Result"/>
-<fullyQualifiedTypeName name="java.util.HashMap"/>
 <fullyQualifiedTypeName name="java.util.Map"/>
 <fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.supply.domain.DailyWaterSupplyData"/>
 <fullyQualifiedTypeName name="java.util.Collection"/>
@@ -38,7 +34,6 @@
 <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.ResponseBody"/>
 <fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.reports.domain.ReportData"/>
 <fullyQualifiedTypeName name="com.techolution.mauritius.smartwater.reports.domain.TelemetryResponseData"/>
-<fullyQualifiedTypeName name="java.util.Date"/>
 <fullyQualifiedTypeName name="java.text.SimpleDateFormat"/>
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="org.influxdb.dto.QueryResult.Series"/>
@@ -57,7 +52,12 @@
 <fullyQualifiedTypeName name="java.lang.Override"/>
 <fullyQualifiedTypeName name="org.springframework.stereotype.Component"/>
 <fullyQualifiedTypeName name="com.techolution.smartoffice.adapter.CustomProperties"/>
-<fullyQualifiedTypeName name="org.springframework.beans.factory.annotation.Autowired"/>
 <fullyQualifiedTypeName name="com.techolution.smartoffice.adapter.callback.SmartOfficeMqttCallBack"/>
 <fullyQualifiedTypeName name="org.eclipse.paho.client.mqttv3.IMqttToken"/>
+<fullyQualifiedTypeName name="org.springframework.data.redis.core.RedisTemplate"/>
+<fullyQualifiedTypeName name="org.springframework.beans.factory.annotation.Autowired"/>
+<fullyQualifiedTypeName name="org.springframework.boot.autoconfigure.data.redis.RedisProperties"/>
+<fullyQualifiedTypeName name="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"/>
+<fullyQualifiedTypeName name="java.sql.Date"/>
+<fullyQualifiedTypeName name="java.util.Date"/>
 </qualifiedTypeNameHistroy>

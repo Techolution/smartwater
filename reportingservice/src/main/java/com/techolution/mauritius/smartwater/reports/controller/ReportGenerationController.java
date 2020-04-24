@@ -1,6 +1,7 @@
 package com.techolution.mauritius.smartwater.reports.controller;
 
 import java.io.IOException;
+import java.text.ParseException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -27,13 +28,14 @@ public class ReportGenerationController {
 	GenerateReportsService service;
 	
 	@PostMapping("/consumption/hourly")
-	public @ResponseBody  ReportData getHourlyConsumptionReport(@RequestBody SupplyStatisticsRequestData data) throws JSONException 	
+	public @ResponseBody  ReportData getHourlyConsumptionReport(@RequestBody SupplyStatisticsRequestData data) throws JSONException, ParseException 	
 	{
 		log.info("Entering ReportGenerationController.getHourlyConsumptionReport");
 		
 		String filePath=null;
 		ReportData reportData=new ReportData();
 		try {
+			
 			filePath = service.generateReport(data);
 			log.debug("filePath obtained is:"+filePath);
 			reportData.setReportPath(filePath);
@@ -49,7 +51,7 @@ public class ReportGenerationController {
 	}
 	
 	@PostMapping("/readings/hourly")
-	public @ResponseBody  ReportData getHourlyRedingsReport(@RequestBody SupplyStatisticsRequestData data) throws JSONException 	
+	public @ResponseBody  ReportData getHourlyRedingsReport(@RequestBody SupplyStatisticsRequestData data) throws JSONException, ParseException 	
 	{
 		log.info("Entering ReportGenerationController.getHourlyConsumptionReport");
 		
