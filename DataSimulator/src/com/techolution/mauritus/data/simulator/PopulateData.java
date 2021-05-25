@@ -19,6 +19,13 @@ public class PopulateData {
 		String endtime=args[3];
 		String sleeptime=args[4];
 		String incrementtime=args[5];
+		System.out.println("KPI**:"+kpi);
+		System.out.println("meterid**:"+meterid);
+		System.out.println("starttime**:"+starttime);
+		System.out.println("endtime**:"+endtime);
+		System.out.println("sleeptime**:"+sleeptime);
+		System.out.println("incrementtime**:"+incrementtime);
+		
 		
 		int meter=Integer.valueOf(meterid).intValue();
 		long sleepval=Long.valueOf(sleeptime).longValue();

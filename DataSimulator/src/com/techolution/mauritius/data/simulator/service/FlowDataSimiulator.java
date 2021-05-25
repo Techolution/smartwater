@@ -27,7 +27,7 @@ import com.techolution.mauritus.data.Telemetry;
 public class FlowDataSimiulator implements IStubData {
 
 	
-	private static String INFLUX_CONNECTION_STRING="http://52.170.92.62:8086";
+	private static String INFLUX_CONNECTION_STRING="http://10.128.0.12:8086";
 	private static String INFLUX_USERNAME="root";
 	private static String INFLUX_PWD="root"; 
 	Logger log=Logger.getLogger(FlowDataSimiulator.class.getName());
