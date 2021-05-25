@@ -18,7 +18,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5Dialect
   datasource:
-    url: jdbc:mysql://localhost:3306/mauritius_smartwater
+    url: jdbc:mysql://10.128.0.12:3306/mauritius_smartwater?&useSSL=false
     username: admin
     password: admin123
     driver-class-name: com.mysql.jdbc.Driver
@@ -33,7 +33,7 @@ spring:
       repositories:
         enabled: true
   redis:
-    host: localhost
+    host: 10.128.0.12
     port: 32768
     timeout:
       seconds: 3600
