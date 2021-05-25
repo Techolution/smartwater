@@ -18,7 +18,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5Dialect
   datasource:
-    url: jdbc:mysql://52.170.92.62:3306/mauritius_smartwater
+    url: jdbc:mysql://10.128.0.12:3306/mauritius_smartwater?&useSSL=false
     username: admin
     password: admin123
     driver-class-name: com.mysql.jdbc.Driver
@@ -47,8 +47,8 @@ eureka:
     ip-address: 127.0.0.1
 
 custom:
-    dataserviceurl: http://techoapigateway.azure-api.net/read/r/GetData
-    readingserviceurl: http://techoapigateway.azure-api.net/instance/data
+    dataserviceurl: http://10.128.0.12/read/r/GetData
+    readingserviceurl: http://10.128.0.12/instance/data
     csvpath: /usr/local  
     storageconnectionstring: DefaultEndpointsProtocol=https;AccountName=techotiotplatformstorage;AccountKey=XmoKg/Col+yWznyXGG/xkSpIOd+bnqbqgsUE/rdDOuerM1jzakXA6FoOuMGdlHfZICq1jXGPMd/ihepmcJlHwQ==
     filesharename: mauritiussmartwtaer
