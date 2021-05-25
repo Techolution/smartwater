@@ -34,7 +34,7 @@ spring:
         enabled: true
   redis:
     host: 10.128.0.12
-    port: 32768
+    port: 6379
     timeout:
       seconds: 3600
 
