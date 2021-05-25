@@ -10,8 +10,6 @@ logging:
     com.techolution: DEBUG
     
 spring:
-  profiles:
-    active: container
   jpa:
     show-sql: true
     hibernate:
@@ -20,7 +18,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5Dialect
   datasource:
-    url: jdbc:mysql://localhost:3306/mauritius_smartwater
+    url: jdbc:mysql://10.128.0.12:3306/mauritius_smartwater?&useSSL=false
     username: admin
     password: admin123
     driver-class-name: com.mysql.jdbc.Driver
@@ -33,7 +31,7 @@ spring:
       
       
 influx:
-    url: http://52.170.92.62:8086
+    url: http://10.128.0.12:8086
     username: root
     password: root
     dbname: mauritius_smartwater_uat
