@@ -10,6 +10,9 @@ logging:
     com.techolution: DEBUG
     
 spring:
+  profiles:
+    active: container
+
   jpa:
     show-sql: true
     hibernate:
