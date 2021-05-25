@@ -29,7 +29,7 @@ public class PopulateData {
 		
 		int meter=Integer.valueOf(meterid).intValue();
 		long sleepval=Long.valueOf(sleeptime).longValue();
-		int incrementval=Integer.valueOf(incrementtime).intValue();
+		int incrementval=Integer.valueOf(incrementtime.trim()).intValue();
 		
 		
 		IStubData data=null;
