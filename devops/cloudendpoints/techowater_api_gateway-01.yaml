@@ -8,9 +8,9 @@
     - https
   produces:
     - application/json
-  
+
   paths:
-  ###ConnectionStatistics### 
+  ###ConnectionStatistics###
     /insert/telemetry/data/{meter_id} :
        post:
         summary: Insert data
@@ -19,11 +19,11 @@
           - in:   path
             name: meter_id
             type: string
-            required: true  
+            required: true
         x-google-backend:
           address: http://34.72.73.97:8085
           path_translation: APPEND_PATH_TO_ADDRESS
-          protocol: h2
+          protocol: http/1.1
         responses:
           '200':
             description: A successful response
@@ -42,12 +42,12 @@
         x-google-backend:
           address: http://34.72.73.97:8085
           path_translation: APPEND_PATH_TO_ADDRESS
-          protocol: h2
+          protocol: http/1.1
         responses:
           '200':
             description: A successful response
             schema:
-              type: string       
+              type: string
 
     /read/daily/data/{meter_id} :
        get:
@@ -57,17 +57,17 @@
           - in: path
             name: meter_id
             type: string
-            required: true  
+            required: true
         x-google-backend:
           address: http://34.72.73.97:8085
           path_translation: APPEND_PATH_TO_ADDRESS
-          protocol: h2
+          protocol: http/1.1
         responses:
           '200':
             description: A successful response
             schema:
               type: string
-    
+
     /read/average/monthlycosnsumption/{meterId} :
        get:
         summary: monthly data
@@ -76,11 +76,11 @@
           - in: path
             name: meterId
             type: string
-            required: true  
+            required: true
         x-google-backend:
           address: http://34.72.73.97:8085
           path_translation: APPEND_PATH_TO_ADDRESS
-          protocol: h2
+          protocol: http/1.1
         responses:
           '200':
             description: A successful response
@@ -99,14 +99,14 @@
         x-google-backend:
           address: http://34.72.73.97:8085
           path_translation: APPEND_PATH_TO_ADDRESS
-          protocol: h2
+          protocol: http/1.1
         responses:
           '200':
             description: A successful response
             schema:
               type: string
 
-   ###ConsolidatedDetails###       
+   ###ConsolidatedDetails###
     /read/r/HList :
       post:
         summary: Consolidated-Details
@@ -114,7 +114,7 @@
         x-google-backend:
           address: http://34.72.73.97:8082
           path_translation: APPEND_PATH_TO_ADDRESS
-          protocol: h2
+          protocol: http/1.1
         responses:
           '200':
             description: A successful response
@@ -128,7 +128,7 @@
         x-google-backend:
           address: http://34.72.73.97:8082
           path_translation: APPEND_PATH_TO_ADDRESS
-          protocol: h2
+          protocol: http/1.1
         responses:
           '200':
             description: A successful response
@@ -151,7 +151,7 @@
         x-google-backend:
           address: http://34.72.73.97:8082
           path_translation: APPEND_PATH_TO_ADDRESS
-          protocol: h2
+          protocol: http/1.1
         responses:
           '200':
             description: A successful response
@@ -167,7 +167,7 @@
         x-google-backend:
           address: http://34.72.73.97:8084
           path_translation: APPEND_PATH_TO_ADDRESS
-          protocol: h2
+          protocol: http/1.1
         responses:
           '200':
             description: A successful response
@@ -183,7 +183,7 @@
         x-google-backend:
           address: http://34.72.73.97:8090
           path_translation: APPEND_PATH_TO_ADDRESS
-          protocol: h2
+          protocol: http/1.1
         responses:
           '200':
             description: A successful response
@@ -197,7 +197,7 @@
         x-google-backend:
           address: http://34.72.73.97:8090
           path_translation: APPEND_PATH_TO_ADDRESS
-          protocol: h2
+          protocol: http/1.1
         responses:
           '200':
             description: A successful response
@@ -222,7 +222,7 @@
         x-google-backend:
           address: http://34.72.73.97:8091
           path_translation: APPEND_PATH_TO_ADDRESS
-          protocol: h2
+          protocol: http/1.1
         responses:
           '200':
             description: A successful response
@@ -243,7 +243,7 @@
         x-google-backend:
           address: http://34.72.73.97:8088
           path_translation: APPEND_PATH_TO_ADDRESS
-          protocol: h2
+          protocol: http/1.1
         responses:
           '200':
             description: A successful response
@@ -263,7 +263,7 @@
         x-google-backend:
           address: http://34.72.73.97:8088
           path_translation: APPEND_PATH_TO_ADDRESS
-          protocol: h2
+          protocol: http/1.1
         responses:
           '200':
             description: A successful response
@@ -282,7 +282,7 @@
         x-google-backend:
           address: http://34.72.73.97:8088
           path_translation: APPEND_PATH_TO_ADDRESS
-          protocol: h2
+          protocol: http/1.1
         responses:
           '200':
             description: A successful response
@@ -296,16 +296,16 @@
         x-google-backend:
           address: http://34.72.73.97:8088
           path_translation: APPEND_PATH_TO_ADDRESS
-          protocol: h2
+          protocol: http/1.1
         responses:
           '200':
             description: A successful response
             schema:
               type: string
-   
-              
+
+
     #######Techowater-Dashboard-Ui#####
-    
+
     /dashboard :
       get:
         summary: Smart-dashboard
@@ -313,7 +313,7 @@
         x-google-backend:
           address: http://34.72.73.97:4200
           path_translation: APPEND_PATH_TO_ADDRESS
-          protocol: h2
+          protocol: http/1.1
         responses:
           '200':
             description: A successful response
@@ -327,14 +327,14 @@
         x-google-backend:
           address: http://34.72.73.97:4200
           path_translation: APPEND_PATH_TO_ADDRESS
-          protocol: h2
+          protocol: http/1.1
         responses:
           '200':
             description: A successful response
             schema:
               type: string
-    
-  
+
+
     / :
       get:
         summary: Smart-dashboard
@@ -342,15 +342,15 @@
         x-google-backend:
           address: http://34.72.73.97:4200
           path_translation: APPEND_PATH_TO_ADDRESS
-          protocol: h2
+          protocol: http/1.1
         responses:
           '200':
             description: A successful response
             schema:
-              type: string                                
-              
-   
-    
+              type: string
+
+
+
     /{filename}:
       get:
         summary: Smart-dashboard
@@ -359,13 +359,13 @@
           - in: path
             name: filename
             type: string
-            required: true  
-        produces: 
-              - text/javascript 
+            required: true
+        produces:
+              - text/javascript
         x-google-backend:
           address: http://34.72.73.97:4200
           path_translation: APPEND_PATH_TO_ADDRESS
-          protocol: h2
+          protocol: http/1.1
         responses:
           '200':
             description: A successful response
