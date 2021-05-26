@@ -320,6 +320,30 @@
             schema:
               type: string
 
+    /detail/{metrics}/{meterid} :
+      get:
+        summary: DetailsPage
+        operationId: DetailsPage
+        parameters:
+          - in: path
+            name: metrics
+            type: string
+            required: true
+          - in: path
+            name: meterid
+            type: string
+            required: true
+          
+        x-google-backend:
+          address: http://34.72.73.97:4200
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: http/1.1
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string
+
     /map :
       get:
         summary: Smart-dashboard
@@ -362,6 +386,27 @@
             required: true
         produces:
               - text/javascript
+        x-google-backend:
+          address: http://34.72.73.97:4200
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: http/1.1
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: file
+
+    /assets/images/{filename}:
+      get:
+        summary: UIAssetsImages
+        operationId: UIAssetsImages
+        parameters:
+          - in: path
+            name: filename
+            type: string
+            required: true  
+        produces: 
+              - image/* 
         x-google-backend:
           address: http://34.72.73.97:4200
           path_translation: APPEND_PATH_TO_ADDRESS
