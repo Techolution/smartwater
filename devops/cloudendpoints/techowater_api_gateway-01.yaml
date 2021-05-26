@@ -1,0 +1,612 @@
+  swagger: '2.0'
+  info:
+    title: TechowaterAPIGateway
+    description: TechowaterAPIGateway-Cloud-Run-With-Endpoint
+    version: 1.0.0
+  host:  smartcityapigateway-7afem2dl7a-de.a.run.app
+  schemes:
+    - https
+  produces:
+    - application/json
+  
+  paths:
+  ###Smart-Analytics-paths### 
+
+    /{filename}:
+      get:
+        summary: Smart-dashboard
+        operationId: Smart-Dashobard-02
+        parameters:
+          - in: path
+            name: filename
+            type: string
+            required: true  
+        produces: 
+              - text/javascript 
+        x-google-backend:
+          address: https://smartcity-dashboard-7afem2dl7a-de.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: file
+    
+    /predictLeak :
+       post:
+        summary: Smart-Analytics
+        operationId: Smart-Analytics-01   
+        x-google-backend:
+          address: https://smart-water-analytics-v2-7afem2dl7a-de.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string    
+   ###Smart-Transformer-Paths###       
+    /transformer/data/transformerOverSites :
+      get:
+        summary: Smart-Transformer
+        operationId: Smart-Transformer-01
+        x-google-backend:
+          address: https://smart-transformer-web-app-7afem2dl7a-uc.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string
+    /transformer/data/transformerAlertsSites :
+      get:
+        summary: Smart-Transformer
+        operationId: Smart-Transformer-02
+        x-google-backend:
+          address: https://smart-transformer-web-app-7afem2dl7a-uc.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string
+    /transformer/data/transformerStatus :
+      get:
+        summary: Smart-Transformer
+        operationId: Smart-Transformer-03
+        x-google-backend:
+          address: https://smart-transformer-web-app-7afem2dl7a-uc.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string
+    /transformer/data/electricParams/undefined :
+      get:
+        summary: Smart-Transformer
+        operationId: Smart-Transformer-04
+        x-google-backend:
+          address: https://smart-transformer-web-app-7afem2dl7a-uc.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string  
+    /transformer/data/hardwareDetails :
+      get:
+        summary: Smart-Transformer
+        operationId: Smart-Transformer-05
+        x-google-backend:
+          address: https://smart-transformer-web-app-7afem2dl7a-uc.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string      
+           
+    /transformer/{resource}/{kpi}/{resourceid} : 
+      get: 
+        operationId: Smart-Transformer-06
+        parameters: 
+           - in: path
+             name: resource
+             required: true
+             type: string
+           - in: path
+             name: kpi
+             required: true
+             type: string
+           - in: path
+             name: resourceid
+             required: true
+             type: string
+        x-google-backend: 
+          address: "https://smart-transformer-web-app-7afem2dl7a-uc.a.run.app"
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2     
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string     
+        
+        
+    ###Smart-Meter-Paths###        
+    /smartmeter/energy/totalEnergyDistributionHistory :
+      get:
+        summary: Smart-Meter
+        operationId: Smart-Meter-01
+        x-google-backend:
+          address: https://python-energy-meter-readings-7afem2dl7a-de.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string           
+    /smartmeter/energy/totalEnergyConsumption :
+      get:
+        summary: Smart-Meter
+        operationId: Smart-Meter-02
+        x-google-backend:
+          address: https://python-energy-meter-readings-7afem2dl7a-de.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string           
+    /smartmeter/energy/totalEnergyUsageDetail :
+      get:
+        summary: Smart-Meter
+        operationId: Smart-Meter-03
+        x-google-backend:
+          address: https://python-energy-meter-readings-7afem2dl7a-de.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string           
+    /smartmeter/energy/meterReadings :
+      get:
+        summary: Smart-Meter
+        operationId: Smart-Meter-04
+        x-google-backend:
+          address: https://python-energy-meter-readings-7afem2dl7a-de.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string           
+    /smartmeter/energy/meterValuesForSite :
+      get:
+        summary: Smart-Meter
+        operationId: Smart-Meter-05
+        x-google-backend:
+          address: https://python-energy-meter-readings-7afem2dl7a-de.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string           
+    /smartmeter/data/siteDetails :
+      get:
+        summary: Smart-Meter
+        operationId: Smart-Meter-06
+        x-google-backend:
+          address: https://smart-meter-web-app-7afem2dl7a-uc.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string           
+    /smartmeter/data/airQualityHistory :
+      get:
+        summary: Smart-Meter
+        operationId: Smart-Meter-07
+        x-google-backend:
+          address: https://smart-meter-web-app-7afem2dl7a-uc.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string           
+    
+    /smartmeter/data/historicalData :
+      get:
+        summary: Smart-Meter
+        operationId: Smart-Meter-08
+        x-google-backend:
+          address: https://python-historical-data-service-7afem2dl7a-de.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string  
+
+    /smartmeter/data/leakage :
+      get:
+        summary: Smart-Meter
+        operationId: Smart-Meter-09
+        x-google-backend:
+          address: https://smartcity-python-water-energy-history-7afem2dl7a-de.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string   
+
+    /smartmeter/data/lastValues :
+      get:
+        summary: Smart-Meter
+        operationId: Smart-Meter-10
+        x-google-backend:
+          address: https://smartcity-python-smartmeterdata-7afem2dl7a-de.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string        
+    /smartmeter/{resource}/{kpi} :
+      get:
+        summary: Smart-Meter
+        operationId: Smart-Meter-11
+        parameters:
+          - in: path
+            name: resource
+            type: string
+            required: true
+          - in: path
+            name: kpi
+            type: string
+            required: true
+        x-google-backend:
+          address: https://smartcity-python-water-energy-history-7afem2dl7a-de.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2    
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string  
+    ###Smart-Light-Paths###
+    /smartlight/lights/rooms :
+      get:
+        summary: Smart-Light
+        operationId: smart-light-01
+        x-google-backend:
+          address: https://smart-light-web-app-7afem2dl7a-uc.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+                   type: string
+
+    /smartlight/lights/roomLightsStatus :
+      get:
+        summary: Smart-Light
+        operationId: smart-light-02
+        x-google-backend:
+          address: https://smart-light-web-app-7afem2dl7a-uc.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string 
+    /smartlight/lights/setLightAttributes :
+      get:
+        summary: Smart-Light
+        operationId: smart-light-03
+        x-google-backend:
+          address: https://smart-light-web-app-7afem2dl7a-uc.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string 
+    /smartlight/lights/locationHistory :
+      get:
+        summary: Smart-Light
+        operationId: smart-light-4
+        x-google-backend:
+          address: https://smart-light-web-app-7afem2dl7a-uc.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string
+
+    /smartlight/lights/airQuality :
+      get:
+        summary: Air Quality
+        operationId: smart-light-airquality-1
+        x-google-backend:
+          address: https://smart-light-web-app-7afem2dl7a-uc.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string
+              
+    /smartlight/lights/{method} :
+      get:
+        parameters:
+          - in: path
+            name: method
+            type: string
+            required: true
+        summary: Smart-Light
+        operationId: Smart-Light-05
+        x-google-backend:
+          address: https://smart-light-web-app-7afem2dl7a-uc.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string
+              
+    ###Smart-Water-Paths###
+    
+    /smart-water/data/totalDevices :
+      get:
+        summary: Smart-Water
+        operationId: Smart-Water-01
+        x-google-backend:
+          address: https://smart-water-web-app-7afem2dl7a-uc.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string   
+
+
+    /smart-water/data/waterConsumption :
+      get:
+        summary: Smart-Water
+        operationId: Smart-Water-02
+        x-google-backend:
+          address: https://smartcity-python-water-meter-7afem2dl7a-de.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string   
+    
+    /smart-water/data/flowRate :
+      get:
+        summary: Smart-Water
+        operationId: Smart-Water-03
+        x-google-backend:
+          address: https://smartcity-python-water-meter-7afem2dl7a-de.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string   
+              
+    /smart-water/data/allSitesConsumptionThreshold :
+      get:
+        summary: Smart-Water
+        operationId: Smart-Water-04
+        x-google-backend:
+          address: https://smartcity-python-water-meter-7afem2dl7a-de.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string             
+    /smart-water/data/waterConsumptionReadings :
+      get:
+        summary: Smart-Water
+        operationId: Smart-Water-05
+        x-google-backend:
+          address: https://smartcity-python-water-meter-7afem2dl7a-de.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string
+
+    /smart-water/data/{method} :
+      get:
+        parameters:
+          - in: path
+            name: method
+            type: string
+            required: true
+        summary: Smart-Water
+        operationId: Smart-Water-06
+        x-google-backend:
+          address: https://smartcity-python-water-meter-7afem2dl7a-de.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string
+              
+    #######Smart-Dashboard-Ui#####
+    
+    /spatial/details :
+      get:
+        summary: Smart-dashboard
+        operationId: Smart-Dashobard-01
+        x-google-backend:
+          address: https://location-details-web-app-7afem2dl7a-uc.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string
+
+    /spatial/{method} :
+      get:
+        parameters:
+          - in: path
+            name: method
+            type: string
+            required: true
+        summary: Smart-dashboard
+        operationId: Smart-Dashobard-spatial-02
+        x-google-backend:
+          address: https://location-details-web-app-7afem2dl7a-uc.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string
+    
+   # /main-es2015.a9bf0ba51cc2c92d9bc4.js :
+   #   get:
+   #     summary: Smart-dashboard
+    #    operationId: Smart-Dashobard-02
+    #    x-google-backend:
+    #      address: https://smartcity-dashboard-7afem2dl7a-de.a.run.app
+    #      path_translation: APPEND_PATH_TO_ADDRESS
+    #      protocol: h2
+    #    responses:
+    #      '200':
+    #        description: A successful response
+             
+    #        content:       # Response body
+    #            application/json:     # Media type
+    #                schema: 
+    #                    $ref: '#/components/schemas/GeneralError' 
+            
+    /power-dashboard :
+      get:
+        summary: Smart-dashboard
+        operationId: Smart-Dashobard-03
+        x-google-backend:
+          address: https://smartcity-dashboard-7afem2dl7a-de.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string     
+    /dashboard :
+      get:
+        summary: Smart-dashboard
+        operationId: Smart-Dashobard-04
+        x-google-backend:
+          address: https://smartcity-dashboard-7afem2dl7a-de.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string  
+    / :
+      get:
+        summary: Smart-dashboard
+        operationId: Smart-Dashobard-05
+        x-google-backend:
+          address: https://smartcity-dashboard-7afem2dl7a-de.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string                                
+              
+    
+    /assets/{filename}:
+      get:
+        summary: Smart-dashboard
+        operationId: Smart-Dashobard-06
+        parameters:
+          - in: path
+            name: filename
+            type: string
+            required: true  
+        produces: 
+              - image/* 
+        x-google-backend:
+          address: https://smartcity-dashboard-7afem2dl7a-de.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: file
+    
+    
+    /{filename}:
+      get:
+        summary: Smart-dashboard
+        operationId: Smart-Dashobard-02
+        parameters:
+          - in: path
+            name: filename
+            type: string
+            required: true  
+        produces: 
+              - text/javascript 
+        x-google-backend:
+          address: https://smartcity-dashboard-7afem2dl7a-de.a.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: h2
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: file

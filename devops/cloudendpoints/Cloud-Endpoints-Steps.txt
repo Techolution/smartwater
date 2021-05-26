@@ -1,0 +1,33 @@
+### To apply a deployment ###
+gcloud endpoints services deploy <File>  --project <Project-Id>
+
+
+### To list all the deployment ###
+gcloud endpoints services list
+
+
+### To delete a deployment ### 
+gcloud endpoints services delete <deployment-name>
+
+### Downloading gcloud_build_image ###
+https://github.com/GoogleCloudPlatform/esp-v2/blob/master/docker/serverless/gcloud_build_image
+
+### Giving Executable Permission ###
+chmod +x gcloud_build_image ./gcloud_build_image -s SERVICE \ -c NEWSERVICECONFIGURATION -p project
+
+###Build Container deployed on cloud run for Cloud endpoints###
+bash gcloud_build_image.sh -s smartcityapigateway-7afem2dl7a-de.a.run.app  -c 2020-07-02r0  -p smartcity-256317
+
+### Deploying the latest Container for Cloud endpoint proxy ### 
+gcloud run deploy smartcityapigateway  --image="gcr.io/smartcity-256317/endpoints-runtime-serverless:smartcityapigateway-7afem2dl7a-de.a.run.app-2020-06-23r0 "  --allow-unauthenticated  --platform managed  --project=smartcity-256317
+
+
+
+
+
+
+
+
+Refrences:-
+https://cloud.google.com/endpoints/docs/openapi/get-started-cloud-run#deploy_endpoints_proxy
+https://cloud.google.com/endpoints/docs/openapi/get-started-cloud-run#configure_esp
