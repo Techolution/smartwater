@@ -11,15 +11,13 @@
   
   paths:
   ###ConnectionStatistics### 
-
-    
     /insert/telemetry/data/{meter_id} :
        post:
         summary: Insert data
         operationId: InsertData
         parameters:
-          - in: meter_id
-            name: meterid
+          - in:   path
+            name: meter_id
             type: string
             required: true  
         x-google-backend:
@@ -37,7 +35,7 @@
         summary: Get data
         operationId: getData
         parameters:
-          - in: metrics
+          - in: path
             name: metrics
             type: string
             required: true
@@ -56,8 +54,8 @@
         summary: Daily data
         operationId: DailyData
         parameters:
-          - in: meter_id
-            name: meterid
+          - in: path
+            name: meter_id
             type: string
             required: true  
         x-google-backend:
@@ -75,7 +73,7 @@
         summary: monthly data
         operationId: MonthlyData
         parameters:
-          - in: meterId
+          - in: path
             name: meterId
             type: string
             required: true  
@@ -94,7 +92,7 @@
         summary: Perform Operation
         operationId: DoOpes
         parameters:
-          - in: operation
+          - in: path
             name: operation
             type: string
             required: true
@@ -142,11 +140,11 @@
         summary: Metrics For Duration
         operationId: Metrics-Duration
         parameters:
-          - in: duration
+          - in: path
             name: duration
             type: string
             required: true
-          - in: metrics
+          - in: path
             name: metrics
             type: string
             required: true
@@ -213,11 +211,11 @@
         summary: Metrics For Duration Report
         operationId: ReportMetrics-Duration
         parameters:
-          - in: metrics
+          - in: path
             name: metrics
             type: string
             required: true
-          - in: duration
+          - in: path
             name: duration
             type: string
             required: true
@@ -238,7 +236,7 @@
         summary: Supply-Trend
         operationId: Supply Trend
         parameters:
-          - in: trend
+          - in: path
             name: trend
             type: string
             required: true
@@ -258,8 +256,8 @@
         summary: Leakage-Trend
         operationId: Leakage Trend
         parameters:
-          - in: metrics
-            name: trend
+          - in: path
+            name: metrics
             type: string
             required: true
         x-google-backend:
@@ -277,7 +275,7 @@
         summary: Supply-for Meter
         operationId: Supply For Meter Data
         parameters:
-          - in: meterId
+          - in: path
             name: meterId
             type: string
             required: true
@@ -324,11 +322,6 @@
 
     /map :
       get:
-        parameters:
-          - in: path
-            name: method
-            type: string
-            required: true
         summary: Smart-dashboard
         operationId: Smart-Dashobard-spatial-02
         x-google-backend:
