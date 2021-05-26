@@ -3,7 +3,7 @@
     title: TechowaterAPIGateway
     description: TechowaterAPIGateway-Cloud-Run-With-Endpoint
     version: 1.0.0
-  host:  smartcityapigateway-7afem2dl7a-de.a.run.app
+  host:  smartcity-esp-sample-7afem2dl7a-uc.a.run.app
   schemes:
     - https
   produces:
