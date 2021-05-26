@@ -13,12 +13,12 @@ public class PopulateData {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
-		String kpi=args[0];
-		String meterid=args[1];
-		String starttime=args[2];
-		String endtime=args[3];
-		String sleeptime=args[4];
-		String incrementtime=args[5];
+		String kpi=args[0].trim();
+		String meterid=args[1].trim();
+		String starttime=args[2].trim();
+		String endtime=args[3].trim();
+		String sleeptime=args[4].trim();
+		String incrementtime=args[5].trim();
 		System.out.println("KPI**:"+kpi);
 		System.out.println("meterid**:"+meterid);
 		System.out.println("starttime**:"+starttime);
