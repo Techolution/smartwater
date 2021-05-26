@@ -21,7 +21,7 @@
             type: string
             required: true  
         x-google-backend:
-          address: https://34.72.73.97:8085
+          address: http://34.72.73.97:8085
           path_translation: APPEND_PATH_TO_ADDRESS
           protocol: h2
         responses:
@@ -40,7 +40,7 @@
             type: string
             required: true
         x-google-backend:
-          address: https://34.72.73.97:8085
+          address: http://34.72.73.97:8085
           path_translation: APPEND_PATH_TO_ADDRESS
           protocol: h2
         responses:
@@ -59,7 +59,7 @@
             type: string
             required: true  
         x-google-backend:
-          address: https://34.72.73.97:8085
+          address: http://34.72.73.97:8085
           path_translation: APPEND_PATH_TO_ADDRESS
           protocol: h2
         responses:
@@ -78,7 +78,7 @@
             type: string
             required: true  
         x-google-backend:
-          address: https://34.72.73.97:8085
+          address: http://34.72.73.97:8085
           path_translation: APPEND_PATH_TO_ADDRESS
           protocol: h2
         responses:
@@ -97,7 +97,7 @@
             type: string
             required: true
         x-google-backend:
-          address: https://34.72.73.97:8085
+          address: http://34.72.73.97:8085
           path_translation: APPEND_PATH_TO_ADDRESS
           protocol: h2
         responses:
@@ -112,7 +112,7 @@
         summary: Consolidated-Details
         operationId: Consolidated-Details
         x-google-backend:
-          address: https://34.72.73.97:8082
+          address: http://34.72.73.97:8082
           path_translation: APPEND_PATH_TO_ADDRESS
           protocol: h2
         responses:
@@ -126,7 +126,7 @@
         summary: Connection-Details
         operationId: Connection-Details
         x-google-backend:
-          address: https://34.72.73.97:8082
+          address: http://34.72.73.97:8082
           path_translation: APPEND_PATH_TO_ADDRESS
           protocol: h2
         responses:
@@ -149,7 +149,7 @@
             type: string
             required: true
         x-google-backend:
-          address: https://34.72.73.97:8082
+          address: http://34.72.73.97:8082
           path_translation: APPEND_PATH_TO_ADDRESS
           protocol: h2
         responses:
@@ -165,7 +165,7 @@
         summary: Map-Data
         operationId: Map-Data
         x-google-backend:
-          address: https://34.72.73.97:8084
+          address: http://34.72.73.97:8084
           path_translation: APPEND_PATH_TO_ADDRESS
           protocol: h2
         responses:
@@ -181,7 +181,7 @@
         summary: Open-Notifications
         operationId: OpenNotifications
         x-google-backend:
-          address: https://34.72.73.97:8090
+          address: http://34.72.73.97:8090
           path_translation: APPEND_PATH_TO_ADDRESS
           protocol: h2
         responses:
@@ -195,7 +195,7 @@
         summary: Priority-Notifications-COunt
         operationId: PriorityNotificationsCount
         x-google-backend:
-          address: https://34.72.73.97:8090
+          address: http://34.72.73.97:8090
           path_translation: APPEND_PATH_TO_ADDRESS
           protocol: h2
         responses:
@@ -220,7 +220,7 @@
             type: string
             required: true
         x-google-backend:
-          address: https://34.72.73.97:8091
+          address: http://34.72.73.97:8091
           path_translation: APPEND_PATH_TO_ADDRESS
           protocol: h2
         responses:
@@ -241,7 +241,7 @@
             type: string
             required: true
         x-google-backend:
-          address: https://34.72.73.97:8088
+          address: http://34.72.73.97:8088
           path_translation: APPEND_PATH_TO_ADDRESS
           protocol: h2
         responses:
@@ -261,7 +261,7 @@
             type: string
             required: true
         x-google-backend:
-          address: https://34.72.73.97:8088
+          address: http://34.72.73.97:8088
           path_translation: APPEND_PATH_TO_ADDRESS
           protocol: h2
         responses:
@@ -280,7 +280,7 @@
             type: string
             required: true
         x-google-backend:
-          address: https://34.72.73.97:8088
+          address: http://34.72.73.97:8088
           path_translation: APPEND_PATH_TO_ADDRESS
           protocol: h2
         responses:
@@ -294,7 +294,7 @@
         summary: Supply-for-Meter-Overall
         operationId: Supply For Meter Data Overall
         x-google-backend:
-          address: https://34.72.73.97:8088
+          address: http://34.72.73.97:8088
           path_translation: APPEND_PATH_TO_ADDRESS
           protocol: h2
         responses:
@@ -311,7 +311,7 @@
         summary: Smart-dashboard
         operationId: Smart-Dashobard-01
         x-google-backend:
-          address: https://34.72.73.97:4200
+          address: http://34.72.73.97:4200
           path_translation: APPEND_PATH_TO_ADDRESS
           protocol: h2
         responses:
@@ -325,7 +325,7 @@
         summary: Smart-dashboard
         operationId: Smart-Dashobard-spatial-02
         x-google-backend:
-          address: https://34.72.73.97:4200
+          address: http://34.72.73.97:4200
           path_translation: APPEND_PATH_TO_ADDRESS
           protocol: h2
         responses:
@@ -340,7 +340,7 @@
         summary: Smart-dashboard
         operationId: Smart-Dashobard-05
         x-google-backend:
-          address: https://34.72.73.97:4200
+          address: http://34.72.73.97:4200
           path_translation: APPEND_PATH_TO_ADDRESS
           protocol: h2
         responses:
@@ -363,7 +363,7 @@
         produces: 
               - text/javascript 
         x-google-backend:
-          address: https://34.72.73.97:4200
+          address: http://34.72.73.97:4200
           path_translation: APPEND_PATH_TO_ADDRESS
           protocol: h2
         responses:
