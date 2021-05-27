@@ -241,7 +241,7 @@
             type: string
             required: true
         x-google-backend:
-          address: http://34.72.73.97:8088
+          address: http://34.72.73.97:8098
           path_translation: APPEND_PATH_TO_ADDRESS
           protocol: http/1.1
         responses:
@@ -261,7 +261,7 @@
             type: string
             required: true
         x-google-backend:
-          address: http://34.72.73.97:8088
+          address: http://34.72.73.97:8098
           path_translation: APPEND_PATH_TO_ADDRESS
           protocol: http/1.1
         responses:
@@ -280,7 +280,7 @@
             type: string
             required: true
         x-google-backend:
-          address: http://34.72.73.97:8088
+          address: http://34.72.73.97:8098
           path_translation: APPEND_PATH_TO_ADDRESS
           protocol: http/1.1
         responses:
@@ -294,7 +294,7 @@
         summary: Supply-for-Meter-Overall
         operationId: Supply For Meter Data Overall
         x-google-backend:
-          address: http://34.72.73.97:8088
+          address: http://34.72.73.97:8098
           path_translation: APPEND_PATH_TO_ADDRESS
           protocol: http/1.1
         responses:
