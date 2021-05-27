@@ -34,8 +34,8 @@ spring:
       repositories:
         enabled: true
   redis:
-    host: localhost
-    port: 32768
+    host: 10.128.0.12
+    port: 6379
     timeout:
       seconds: 3600
       
