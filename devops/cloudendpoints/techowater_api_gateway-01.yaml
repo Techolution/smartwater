@@ -303,6 +303,20 @@
             schema:
               type: string
 
+    /supply/stats :
+      get:
+        summary: Supply-Stats
+        operationId: Supply Stats For Meter Data
+        x-google-backend:
+          address: http://34.72.73.97:8098
+          path_translation: APPEND_PATH_TO_ADDRESS
+          protocol: http/1.1
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string
+
 
     #######Techowater-Dashboard-Ui#####
 
