@@ -1,0 +1,23 @@
+1. Install influx
+2. Create credentials root, password as root
+3. Create DB mauritius_smartwater_uat
+4. Create retentionPolicies with name "aRetentionPolicy" and "aRetentionPolicy2" each with expiration of 365days or relevant time. Check online for syntax
+
+CREATE RETENTION POLICY aRetentionPolicy2 ON mauritius_smartwater_uat DURATION 365d REPLICATION 1 DEFAULT
+CREATE RETENTION POLICY aRetentionPolicy1 ON mauritius_smartwater_uat DURATION 365d REPLICATION 1 
+
+5. Execute below insert statements
+
+insert devicestatus,meter_id=1234 value=0
+insert devicestatus,meter_id=1245 value=1
+insert devicestatus,meter_id=1256 value=1
+insert devicestatus,meter_id=1267 value=1
+insert devicestatus,meter_id=2022 value=1
+insert devicestatus,meter_id=2023 value=1
+insert devicestatus,meter_id=12345 value=1
+insert devicestatus,meter_id=2025 value=1
+
+insert consumerleakage,meter_id=1234 value=50
+insert networkleakage,meter_id=1234 value=50
+insert consumerleakageontime,meter_id=1234 value=50 
+insert consumerleakageofftime,meter_id=1234 value=50
